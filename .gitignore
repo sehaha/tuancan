@@ -1,0 +1,16 @@
+# OS / editor junk
+.DS_Store
+**/.DS_Store
+.thumbnail
+
+# Local tooling / internal state
+.claude/
+.image-slots.state.json
+node_modules/
+
+# Large source bundles (keep originals locally, not in git)
+*.zip
+
+# 精简公开仓库：排除商业资料与原始素材（仅保留官网本体）
+uploads/
+photo/

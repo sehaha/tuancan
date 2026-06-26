@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=Noto+Serif+SC:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:#F3EFE8}
+  ::-webkit-scrollbar{width:9px;height:9px}
+  ::-webkit-scrollbar-thumb{background:#D6CCBC;border-radius:5px}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+</style>
+</helmet>
+<div style="display:flex;min-height:100vh;font-family:'Noto Sans SC',sans-serif;color:#221C18">
+
+  <!-- SIDEBAR -->
+  <div style="width:236px;flex:none;background:#221C18;color:#fff;display:flex;flex-direction:column;position:sticky;top:0;height:100vh">
+    <div style="padding:22px 22px 16px;display:flex;align-items:center;gap:10px">
+      <div style="width:36px;height:36px;border-radius:10px;background:#E0392B;display:flex;align-items:center;justify-content:center;font-size:20px">🍱</div>
+      <div>
+        <div style="font-family:'Noto Serif SC',serif;font-weight:900;font-size:16px">万能美食团</div>
+        <div style="font-size:10.5px;color:#9A8E80;margin-top:1px">运营管理后台</div>
+      </div>
+    </div>
+    <div style="flex:1;overflow-y:auto;padding:4px 12px 20px">
+      <sc-for list="{{ navGroups }}" as="grp" hint-placeholder-count="4">
+        <div style="margin-top:14px">
+          <div style="font-size:10.5px;color:#7A6F62;letter-spacing:1px;padding:0 10px 6px">{{ grp.label }}</div>
+          <sc-for list="{{ grp.items }}" as="it" hint-placeholder-count="4">
+            <div onClick="{{ it.go }}" style="{{ it.style }}">
+              <span style="font-size:15px;width:20px;text-align:center">{{ it.icon }}</span>
+              <span style="font-size:13px;font-weight:{{ it.weight }}">{{ it.label }}</span>
+              <sc-if value="{{ it.hasBadge }}" hint-placeholder-val="{{ false }}"><span style="margin-left:auto;background:#E0392B;color:#fff;font-size:10px;font-weight:700;min-width:17px;height:17px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 4px">{{ it.badge }}</span></sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </sc-for>
+    </div>
+    <div style="padding:14px 18px;border-top:1px solid #34291f;display:flex;align-items:center;gap:10px">
+      <div style="width:32px;height:32px;border-radius:50%;background:#3a312a;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700">运</div>
+      <div style="flex:1;min-width:0"><div style="font-size:12.5px;font-weight:600">Admin · 平台管理员</div><div style="font-size:10.5px;color:#9A8E80">全部权限</div></div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+    <!-- topbar -->
+    <div style="height:64px;flex:none;background:#FBF8F2;border-bottom:1px solid #E8E0D2;display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:10">
+      <div>
+        <div style="font-family:'Noto Serif SC',serif;font-weight:900;font-size:19px">{{ pageTitle }}</div>
+        <div style="font-size:11.5px;color:#9A8E80;margin-top:1px">{{ pageSub }}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:14px">
+        <div style="font-size:12px;color:#9A8E80">截单日期 周日 6/29 · 12:00 锁单</div>
+        <sc-if value="{{ hasExport }}" hint-placeholder-val="{{ false }}">
+          <button onClick="{{ doExport }}" style="border:none;background:#E0392B;color:#fff;font-weight:700;font-size:13px;padding:9px 16px;border-radius:9px;cursor:pointer">⬇ 导出 CSV</button>
+        </sc-if>
+      </div>
+    </div>
+
+    <!-- content -->
+    <div style="flex:1;overflow-y:auto;padding:24px 28px 60px">
+      <div style="animation:fade .3s" key="{{ page }}">
+
+      <!-- DASHBOARD -->
+      <sc-if value="{{ isDashboard }}" hint-placeholder-val="{{ true }}">
+        <div>
+          <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:14px">
+            <sc-for list="{{ stats }}" as="s" hint-placeholder-count="6">
+              <div style="background:#fff;border-radius:14px;padding:16px 16px 18px;box-shadow:0 2px 10px rgba(80,50,20,.04)">
+                <div style="font-size:11.5px;color:#9A8E80">{{ s.label }}</div>
+                <div style="font-size:25px;font-weight:900;margin-top:8px;color:{{ s.color }}">{{ s.value }}</div>
+                <div style="font-size:11px;color:#A89A8A;margin-top:4px">{{ s.delta }}</div>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1.45fr 1fr;gap:18px;margin-top:18px">
+            <div style="background:#fff;border-radius:16px;padding:18px 20px;box-shadow:0 2px 10px rgba(80,50,20,.04)">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+                <span style="font-weight:900;font-size:15px">近 7 日订单量</span>
+                <span style="font-size:11.5px;color:#9A8E80">第 4 周 · 日均 86 份</span>
+              </div>
+              <div style="display:flex;align-items:flex-end;gap:14px;height:160px;padding-top:10px">
+                <sc-for list="{{ chartBars }}" as="b" hint-placeholder-count="7">
+                  <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:7px;height:100%;justify-content:flex-end">
+                    <span style="font-size:11px;font-weight:700;color:#221C18">{{ b.val }}</span>
+                    <div style="width:100%;max-width:34px;border-radius:7px 7px 3px 3px;background:{{ b.bg }};height:{{ b.h }}"></div>
+                    <span style="font-size:11px;color:#9A8E80">{{ b.label }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+
+            <div style="background:#fff;border-radius:16px;padding:18px 20px;box-shadow:0 2px 10px rgba(80,50,20,.04)">
+              <div style="font-weight:900;font-size:15px;margin-bottom:6px">明日备餐汇总（周一）</div>
+              <div style="font-size:11.5px;color:#9A8E80;margin-bottom:12px">12:00 截单后导出给餐厅</div>
+              <sc-for list="{{ prepSummary }}" as="p" hint-placeholder-count="4">
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid #F4EDE0">
+                  <div><div style="font-size:13px;font-weight:600">{{ p.name }}</div><div style="font-size:11px;color:#9A8E80">{{ p.rest }}</div></div>
+                  <div style="font-size:16px;font-weight:900;color:#E0392B">{{ p.qty }}<span style="font-size:11px;color:#9A8E80;font-weight:400">份</span></div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="background:#fff;border-radius:16px;padding:18px 20px;margin-top:18px;box-shadow:0 2px 10px rgba(80,50,20,.04)">
+            <div style="font-weight:900;font-size:15px;margin-bottom:14px">最新订单</div>
+            <div style="display:flex;font-size:11.5px;color:#9A8E80;font-weight:700;padding-bottom:10px;border-bottom:1px solid #EFE7D8">
+              <div style="flex:1.4">订单号</div><div style="flex:1">用户</div><div style="flex:1">餐食日期</div><div style="flex:1.2">套餐</div><div style="flex:.9">交付</div><div style="flex:.8">金额</div><div style="flex:.9">状态</div>
+            </div>
+            <sc-for list="{{ recentOrders }}" as="o" hint-placeholder-count="5">
+              <div style="display:flex;align-items:center;font-size:12.5px;padding:11px 0;border-bottom:1px solid #F6F0E5">
+                <div style="flex:1.4;color:#8C8279">{{ o.no }}</div><div style="flex:1">{{ o.user }}</div><div style="flex:1">{{ o.date }}</div><div style="flex:1.2">{{ o.pkg }}</div><div style="flex:.9">{{ o.deliver }}</div><div style="flex:.8;font-weight:700">{{ o.amount }}</div>
+                <div style="flex:.9"><span style="{{ o.statusStyle }}">{{ o.status }}</span></div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- GENERIC TABLE -->
+      <sc-if value="{{ isTable }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <sc-for list="{{ filters }}" as="f" hint-placeholder-count="3">
+                <button onClick="{{ f.onClick }}" style="{{ f.style }}">{{ f.label }}</button>
+              </sc-for>
+            </div>
+            <sc-if value="{{ hasPrimary }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ primaryAction }}" style="border:none;background:#221C18;color:#fff;font-weight:700;font-size:13px;padding:9px 16px;border-radius:9px;cursor:pointer">+ {{ primaryLabel }}</button>
+            </sc-if>
+          </div>
+          <div style="background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 2px 10px rgba(80,50,20,.04)">
+            <div style="display:flex;background:#FBF6EE;padding:13px 18px;border-bottom:1px solid #EFE7D8">
+              <sc-for list="{{ columns }}" as="c" hint-placeholder-count="6">
+                <div style="{{ c.style }}">{{ c.label }}</div>
+              </sc-for>
+            </div>
+            <sc-for list="{{ rows }}" as="r" hint-placeholder-count="8">
+              <div style="display:flex;align-items:center;padding:13px 18px;border-bottom:1px solid #F6F0E5">
+                <sc-for list="{{ r.cells }}" as="cell" hint-placeholder-count="6">
+                  <div style="{{ cell.wrapStyle }}">
+                    <sc-if value="{{ cell.isBadge }}" hint-placeholder-val="{{ false }}"><span style="{{ cell.badgeStyle }}">{{ cell.text }}</span></sc-if>
+                    <sc-if value="{{ cell.isText }}" hint-placeholder-val="{{ true }}"><span style="{{ cell.textStyle }}">{{ cell.text }}</span></sc-if>
+                    <sc-if value="{{ cell.isActions }}" hint-placeholder-val="{{ false }}">
+                      <sc-for list="{{ cell.actions }}" as="a" hint-placeholder-count="2"><span onClick="{{ a.onClick }}" style="{{ a.style }}">{{ a.label }}</span></sc-for>
+                    </sc-if>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-for>
+          </div>
+          <div style="font-size:11.5px;color:#9A8E80;margin-top:10px">{{ rowSummary }}</div>
+        </div>
+      </sc-if>
+
+      <!-- WEEKLY MENU -->
+      <sc-if value="{{ isWeekly }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+            <div style="font-size:13px;color:#8C8279">下周菜单（6/29 – 7/3）· 拖动数量调整库存，点击套餐切换上架状态</div>
+            <div style="display:flex;gap:8px">
+              <button onClick="{{ copyLastWeek }}" style="border:1px solid #E5DBCC;background:#fff;font-size:13px;font-weight:700;padding:9px 14px;border-radius:9px;cursor:pointer">复制上一周</button>
+              <button onClick="{{ publishMenu }}" style="border:none;background:#E0392B;color:#fff;font-weight:700;font-size:13px;padding:9px 16px;border-radius:9px;cursor:pointer">发布下周菜单</button>
+            </div>
+          </div>
+          <div style="overflow-x:auto">
+            <div style="display:grid;grid-template-columns:140px repeat(5,1fr);gap:12px;min-width:880px">
+              <div></div>
+              <sc-for list="{{ weekDays }}" as="d" hint-placeholder-count="5">
+                <div style="text-align:center;font-weight:900;font-size:13px;padding:8px;background:#fff;border-radius:10px">{{ d.day }}<span style="display:block;font-size:11px;color:#9A8E80;font-weight:400">{{ d.date }}</span></div>
+              </sc-for>
+              <sc-for list="{{ weekRows }}" as="row" hint-placeholder-count="3">
+                <div style="display:flex;align-items:center;gap:8px;font-weight:700;font-size:13px;padding:0 4px"><span style="width:26px;height:26px;border-radius:8px;background:{{ row.bg }};display:flex;align-items:center;justify-content:center;font-size:14px">{{ row.emoji }}</span>{{ row.rest }}</div>
+                <sc-for list="{{ row.cells }}" as="cell" hint-placeholder-count="5">
+                  <div style="background:#fff;border-radius:10px;padding:8px;min-height:90px;display:flex;flex-direction:column;gap:5px">
+                    <sc-for list="{{ cell.pkgs }}" as="pk" hint-placeholder-count="2">
+                      <div onClick="{{ pk.toggle }}" style="{{ pk.style }}">
+                        <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ pk.name }}</span>
+                        <span style="font-size:10px;opacity:.8;white-space:nowrap;margin-left:4px">库{{ pk.stock }}</span>
+                      </div>
+                    </sc-for>
+                  </div>
+                </sc-for>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- PREP EXPORT -->
+      <sc-if value="{{ isPrep }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <div style="font-size:13px;color:#8C8279;margin-bottom:14px">按「餐厅 + 日期」汇总，12:05 截单后发送给餐厅确认数量。</div>
+          <sc-for list="{{ prepCards }}" as="c" hint-placeholder-count="3">
+            <div style="background:#fff;border-radius:14px;padding:18px 20px;margin-bottom:14px;box-shadow:0 2px 10px rgba(80,50,20,.04)">
+              <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #EFE7D8;padding-bottom:12px;margin-bottom:12px">
+                <div style="display:flex;align-items:center;gap:10px"><span style="width:30px;height:30px;border-radius:9px;background:{{ c.bg }};display:flex;align-items:center;justify-content:center;font-size:16px">{{ c.emoji }}</span><span style="font-weight:900;font-size:15px">{{ c.title }}</span></div>
+                <div style="font-size:12px;color:#9A8E80">出餐时间 {{ c.time }} · 共 {{ c.total }} 份</div>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px 28px">
+                <sc-for list="{{ c.lines }}" as="l" hint-placeholder-count="6">
+                  <div style="display:flex;align-items:center;justify-content:space-between;font-size:13px;padding:3px 0;{{ l.lineStyle }}"><span style="color:{{ l.color }}">{{ l.name }}</span><span style="font-weight:700;color:{{ l.color }}">{{ l.qty }}</span></div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <!-- SORT EXPORT -->
+      <sc-if value="{{ isSort }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <div style="font-size:13px;color:#8C8279;margin-bottom:14px">按「用户 + 日期」汇总，平台据此将不同餐厅餐盒放入同一用户袋。</div>
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px">
+            <sc-for list="{{ sortCards }}" as="s" hint-placeholder-count="6">
+              <div style="background:#fff;border-radius:14px;padding:16px 18px;box-shadow:0 2px 10px rgba(80,50,20,.04);border-left:4px solid {{ s.accent }}">
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <div><span style="font-weight:900;font-size:15px">{{ s.user }}</span><span style="font-size:12px;color:#9A8E80;margin-left:8px">尾号 {{ s.phone }}</span></div>
+                  <div style="text-align:right"><div style="font-size:10.5px;color:#9A8E80">取餐码</div><div style="font-weight:900;font-size:18px;color:#E0392B;letter-spacing:2px">{{ s.code }}</div></div>
+                </div>
+                <div style="font-size:11.5px;color:#9A8E80;margin:8px 0 10px">{{ s.route }} · 共 {{ s.count }} 份</div>
+                <sc-for list="{{ s.items }}" as="i" hint-placeholder-count="2">
+                  <div style="display:flex;align-items:center;gap:8px;font-size:12.5px;padding:4px 0"><span style="width:6px;height:6px;border-radius:50%;background:{{ i.dot }}"></span><span style="flex:1">{{ i.name }}</span><span style="color:#9A8E80">{{ i.rest }}</span></div>
+                </sc-for>
+                <button onClick="{{ s.markSorted }}" style="{{ s.btnStyle }}">{{ s.btnLabel }}</button>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- toast -->
+  <sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#221C18;color:#fff;font-size:13.5px;padding:12px 24px;border-radius:26px;z-index:50;box-shadow:0 10px 30px rgba(0,0,0,.2)">{{ toast }}</div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = { page:'dashboard', filter:'all', toast:'', sorted:{}, menuState:{}, orderFilter:'all' };
+    this.nav = [
+      {label:'运营', items:[
+        {id:'dashboard', icon:'📊', label:'数据概览'},
+        {id:'orders', icon:'🧾', label:'订单管理'},
+        {id:'exceptions', icon:'⚠️', label:'异常订单', badge:2}
+      ]},
+      {label:'菜单', items:[
+        {id:'restaurants', icon:'🏪', label:'餐厅管理'},
+        {id:'packages', icon:'🍱', label:'套餐管理'},
+        {id:'dishes', icon:'🥘', label:'菜品选项'},
+        {id:'weekly', icon:'🗓️', label:'每周菜单'}
+      ]},
+      {label:'交付', items:[
+        {id:'pickup', icon:'📍', label:'自提点管理'},
+        {id:'delivery', icon:'🚗', label:'配送区域'},
+        {id:'prep', icon:'📦', label:'备餐单导出'},
+        {id:'sort', icon:'🏷️', label:'分拣单导出'},
+        {id:'deliveryExport', icon:'🛵', label:'配送单导出'}
+      ]},
+      {label:'财务 / 用户', items:[
+        {id:'users', icon:'👥', label:'用户管理'},
+        {id:'refunds', icon:'💸', label:'退款 / 余额'},
+        {id:'settlement', icon:'🧮', label:'餐厅结算'}
+      ]}
+    ];
+    this.meta = {
+      dashboard:{title:'数据概览', sub:'试运营第 4 周 · 实时运营看板', mode:'dashboard'},
+      orders:{title:'订单管理', sub:'查看、改状态、取消、退款、标记异常', mode:'table', export:true},
+      exceptions:{title:'异常订单记录', sub:'缺货 / 迟到 / 漏送 / 配送异常', mode:'table'},
+      restaurants:{title:'餐厅管理', sub:'3 家合作餐厅', mode:'table', primary:'新增餐厅'},
+      packages:{title:'套餐管理', sub:'套餐价格、供货价、库存与上架', mode:'table', primary:'新增套餐'},
+      dishes:{title:'菜品选项管理', sub:'中餐格子套餐荤素菜品', mode:'table', primary:'新增菜品'},
+      weekly:{title:'每周菜单管理', sub:'编排下周一到周五菜单', mode:'weekly'},
+      pickup:{title:'自提点管理', sub:'取餐点与取餐时段', mode:'table', primary:'新增自提点'},
+      delivery:{title:'配送区域管理', sub:'配送分区与费用', mode:'table', primary:'新增区域'},
+      prep:{title:'备餐单导出', sub:'按餐厅 + 日期汇总', mode:'prep', export:true},
+      sort:{title:'分拣单导出', sub:'按用户 + 日期汇总', mode:'sort', export:true},
+      deliveryExport:{title:'配送单导出', sub:'按配送路线汇总', mode:'table', export:true},
+      users:{title:'用户管理', sub:'注册用户与账户余额', mode:'table'},
+      refunds:{title:'退款 / 余额管理', sub:'取消退款与余额变动', mode:'table'},
+      settlement:{title:'餐厅结算', sub:'每周与餐厅结算', mode:'table', export:true}
+    };
+  }
+
+  go(id){ this.setState({page:id, filter:'all', orderFilter:'all'}); const el=document.querySelector('[style*="overflow-y"]'); }
+  toast(t){ this.setState({toast:t}); clearTimeout(this._t); this._t=setTimeout(()=>this.setState({toast:''}),1700); }
+
+  // styling helpers
+  badge(text, kind){
+    const m={ green:'#E5F3EA|#2E7D4F', red:'#FCE9E7|#E0392B', blue:'#E6F0FB|#2563B5', gold:'#FBE9D6|#C7891B', gray:'#EFEAE2|#8C8279', purple:'#F0EAFB|#6B4BB5' };
+    const [bg,c]=(m[kind]||m.gray).split('|');
+    return {text, isBadge:true, isText:false, isActions:false, badgeStyle:'font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:8px;background:'+bg+';color:'+c };
+  }
+  txt(text, opt){ opt=opt||{}; return {text:String(text), isText:true, isBadge:false, isActions:false, textStyle:'font-size:12.5px;color:'+(opt.color||'#3a322b')+';font-weight:'+(opt.bold?'700':'400')+';overflow:hidden;text-overflow:ellipsis;white-space:nowrap'}; }
+  acts(list){ return {isActions:true, isText:false, isBadge:false, actions:list.map(a=>({label:a.label, onClick:a.onClick, style:'font-size:12px;color:'+(a.danger?'#E0392B':'#2563B5')+';cursor:pointer;margin-right:12px'}))}; }
+
+  buildRows(widths, dataRows){
+    return dataRows.map(cells=>({ cells: cells.map((cell,i)=>{
+      const w=widths[i];
+      const wrap='flex:'+w+';min-width:0;display:flex;align-items:center;padding-right:10px';
+      return {...cell, wrapStyle:wrap};
+    })}));
+  }
+  cols(widths, labels){ return labels.map((l,i)=>({label:l, style:'flex:'+widths[i]+';font-size:11.5px;font-weight:700;color:#9A8E80;min-width:0;padding-right:10px'})); }
+
+  tableFor(page){
+    const st=this.state;
+    // returns {columns, rows, widths, filters?, primary?, summary}
+    if(page==='restaurants'){
+      const w=[1.6,1,1.2,1,1,1.4];
+      const data=[
+        ['家常小馆','张伟 (949)555-0201','家常中餐','供货价模式','11:00 出餐','green:营业中'],
+        ['元气便当','李娜 (949)555-0202','日式便当','供货价模式','11:30 出餐','green:营业中'],
+        ['轻盈轻食','王芳 (949)555-0203','健康轻食','供货价模式','11:00 出餐','green:营业中'],
+        ['川味轩','陈强 (949)555-0204','川菜','待签约','—','gray:已停用']
+      ];
+      const rows=this.buildRows(w, data.map(d=>[this.txt(d[0],{bold:true}),this.txt(d[1]),this.txt(d[2]),this.txt(d[3]),this.txt(d[4]),this.statusCell(d[5],()=>this.toast('查看餐厅订单'),'编辑')]));
+      return {columns:this.cols(w,['餐厅名称','联系人','菜系','结算方式','出餐时间','状态']), rows, summary:'共 4 家餐厅，3 家营业中'};
+    }
+    if(page==='packages'){
+      const w=[1.6,1,1.1,.8,.8,.9,1.2];
+      const D=[
+        ['两荤一素套餐','家常小馆','中餐格子','$15.99','$10.00','35','red:爆款 green:上架'],
+        ['照烧鸡便当','元气便当','固定便当','$13.99','$9.00','30','green:上架'],
+        ['三文鱼便当','元气便当','固定便当','$17.99','$13.00','22','blue:高蛋白 green:上架'],
+        ['鸡胸肉健康碗','轻盈轻食','健康轻食','$13.99','$9.00','26','green:上架'],
+        ['周三烤鸭饭日','家常小馆','爆款限量','$16.99','$11.00','50','gold:限量 green:上架'],
+        ['素食能量碗','轻盈轻食','健康轻食','$12.99','$8.00','24','gray:已下架']
+      ];
+      const rows=this.buildRows(w, D.map(d=>{
+        const tagCell=this.multiBadge(d[6]);
+        return [this.txt(d[0],{bold:true}),this.txt(d[1]),this.txt(d[2]),this.txt(d[3],{color:'#E0392B',bold:true}),this.txt(d[4],{color:'#9A8E80'}),this.txt(d[5]),tagCell];
+      }));
+      return {columns:this.cols(w,['套餐名称','餐厅','类型','售价','供货价','库存','标签 / 状态']), rows, summary:'共 6 个套餐'};
+    }
+    if(page==='dishes'){
+      const w=[1.4,1.1,.9,1,.9,1.2];
+      const D=[
+        ['宫保鸡丁','家常小馆','荤菜','周一-周五','微辣','green:启用'],
+        ['红烧牛腩','家常小馆','荤菜','周一-周五','不辣','green:启用'],
+        ['鱼香肉丝','家常小馆','荤菜','周一-周五','微辣','green:启用'],
+        ['番茄炒蛋','家常小馆','素菜','周一-周五','不辣','green:启用'],
+        ['蒜蓉西兰花','家常小馆','素菜','周一-周五','不辣','green:启用'],
+        ['加饭','家常小馆','主食 (+$1)','周一-周五','—','green:启用']
+      ];
+      const rows=this.buildRows(w, D.map(d=>[this.txt(d[0],{bold:true}),this.txt(d[1]),this.txt(d[2]),this.txt(d[3]),this.txt(d[4]),this.badge(d[5].split(':')[1],'green')]));
+      return {columns:this.cols(w,['菜品','餐厅','类型','可售日期','辣度','状态']), rows, summary:'家常小馆：3 荤 / 2 素 / 1 主食（每日上限 3 荤 3 素）'};
+    }
+    if(page==='orders'){
+      const all=[
+        ['MST-2627042','Tommy','周二 6/30','两荤一素套餐 等2件','自提 A','$29.98','已确认','confirmed'],
+        ['MST-2731088','Cindy','周三 7/1','周三烤鸭饭日 ×2','配送 A','$37.48','已付款','paid'],
+        ['MST-2730091','王先生','周二 6/30','三文鱼便当','自提 B','$17.99','备餐中','prep'],
+        ['MST-2629077','Lily','周一 6/29','鸡胸肉健康碗 ×2','配送 B','$32.98','配送中','shipping'],
+        ['MST-2625012','David','周五 7/3','酸菜鱼饭日','自提 A','$15.99','已完成','done'],
+        ['MST-2620003','Anna','周一 6/29','素食能量碗','自提 C','$12.99','已取消','cancel']
+      ];
+      const map={paid:'已付款|red',confirmed:'已确认|blue',prep:'备餐中|gold',shipping:'配送中|blue',done:'已完成|gray',cancel:'已取消|gray'};
+      const fmap={all:null,paid:'paid',confirmed:'confirmed',prep:'prep',shipping:'shipping',done:'done'};
+      const filt = this.state.orderFilter;
+      const data = all.filter(d=> filt==='all' || d[7]===fmap[filt]);
+      const w=[1.5,.9,1.1,1.7,1,.9,1.3];
+      const rows=this.buildRows(w, data.map(d=>{ const [lbl,kind]=map[d[7]].split('|'); return [this.txt(d[0],{color:'#8C8279'}),this.txt(d[1]),this.txt(d[2]),this.txt(d[3]),this.txt(d[4]),this.txt(d[5],{bold:true}),this.statusCellBadge(this.badge(lbl,kind), d[7])]; }));
+      const fl=[['all','全部'],['paid','已付款'],['confirmed','已确认'],['prep','备餐中'],['shipping','配送中'],['done','已完成']];
+      return {columns:this.cols(w,['订单号','用户','餐食日期','套餐明细','交付','金额','状态']), rows,
+        filters: fl.map(([k,l])=>({label:l, onClick:()=>this.setState({orderFilter:k}), style:this.filterStyle(filt===k)})),
+        summary:'共 '+data.length+' 笔订单'};
+    }
+    if(page==='exceptions'){
+      const w=[1.4,1,1.6,1.2,1.2];
+      const D=[
+        ['MST-2730091','王先生','餐厅缺货：三文鱼','已替换同价套餐','gold:处理中'],
+        ['MST-2629077','Lily','配送延迟 20 分钟','已电话告知用户','green:已解决']
+      ];
+      const rows=this.buildRows(w, D.map(d=>[this.txt(d[0],{color:'#8C8279'}),this.txt(d[1]),this.txt(d[2]),this.txt(d[3]),this.badge(d[4].split(':')[1], d[4].split(':')[0])]));
+      return {columns:this.cols(w,['订单号','用户','异常类型','处理方式','状态']), rows, summary:'共 2 条异常记录'};
+    }
+    if(page==='pickup'){
+      const w=[1.8,1.2,1,1.2,.9];
+      const D=[
+        ['自提点 A · Spectrum 商务楼','100 Spectrum Center Dr','12:00–13:00','Lisa 555-0101','green:启用'],
+        ['自提点 B · Diamond Plaza','2700 Alton Pkwy','12:00–13:00','Kevin 555-0102','green:启用'],
+        ['自提点 C · Northpark 社区','5365 Portola Pkwy','18:00–19:00','Amy 555-0103','green:启用']
+      ];
+      const rows=this.buildRows(w, D.map(d=>[this.txt(d[0],{bold:true}),this.txt(d[1]),this.txt(d[2]),this.txt(d[3]),this.badge(d[4].split(':')[1],'green')]));
+      return {columns:this.cols(w,['自提点','地址','取餐时间','联系人','状态']), rows, summary:'共 3 个自提点'};
+    }
+    if(page==='delivery'){
+      const w=[1,1.6,.9,1.2,.9];
+      const D=[
+        ['Zone A','Spectrum / Woodbury 一带','$3.5','满$20起送','green:启用'],
+        ['Zone B','Northwood / University Park','$5.0','满$20起送','green:启用'],
+        ['Zone C','远距离区域','单独报价','暂不支持','gray:停用']
+      ];
+      const rows=this.buildRows(w, D.map(d=>[this.txt(d[0],{bold:true}),this.txt(d[1]),this.txt(d[2],{color:'#E0392B',bold:true}),this.txt(d[3]),this.badge(d[4].split(':')[1], d[4].split(':')[0])]));
+      return {columns:this.cols(w,['区域','范围','配送费','起送规则','状态']), rows, summary:'2 个区域配送中，最低消费 $20'};
+    }
+    if(page==='deliveryExport'){
+      const w=[1,1.5,1.1,.7,.9,1.1];
+      const D=[
+        ['Zone A','Cindy · 18 Maple, Irvine','555-1088','×2','可放门口','blue:待配送'],
+        ['Zone B','Lily · 320 Oak Ave #4','555-2077','×2','需当面','blue:配送中'],
+        ['Zone A','Mark · 7 Birch Ln','555-3055','×1','可放门口','green:已完成']
+      ];
+      const rows=this.buildRows(w, D.map(d=>[this.txt(d[0],{bold:true}),this.txt(d[1]),this.txt(d[2]),this.txt(d[3]),this.txt(d[4]),this.badge(d[5].split(':')[1], d[5].split(':')[0])]));
+      return {columns:this.cols(w,['路线','用户 / 地址','电话','份数','放门口','状态']), rows, summary:'周一配送 3 单 · Zone A ×2，Zone B ×1'};
+    }
+    if(page==='users'){
+      const w=[1,1.1,1,.9,.9,1];
+      const D=[
+        ['Tommy','(949)555-1234','tommy_wx','$25.00','非会员','6 单'],
+        ['Cindy','(949)555-1088','cindy88','$0.00','会员','11 单'],
+        ['Lily','(949)555-2077','—','$12.99','非会员','3 单'],
+        ['王先生','(949)555-3300','wang_oc','$8.00','非会员','5 单']
+      ];
+      const rows=this.buildRows(w, D.map(d=>[this.txt(d[0],{bold:true}),this.txt(d[1]),this.txt(d[2]),this.txt(d[3],{color:'#2E7D4F',bold:true}),this.badge(d[4], d[4]==='会员'?'purple':'gray'),this.txt(d[5])]));
+      return {columns:this.cols(w,['姓名','电话','微信','余额','会员','累计订单']), rows, summary:'共 4 名注册用户'};
+    }
+    if(page==='refunds'){
+      const w=[1.4,1,1,1.4,1];
+      const D=[
+        ['MST-2620003','Anna','+$12.99','截止前取消 · 退回余额','green:已退余额'],
+        ['MST-2618001','Mike','+$15.99','餐厅缺货 · 平台补偿','green:已退余额'],
+        ['MST-2731088','Cindy','$37.48','申请取消 · 待审核','gold:处理中']
+      ];
+      const rows=this.buildRows(w, D.map(d=>[this.txt(d[0],{color:'#8C8279'}),this.txt(d[1]),this.txt(d[2],{color:'#2E7D4F',bold:true}),this.txt(d[3]),this.badge(d[4].split(':')[1], d[4].split(':')[0])]));
+      return {columns:this.cols(w,['订单号','用户','金额','原因','状态']), rows, summary:'本周退款合计 $28.98（退余额）'};
+    }
+    if(page==='settlement'){
+      const w=[1.2,1,.9,1,1,1];
+      const D=[
+        ['家常小馆','6/23–6/29','142 份','$1,420.00','$2,268.58','green:待结算'],
+        ['元气便当','6/23–6/29','98 份','$1,078.00','$1,565.02','green:待结算'],
+        ['轻盈轻食','6/23–6/29','76 份','$684.00','$1,063.24','gray:已结算']
+      ];
+      const rows=this.buildRows(w, D.map(d=>[this.txt(d[0],{bold:true}),this.txt(d[1]),this.txt(d[2]),this.txt(d[3]),this.txt(d[4],{color:'#E0392B',bold:true}),this.badge(d[5].split(':')[1], d[5].split(':')[0])]));
+      return {columns:this.cols(w,['餐厅','结算周期','销售份数','供货价总额','平台销售额','结算状态']), rows, summary:'本周应结算供货价合计 $3,182.00 · 平台毛利约 $1,714'};
+    }
+    return {columns:[], rows:[], summary:''};
+  }
+
+  multiBadge(spec){
+    const parts=spec.split(' ').map(p=>{const [k,t]=p.split(':');const b=this.badge(t,k);return {label:t, onClick:()=>{}, style:b.badgeStyle+';margin-right:6px;cursor:default'};});
+    return {isActions:true, isText:false, isBadge:false, actions:parts};
+  }
+  statusCell(spec, viewFn, editLabel){
+    // returns a cell that shows badge + actions; simplest: just badge
+    const [k,t]=spec.split(':');
+    return this.badge(t,k);
+  }
+  statusCellBadge(badgeCell, kind){ return badgeCell; }
+  filterStyle(active){ return active ? 'border:none;background:#221C18;color:#fff;font-size:12.5px;font-weight:600;padding:8px 14px;border-radius:8px;cursor:pointer' : 'border:1px solid #E5DBCC;background:#fff;color:#8C8279;font-size:12.5px;padding:8px 14px;border-radius:8px;cursor:pointer'; }
+
+  renderVals(){
+    const st=this.state; const page=st.page; const meta=this.meta[page]||{};
+    const v={
+      page, pageTitle:meta.title, pageSub:meta.sub,
+      hasExport:!!meta.export, doExport:()=>this.toast('已导出 '+meta.title+' CSV'),
+      hasToast:!!st.toast, toast:st.toast,
+      navGroups:this.nav.map(g=>({ label:g.label, items:g.items.map(it=>({
+        icon:it.icon, label:it.label, go:()=>this.go(it.id),
+        hasBadge:!!it.badge, badge:it.badge, weight: page===it.id?'700':'500',
+        style:'display:flex;align-items:center;gap:11px;padding:9px 10px;border-radius:9px;cursor:pointer;margin-bottom:2px;'+(page===it.id?'background:#E0392B;color:#fff':'color:#C9BEAF')
+      })) })),
+      isDashboard:meta.mode==='dashboard', isTable:meta.mode==='table', isWeekly:meta.mode==='weekly', isPrep:meta.mode==='prep', isSort:meta.mode==='sort'
+    };
+
+    // DASHBOARD
+    if(meta.mode==='dashboard'){
+      v.stats=[
+        {label:'今日订单', value:'86', delta:'↑ 12% vs 昨日', color:'#221C18'},
+        {label:'餐食份数', value:'132', delta:'3 家餐厅', color:'#221C18'},
+        {label:'今日 GMV', value:'$1,842', delta:'↑ 9%', color:'#E0392B'},
+        {label:'平台毛利', value:'$402', delta:'毛利率 21.8%', color:'#2E7D4F'},
+        {label:'自提比例', value:'58%', delta:'目标 50%+', color:'#221C18'},
+        {label:'待处理异常', value:'2', delta:'需跟进', color:'#C7891B'}
+      ];
+      const bars=[['周一',62],['周二',71],['周三',95],['周四',78],['周五',103],['周六',54],['周日',88]];
+      const max=110;
+      v.chartBars=bars.map((b,i)=>({label:b[0], val:b[1], h:Math.round(b[1]/max*140)+'px', bg: i===4?'#E0392B':'#F1C4AE'}));
+      v.prepSummary=[
+        {name:'两荤一素套餐', rest:'家常小馆', qty:22},
+        {name:'照烧鸡便当', rest:'元气便当', qty:18},
+        {name:'鸡胸肉健康碗', rest:'轻盈轻食', qty:15},
+        {name:'三文鱼便当', rest:'元气便当', qty:11}
+      ];
+      const sm=(s,k)=>{const map={paid:'red',confirmed:'blue',prep:'gold',shipping:'blue',done:'gray'};const b=this.badge(s,map[k]);return b.badgeStyle;};
+      v.recentOrders=[
+        {no:'MST-2627042', user:'Tommy', date:'周二 6/30', pkg:'两荤一素 等2件', deliver:'自提 A', amount:'$29.98', status:'已确认', statusStyle:sm('已确认','confirmed')},
+        {no:'MST-2731088', user:'Cindy', date:'周三 7/1', pkg:'烤鸭饭 ×2', deliver:'配送 A', amount:'$37.48', status:'已付款', statusStyle:sm('已付款','paid')},
+        {no:'MST-2730091', user:'王先生', date:'周二 6/30', pkg:'三文鱼便当', deliver:'自提 B', amount:'$17.99', status:'备餐中', statusStyle:sm('备餐中','prep')},
+        {no:'MST-2629077', user:'Lily', date:'周一 6/29', pkg:'健康碗 ×2', deliver:'配送 B', amount:'$32.98', status:'配送中', statusStyle:sm('配送中','shipping')},
+        {no:'MST-2625012', user:'David', date:'周五 7/3', pkg:'酸菜鱼饭', deliver:'自提 A', amount:'$15.99', status:'已完成', statusStyle:sm('已完成','done')}
+      ];
+    }
+
+    // TABLE
+    if(meta.mode==='table'){
+      const t=this.tableFor(page);
+      v.columns=t.columns; v.rows=t.rows; v.rowSummary=t.summary;
+      v.filters=t.filters||[]; v.hasPrimary=!!meta.primary; v.primaryLabel=meta.primary||''; v.primaryAction=()=>this.toast('打开「'+(meta.primary||'')+'」表单');
+    }
+
+    // WEEKLY
+    if(meta.mode==='weekly'){
+      v.copyLastWeek=()=>this.toast('已复制上一周菜单'); v.publishMenu=()=>this.toast('下周菜单已发布');
+      v.weekDays=[['周一','6/29'],['周二','6/30'],['周三','7/1'],['周四','7/2'],['周五','7/3']].map(d=>({day:d[0],date:d[1]}));
+      const rests=[
+        {rest:'家常小馆', emoji:'🥘', bg:'#F6D8C3', base:['一荤一素','两荤一素','两荤两素'], stocks:[40,35,30]},
+        {rest:'元气便当', emoji:'🍙', bg:'#CFE0F2', base:['照烧鸡便当','牛肉饭便当','三文鱼便当'], stocks:[30,28,22]},
+        {rest:'轻盈轻食', emoji:'🥗', bg:'#D5EAD2', base:['鸡胸健康碗','牛肉沙拉','素食能量碗'], stocks:[26,20,24]}
+      ];
+      const hot={2:{rest:'家常小馆',name:'烤鸭饭日',stock:50},4:{rest:'家常小馆',name:'酸菜鱼日',stock:40}};
+      v.weekRows=rests.map(r=>({ rest:r.rest, emoji:r.emoji, bg:r.bg,
+        cells:[0,1,2,3,4].map(di=>{
+          const pkgs=r.base.map((n,pi)=>({name:n, stock:r.stocks[pi], toggle:()=>this.toast(n+' 已切换上架状态'),
+            style:'display:flex;align-items:center;justify-content:space-between;font-size:11px;background:#FBF6EE;border:1px solid #EFE3D2;border-radius:6px;padding:4px 7px;cursor:pointer;color:#3a322b'}));
+          if(hot[di] && hot[di].rest===r.rest) pkgs.push({name:'🔥'+hot[di].name, stock:hot[di].stock, toggle:()=>this.toast('爆款套餐'), style:'display:flex;align-items:center;justify-content:space-between;font-size:11px;background:#FCEFE9;border:1px solid #F3C9B6;border-radius:6px;padding:4px 7px;cursor:pointer;color:#C7350F;font-weight:700'});
+          return {pkgs};
+        })
+      }));
+    }
+
+    // PREP
+    if(meta.mode==='prep'){
+      v.prepCards=[
+        {title:'家常小馆 · 周一午餐', time:'11:00', total:37, emoji:'🥘', bg:'#F6D8C3', lines:[
+          {name:'两荤一素套餐',qty:'22 份',color:'#221C18'},{name:'一荤一素套餐',qty:'15 份',color:'#221C18'},
+          {name:'· 宫保鸡丁',qty:'18',color:'#8C8279'},{name:'· 红烧牛腩',qty:'12',color:'#8C8279'},
+          {name:'· 鱼香肉丝',qty:'7',color:'#8C8279'},{name:'· 番茄炒蛋',qty:'14',color:'#8C8279'},
+          {name:'· 蒜蓉西兰花',qty:'10',color:'#8C8279'},{name:'不辣 / 加饭',qty:'6 / 4',color:'#C7891B'}
+        ]},
+        {title:'元气便当 · 周一午餐', time:'11:30', total:29, emoji:'🍙', bg:'#CFE0F2', lines:[
+          {name:'A 照烧鸡便当',qty:'18 份',color:'#221C18'},{name:'B 牛肉饭便当',qty:'7 份',color:'#221C18'},
+          {name:'C 三文鱼便当',qty:'4 份',color:'#221C18'},{name:'加饭',qty:'5',color:'#C7891B'},
+          {name:'需要餐具',qty:'12',color:'#C7891B'},{name:'微辣',qty:'3',color:'#C7891B'}
+        ]},
+        {title:'轻盈轻食 · 周一午餐', time:'11:00', total:21, emoji:'🥗', bg:'#D5EAD2', lines:[
+          {name:'鸡胸肉健康碗',qty:'15 份',color:'#221C18'},{name:'牛肉沙拉',qty:'4 份',color:'#221C18'},
+          {name:'素食能量碗',qty:'2 份',color:'#221C18'},{name:'糙米',qty:'9',color:'#C7891B'},
+          {name:'少酱 / 酱分开',qty:'5 / 3',color:'#C7891B'},{name:'需要餐具',qty:'14',color:'#C7891B'}
+        ]}
+      ].map(c=>({...c, lines:c.lines.map(l=>({...l, lineStyle: l.name.startsWith('·')?'padding-left:8px':'', color:l.color}))}));
+    }
+
+    // SORT
+    if(meta.mode==='sort'){
+      const data=[
+        {user:'Tommy', phone:'1234', code:'3821', route:'自提点 A', count:2, accent:'#E0392B', items:[{name:'两荤一素套餐',rest:'家常小馆',dot:'#E0392B'},{name:'鸡胸肉健康碗',rest:'轻盈轻食',dot:'#2E7D4F'}]},
+        {user:'Cindy', phone:'1088', code:'5530', route:'配送 Zone A', count:2, accent:'#2563B5', items:[{name:'周三烤鸭饭日 ×2',rest:'家常小馆',dot:'#C7891B'}]},
+        {user:'王先生', phone:'3300', code:'2914', route:'自提点 B', count:1, accent:'#E0392B', items:[{name:'三文鱼便当',rest:'元气便当',dot:'#2563B5'}]},
+        {user:'Lily', phone:'2077', code:'7180', route:'配送 Zone B', count:2, accent:'#2563B5', items:[{name:'鸡胸肉健康碗 ×2',rest:'轻盈轻食',dot:'#2E7D4F'}]},
+        {user:'David', phone:'4521', code:'6602', route:'自提点 A', count:1, accent:'#E0392B', items:[{name:'酸菜鱼饭日',rest:'家常小馆',dot:'#C7350F'}]},
+        {user:'Anna', phone:'9087', code:'1145', route:'自提点 C', count:1, accent:'#E0392B', items:[{name:'素食能量碗',rest:'轻盈轻食',dot:'#2E7D4F'}]}
+      ];
+      v.sortCards=data.map(s=>{ const done=!!st.sorted[s.code]; return {...s,
+        markSorted:()=>this.setState({sorted:{...st.sorted,[s.code]:!done}}),
+        btnLabel: done?'✓ 已分拣':'标记已分拣',
+        btnStyle: 'width:100%;margin-top:12px;border:none;border-radius:9px;padding:9px;font-size:12.5px;font-weight:700;cursor:pointer;'+(done?'background:#E5F3EA;color:#2E7D4F':'background:#221C18;color:#fff') };
+      });
+    }
+
+    return v;
+  }
+}
+</script>
+</body>
+</html>

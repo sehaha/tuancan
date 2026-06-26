@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=Noto+Serif+SC:wght@600;700;900&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  ::-webkit-scrollbar{width:0;height:0}
+  @keyframes popIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  @keyframes toastIn{from{opacity:0;transform:transl(-50%,8px)}to{opacity:1}}
+  @keyframes badgePop{0%{transform:scale(.5)}60%{transform:scale(1.25)}100%{transform:scale(1)}}
+</style>
+</helmet>
+<div style="min-height:100vh;background:#E9E0D2;display:flex;align-items:flex-start;justify-content:center;padding:32px 16px;font-family:'Noto Sans SC',sans-serif">
+  <div style="width:390px;height:844px;background:#FBF5EC;border-radius:46px;box-shadow:0 2px 0 #fff inset,0 30px 80px rgba(60,40,20,.28),0 0 0 11px #1b1714,0 0 0 13px #2c2520;overflow:hidden;position:relative;display:flex;flex-direction:column">
+
+    <!-- status bar -->
+    <div style="height:48px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 30px 0 34px;font-size:15px;font-weight:700;color:#221C18;z-index:30;position:relative">
+      <span>9:41</span>
+      <div style="display:flex;align-items:center;gap:7px">
+        <span style="font-size:12px">●●●●</span>
+        <span style="font-size:13px">5G</span>
+        <span style="display:inline-block;width:24px;height:12px;border:1.5px solid #221C18;border-radius:3px;position:relative"><span style="position:absolute;inset:1.5px;width:70%;background:#221C18;border-radius:1px"></span></span>
+      </div>
+    </div>
+
+    <!-- app top bar -->
+    <div style="flex:none;height:50px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;z-index:20;position:relative;background:{{ topBarBg }}">
+      <div style="display:flex;align-items:center;gap:8px;min-width:0">
+        <sc-if value="{{ showBack }}" hint-placeholder-val="{{ false }}">
+          <button onClick="{{ goBack }}" style="border:none;background:none;font-size:22px;line-height:1;color:#221C18;cursor:pointer;padding:0 2px">‹</button>
+        </sc-if>
+        <span style="font-family:'Noto Serif SC',serif;font-weight:900;font-size:18px;color:#221C18;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ screenTitle }}</span>
+      </div>
+      <button onClick="{{ goCart }}" style="position:relative;border:none;background:none;cursor:pointer;font-size:20px;padding:4px">🛒
+        <sc-if value="{{ hasCart }}" hint-placeholder-val="{{ false }}">
+          <span style="position:absolute;top:-2px;right:-4px;min-width:18px;height:18px;padding:0 4px;background:#E0392B;color:#fff;border-radius:9px;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;animation:badgePop .3s">{{ cartCount }}</span>
+        </sc-if>
+      </button>
+    </div>
+
+    <!-- scroll body -->
+    <div style="flex:1;overflow-y:auto;position:relative">
+
+      <!-- ================= HOME ================= -->
+      <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+        <div style="animation:popIn .35s">
+          <div style="margin:6px 16px 0;border-radius:24px;overflow:hidden;background:linear-gradient(150deg,#E0392B,#B5241B);color:#fff;padding:26px 22px 24px;position:relative">
+            <div style="position:absolute;right:-20px;top:-18px;font-size:120px;opacity:.16;transform:rotate(-12deg)">🍱</div>
+            <div style="display:inline-block;background:rgba(255,255,255,.18);backdrop-filter:blur(4px);font-size:12px;font-weight:700;padding:5px 11px;border-radius:20px;letter-spacing:.5px">万能美食团 · Irvine 试运营</div>
+            <div style="font-family:'Noto Serif SC',serif;font-weight:900;font-size:30px;line-height:1.25;margin:14px 0 6px">下周吃什么<br>今天一次订好</div>
+            <div style="font-size:13px;opacity:.92;line-height:1.6;max-width:240px">三家餐厅套餐任选 · 自提免费 · 指定区域低价配送</div>
+            <button onClick="{{ goMenu }}" style="margin-top:18px;border:none;background:#fff;color:#E0392B;font-weight:900;font-size:15px;padding:13px 22px;border-radius:30px;cursor:pointer;box-shadow:0 8px 20px rgba(0,0,0,.18)">立即预订下周餐食 →</button>
+          </div>
+
+          <div style="display:flex;gap:10px;padding:16px">
+            <div onClick="{{ goPickup }}" style="flex:1;background:#fff;border-radius:16px;padding:14px;cursor:pointer;box-shadow:0 4px 14px rgba(80,50,20,.06)">
+              <div style="font-size:22px">📍</div>
+              <div style="font-weight:700;font-size:14px;margin-top:6px;color:#221C18">自提点</div>
+              <div style="font-size:11px;color:#8C8279;margin-top:2px">免配送费 · 3 个取餐点</div>
+            </div>
+            <div onClick="{{ goDelivery }}" style="flex:1;background:#fff;border-radius:16px;padding:14px;cursor:pointer;box-shadow:0 4px 14px rgba(80,50,20,.06)">
+              <div style="font-size:22px">🚗</div>
+              <div style="font-weight:700;font-size:14px;margin-top:6px;color:#221C18">区域配送</div>
+              <div style="font-size:11px;color:#8C8279;margin-top:2px">$3.5–$5 · 满$20起送</div>
+            </div>
+          </div>
+
+          <div style="padding:0 16px">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px">
+              <span style="font-family:'Noto Serif SC',serif;font-weight:900;font-size:19px;color:#221C18">🔥 本周爆款限量</span>
+              <span onClick="{{ goMenu }}" style="font-size:12px;color:#8C8279;cursor:pointer">全部菜单 ›</span>
+            </div>
+            <div style="display:flex;gap:12px;overflow-x:auto;padding-bottom:4px;margin:0 -16px;padding-left:16px;padding-right:16px">
+              <sc-for list="{{ hotList }}" as="h" hint-placeholder-count="3">
+                <div onClick="{{ h.open }}" style="flex:none;width:160px;background:#fff;border-radius:18px;overflow:hidden;cursor:pointer;box-shadow:0 6px 18px rgba(80,50,20,.08)">
+                  <div style="height:104px;background:{{ h.bg }};display:flex;align-items:center;justify-content:center;font-size:46px;position:relative">{{ h.emoji }}
+                    <span style="position:absolute;top:8px;left:8px;background:#D89A2A;color:#fff;font-size:10px;font-weight:700;padding:3px 7px;border-radius:8px">限量{{ h.stock }}份</span>
+                  </div>
+                  <div style="padding:10px 11px 12px">
+                    <div style="font-weight:700;font-size:14px;color:#221C18;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ h.name }}</div>
+                    <div style="font-size:11px;color:#8C8279;margin-top:2px">{{ h.day }} · {{ h.restName }}</div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px">
+                      <span style="color:#E0392B;font-weight:900;font-size:16px">{{ h.priceStr }}</span>
+                      <span style="font-size:10px;color:#B5241B;background:#FCE9E7;padding:2px 6px;border-radius:6px">已订{{ h.sold }}</span>
+                    </div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="padding:20px 16px 6px">
+            <div style="font-family:'Noto Serif SC',serif;font-weight:900;font-size:19px;color:#221C18;margin-bottom:10px">合作餐厅</div>
+            <sc-for list="{{ restList }}" as="r" hint-placeholder-count="3">
+              <div onClick="{{ goMenu }}" style="display:flex;align-items:center;gap:13px;background:#fff;border-radius:16px;padding:12px 14px;margin-bottom:10px;cursor:pointer;box-shadow:0 4px 14px rgba(80,50,20,.05)">
+                <div style="width:50px;height:50px;border-radius:14px;background:{{ r.bg }};display:flex;align-items:center;justify-content:center;font-size:26px;flex:none">{{ r.emoji }}</div>
+                <div style="flex:1;min-width:0">
+                  <div style="font-weight:700;font-size:15px;color:#221C18">{{ r.name }}</div>
+                  <div style="font-size:12px;color:#8C8279;margin-top:2px">{{ r.cuisine }} · {{ r.skuStr }}</div>
+                </div>
+                <span style="color:#8C8279;font-size:18px">›</span>
+              </div>
+            </sc-for>
+          </div>
+
+          <div onClick="{{ goEnterprise }}" style="margin:8px 16px;background:linear-gradient(120deg,#221C18,#3a312a);color:#fff;border-radius:18px;padding:18px 20px;cursor:pointer;display:flex;align-items:center;justify-content:space-between">
+            <div>
+              <div style="font-weight:900;font-size:16px">公司 / 机构团餐合作</div>
+              <div style="font-size:12px;opacity:.78;margin-top:4px">办公室 · 补习机构 · 活动 · 周餐包月</div>
+            </div>
+            <span style="font-size:24px">🏢</span>
+          </div>
+
+          <div style="margin:4px 16px 24px;background:#FFF8EE;border:1px solid #F2E4CE;border-radius:14px;padding:14px 16px">
+            <div style="font-weight:700;font-size:13px;color:#221C18;margin-bottom:6px">⏰ 取消规则</div>
+            <div style="font-size:12px;color:#8C8279;line-height:1.7">餐食日前一天中午 12:00 前可取消或修改，超过时间后餐厅已备货，不支持取消或退款。截止前取消 100% 退回账户余额。</div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ================= MENU ================= -->
+      <sc-if value="{{ isMenu }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <div style="position:sticky;top:0;z-index:10;background:#FBF5EC;padding:10px 0 8px;box-shadow:0 6px 10px -8px rgba(80,50,20,.2)">
+            <div style="display:flex;gap:8px;overflow-x:auto;padding:0 16px">
+              <sc-for list="{{ dayTabs }}" as="t" hint-placeholder-count="5">
+                <button onClick="{{ t.onClick }}" style="{{ t.style }}">
+                  <span style="font-size:14px;font-weight:700">{{ t.label }}</span>
+                  <span style="font-size:10px;opacity:.7;margin-top:1px">{{ t.date }}</span>
+                </button>
+              </sc-for>
+            </div>
+            <div style="font-size:11px;color:#8C8279;padding:8px 16px 0">截止时间：{{ cutoffStr }} · 售完即止</div>
+          </div>
+
+          <div style="padding:6px 16px 20px">
+            <sc-for list="{{ dayRestaurants }}" as="r" hint-placeholder-count="3">
+              <div style="margin-bottom:8px">
+                <div style="display:flex;align-items:center;gap:9px;margin:16px 0 10px">
+                  <div style="width:32px;height:32px;border-radius:10px;background:{{ r.bg }};display:flex;align-items:center;justify-content:center;font-size:17px">{{ r.emoji }}</div>
+                  <div style="font-family:'Noto Serif SC',serif;font-weight:700;font-size:16px;color:#221C18">{{ r.name }}</div>
+                  <div style="font-size:11px;color:#8C8279">{{ r.cuisine }}</div>
+                </div>
+                <sc-for list="{{ r.packages }}" as="p" hint-placeholder-count="3">
+                  <div onClick="{{ p.open }}" style="display:flex;gap:12px;background:#fff;border-radius:16px;padding:11px;margin-bottom:10px;cursor:pointer;box-shadow:0 4px 14px rgba(80,50,20,.05);position:relative">
+                    <div style="width:84px;height:84px;border-radius:12px;background:{{ p.bg }};display:flex;align-items:center;justify-content:center;font-size:38px;flex:none;position:relative">{{ p.emoji }}</div>
+                    <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+                      <div style="font-weight:700;font-size:15px;color:#221C18">{{ p.name }}</div>
+                      <div style="font-size:11.5px;color:#8C8279;margin-top:3px;line-height:1.45;overflow:hidden">{{ p.desc }}</div>
+                      <div style="display:flex;gap:5px;margin-top:6px;flex-wrap:wrap">
+                        <sc-for list="{{ p.tags }}" as="tg" hint-placeholder-count="2">
+                          <span style="{{ tg.style }}">{{ tg.label }}</span>
+                        </sc-for>
+                      </div>
+                      <div style="margin-top:auto;display:flex;align-items:flex-end;justify-content:space-between;padding-top:8px">
+                        <div>
+                          <span style="color:#E0392B;font-weight:900;font-size:18px">{{ p.priceStr }}</span>
+                          <span style="font-size:10.5px;color:#B79; color:#A89;margin-left:6px;color:#8C8279">{{ p.stockStr }}</span>
+                        </div>
+                        <button onClick="{{ p.add }}" style="{{ p.btnStyle }}">{{ p.btnLabel }}</button>
+                      </div>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ================= DETAIL ================= -->
+      <sc-if value="{{ isDetail }}" hint-placeholder-val="{{ false }}">
+        <div style="animation:popIn .3s;padding-bottom:20px">
+          <div style="height:200px;background:{{ d.bg }};display:flex;align-items:center;justify-content:center;font-size:96px;position:relative">{{ d.emoji }}
+            <div style="position:absolute;left:14px;top:12px;display:flex;gap:6px">
+              <sc-for list="{{ d.tags }}" as="tg" hint-placeholder-count="2">
+                <span style="{{ tg.style }}">{{ tg.label }}</span>
+              </sc-for>
+            </div>
+          </div>
+          <div style="padding:16px">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
+              <div>
+                <div style="font-family:'Noto Serif SC',serif;font-weight:900;font-size:22px;color:#221C18">{{ d.name }}</div>
+                <div style="font-size:12.5px;color:#8C8279;margin-top:4px">{{ d.restName }} · {{ d.day }}</div>
+              </div>
+              <div style="color:#E0392B;font-weight:900;font-size:24px;white-space:nowrap">{{ d.priceStr }}</div>
+            </div>
+            <div style="font-size:13px;color:#5a524a;line-height:1.7;margin-top:12px">{{ d.desc }}</div>
+
+            <!-- 套餐内容 -->
+            <div style="background:#fff;border-radius:14px;padding:14px 16px;margin-top:14px">
+              <div style="font-weight:700;font-size:13px;color:#221C18;margin-bottom:8px">套餐内容</div>
+              <div style="font-size:12.5px;color:#5a524a;line-height:1.8">{{ d.content }}</div>
+            </div>
+
+            <!-- 选菜 (grid only) -->
+            <sc-if value="{{ d.isGrid }}" hint-placeholder-val="{{ false }}">
+              <div style="margin-top:14px">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+                  <span style="font-weight:700;font-size:14px;color:#221C18">选择荤菜</span>
+                  <span style="font-size:11px;color:{{ d.meatCntColor }}">{{ d.meatCntStr }}</span>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <sc-for list="{{ d.meats }}" as="m" hint-placeholder-count="3">
+                    <div onClick="{{ m.toggle }}" style="{{ m.style }}">
+                      <span style="font-size:14px;font-weight:500">{{ m.name }}</span>
+                      <span style="font-size:16px">{{ m.check }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;margin:14px 0 8px">
+                  <span style="font-weight:700;font-size:14px;color:#221C18">选择素菜</span>
+                  <span style="font-size:11px;color:{{ d.vegCntColor }}">{{ d.vegCntStr }}</span>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <sc-for list="{{ d.veggies }}" as="v" hint-placeholder-count="3">
+                    <div onClick="{{ v.toggle }}" style="{{ v.style }}">
+                      <span style="font-size:14px;font-weight:500">{{ v.name }}</span>
+                      <span style="font-size:16px">{{ v.check }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-if>
+
+            <!-- options -->
+            <div style="margin-top:16px">
+              <div style="font-weight:700;font-size:14px;color:#221C18;margin-bottom:8px">辣度</div>
+              <div style="display:flex;gap:8px">
+                <sc-for list="{{ d.spicyOpts }}" as="s" hint-placeholder-count="3">
+                  <button onClick="{{ s.set }}" style="{{ s.style }}">{{ s.label }}</button>
+                </sc-for>
+              </div>
+              <div style="font-weight:700;font-size:14px;color:#221C18;margin:14px 0 8px">主食</div>
+              <div style="display:flex;gap:8px">
+                <sc-for list="{{ d.stapleOpts }}" as="s" hint-placeholder-count="3">
+                  <button onClick="{{ s.set }}" style="{{ s.style }}">{{ s.label }}</button>
+                </sc-for>
+              </div>
+              <div onClick="{{ d.toggleUtensil }}" style="display:flex;align-items:center;justify-content:space-between;background:#fff;border-radius:12px;padding:13px 15px;margin-top:14px;cursor:pointer">
+                <span style="font-size:14px;color:#221C18">需要餐具</span>
+                <span style="width:44px;height:26px;border-radius:14px;background:{{ d.utensilBg }};position:relative;transition:.2s"><span style="position:absolute;top:3px;left:{{ d.utensilDot }};width:20px;height:20px;border-radius:50%;background:#fff;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.3)"></span></span>
+              </div>
+            </div>
+
+            <div style="background:#FFF8EE;border:1px solid #F2E4CE;border-radius:12px;padding:12px 14px;margin-top:16px;font-size:11.5px;color:#8C8279;line-height:1.7">
+              <div>库存剩余 <b style="color:#E0392B">{{ d.stockNum }}</b> 份 · 截止 {{ d.cutoff }}</div>
+              <div style="margin-top:4px">⚠️ 含常见食材，对食材过敏或严格忌口请谨慎下单。试运营期间暂不支持复杂定制。</div>
+            </div>
+          </div>
+        </div>
+        <!-- bottom add bar -->
+        <div style="position:absolute;left:0;right:0;bottom:0;background:#fff;padding:12px 16px 22px;box-shadow:0 -6px 18px rgba(80,50,20,.08);display:flex;align-items:center;gap:14px">
+          <div style="display:flex;align-items:center;border:1px solid #E5DBCC;border-radius:24px;overflow:hidden">
+            <button onClick="{{ d.qtyDown }}" style="width:38px;height:40px;border:none;background:none;font-size:20px;color:#221C18;cursor:pointer">−</button>
+            <span style="width:30px;text-align:center;font-weight:700;font-size:15px">{{ d.qty }}</span>
+            <button onClick="{{ d.qtyUp }}" style="width:38px;height:40px;border:none;background:none;font-size:20px;color:#221C18;cursor:pointer">+</button>
+          </div>
+          <button onClick="{{ d.addToCart }}" style="flex:1;height:48px;border:none;border-radius:24px;background:{{ d.addBg }};color:#fff;font-weight:900;font-size:15px;cursor:pointer">{{ d.addLabel }}</button>
+        </div>
+      </sc-if>
+
+      <!-- ================= CART ================= -->
+      <sc-if value="{{ isCart }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:12px 16px 130px">
+          <sc-if value="{{ cartEmpty }}" hint-placeholder-val="{{ true }}">
+            <div style="text-align:center;padding:90px 20px;color:#8C8279">
+              <div style="font-size:60px">🛒</div>
+              <div style="font-size:15px;margin-top:14px">购物车还是空的</div>
+              <button onClick="{{ goMenu }}" style="margin-top:18px;border:none;background:#E0392B;color:#fff;font-weight:700;font-size:14px;padding:11px 26px;border-radius:24px;cursor:pointer">去看看下周菜单</button>
+            </div>
+          </sc-if>
+          <sc-if value="{{ cartNotEmpty }}" hint-placeholder-val="{{ false }}">
+            <div>
+              <sc-for list="{{ cartGroups }}" as="g" hint-placeholder-count="2">
+                <div style="margin-bottom:16px">
+                  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+                    <span style="font-weight:900;font-size:14px;color:#221C18">{{ g.day }}</span>
+                    <span style="font-size:11px;color:#8C8279">{{ g.date }} · {{ g.mealType }}</span>
+                  </div>
+                  <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="2">
+                    <div style="display:flex;gap:11px;background:#fff;border-radius:14px;padding:11px;margin-bottom:8px">
+                      <div style="width:62px;height:62px;border-radius:11px;background:{{ it.bg }};display:flex;align-items:center;justify-content:center;font-size:30px;flex:none">{{ it.emoji }}</div>
+                      <div style="flex:1;min-width:0">
+                        <div style="display:flex;justify-content:space-between;gap:8px">
+                          <span style="font-weight:700;font-size:14px;color:#221C18">{{ it.name }}</span>
+                          <span onClick="{{ it.remove }}" style="font-size:12px;color:#C4B; color:#b0a499;cursor:pointer">删除</span>
+                        </div>
+                        <div style="font-size:11px;color:#8C8279;margin-top:3px;line-height:1.5">{{ it.optStr }}</div>
+                        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:7px">
+                          <span style="color:#E0392B;font-weight:900;font-size:15px">{{ it.priceStr }}</span>
+                          <div style="display:flex;align-items:center;border:1px solid #E5DBCC;border-radius:20px">
+                            <button onClick="{{ it.dec }}" style="width:30px;height:30px;border:none;background:none;font-size:17px;cursor:pointer;color:#221C18">−</button>
+                            <span style="width:24px;text-align:center;font-weight:700;font-size:14px">{{ it.qty }}</span>
+                            <button onClick="{{ it.inc }}" style="width:30px;height:30px;border:none;background:none;font-size:17px;cursor:pointer;color:#221C18">+</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </sc-for>
+                  <div style="font-size:11px;color:#8C8279;text-align:right">取消截止：{{ g.cutoff }}</div>
+                </div>
+              </sc-for>
+              <button onClick="{{ goMenu }}" style="width:100%;border:1px dashed #D7CBB8;background:#fff;color:#8C8279;font-size:13px;padding:12px;border-radius:14px;cursor:pointer">+ 继续选餐</button>
+            </div>
+          </sc-if>
+        </div>
+        <sc-if value="{{ cartNotEmpty }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;left:0;right:0;bottom:0;background:#fff;padding:14px 16px 22px;box-shadow:0 -6px 18px rgba(80,50,20,.08)">
+            <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:12px">
+              <div style="font-size:11.5px;color:#8C8279">共 {{ cartCount }} 份 · 自提免配送费</div>
+              <div><span style="font-size:12px;color:#8C8279">合计 </span><span style="color:#E0392B;font-weight:900;font-size:22px">{{ cartTotalStr }}</span></div>
+            </div>
+            <button onClick="{{ goCheckout }}" style="width:100%;height:50px;border:none;border-radius:25px;background:#E0392B;color:#fff;font-weight:900;font-size:16px;cursor:pointer">去结算</button>
+          </div>
+        </sc-if>
+      </sc-if>
+
+      <!-- ================= CHECKOUT ================= -->
+      <sc-if value="{{ isCheckout }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:14px 16px 120px">
+          <div style="display:flex;gap:10px;margin-bottom:14px">
+            <button onClick="{{ co.setPickup }}" style="{{ co.pickupTabStyle }}">📍 自提<span style="display:block;font-size:11px;font-weight:400;opacity:.8;margin-top:2px">免配送费</span></button>
+            <button onClick="{{ co.setDeliver }}" style="{{ co.deliverTabStyle }}">🚗 配送<span style="display:block;font-size:11px;font-weight:400;opacity:.8;margin-top:2px">$3.5 起</span></button>
+          </div>
+
+          <sc-if value="{{ co.isPickup }}" hint-placeholder-val="{{ true }}">
+            <div style="background:#fff;border-radius:14px;padding:6px 4px;margin-bottom:14px">
+              <sc-for list="{{ co.pickupPoints }}" as="pp" hint-placeholder-count="3">
+                <div onClick="{{ pp.set }}" style="{{ pp.style }}">
+                  <div style="flex:1">
+                    <div style="font-weight:700;font-size:14px;color:#221C18">{{ pp.name }}</div>
+                    <div style="font-size:11.5px;color:#8C8279;margin-top:3px">{{ pp.address }}</div>
+                    <div style="font-size:11px;color:#8C8279;margin-top:2px">取餐 {{ pp.time }} · {{ pp.parking }}</div>
+                  </div>
+                  <span style="font-size:18px;color:{{ pp.dotColor }}">{{ pp.dot }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ co.isDeliver }}" hint-placeholder-val="{{ false }}">
+            <div style="background:#fff;border-radius:14px;padding:14px 16px;margin-bottom:14px">
+              <div style="font-weight:700;font-size:13px;color:#221C18;margin-bottom:10px">配送地址</div>
+              <input value="{{ co.address }}" onInput="{{ co.onAddress }}" placeholder="街道地址，如 123 Main St, Irvine" style="{{ co.inputStyle }}">
+              <input value="{{ co.unit }}" onInput="{{ co.onUnit }}" placeholder="门牌号 / 单元号" style="{{ co.inputStyle }}">
+              <div style="font-size:11px;color:#D89A2A;margin-top:4px">⚠️ 配送最低消费 $20。仅支持 Zone A / B 指定区域。</div>
+              <div onClick="{{ co.toggleDoor }}" style="display:flex;align-items:center;gap:8px;margin-top:10px;cursor:pointer">
+                <span style="width:20px;height:20px;border-radius:6px;border:2px solid {{ co.doorBorder }};background:{{ co.doorBg }};display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px">{{ co.doorCheck }}</span>
+                <span style="font-size:13px;color:#5a524a">可放门口（无接触配送）</span>
+              </div>
+            </div>
+          </sc-if>
+
+          <div style="background:#fff;border-radius:14px;padding:14px 16px;margin-bottom:14px">
+            <div style="font-weight:700;font-size:13px;color:#221C18;margin-bottom:10px">联系信息</div>
+            <input value="{{ co.name }}" onInput="{{ co.onName }}" placeholder="姓名" style="{{ co.inputStyle }}">
+            <input value="{{ co.phone }}" onInput="{{ co.onPhone }}" placeholder="手机号" style="{{ co.inputStyle }}">
+            <input value="{{ co.wechat }}" onInput="{{ co.onWechat }}" placeholder="微信号（选填）" style="{{ co.inputStyleLast }}">
+          </div>
+
+          <div style="background:#fff;border-radius:14px;padding:14px 16px;margin-bottom:14px">
+            <div style="font-weight:700;font-size:13px;color:#221C18;margin-bottom:10px">支付方式</div>
+            <sc-for list="{{ co.payOpts }}" as="pm" hint-placeholder-count="3">
+              <div onClick="{{ pm.set }}" style="{{ pm.style }}">
+                <span style="font-size:14px;color:#221C18">{{ pm.label }}</span>
+                <span style="font-size:16px;color:{{ pm.dotColor }}">{{ pm.dot }}</span>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="background:#fff;border-radius:14px;padding:14px 16px">
+            <div style="display:flex;justify-content:space-between;font-size:13px;color:#5a524a;margin-bottom:8px"><span>餐食金额</span><span>{{ co.foodStr }}</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;color:#5a524a;margin-bottom:8px"><span>配送费</span><span>{{ co.feeStr }}</span></div>
+            <div style="border-top:1px dashed #E5DBCC;margin:10px 0"></div>
+            <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-weight:700;font-size:14px;color:#221C18">应付总额</span><span style="color:#E0392B;font-weight:900;font-size:22px">{{ co.totalStr }}</span></div>
+          </div>
+          <div style="font-size:11px;color:#8C8279;line-height:1.7;margin-top:12px">下单即同意：餐食日前一天 12:00 前可取消并退回账户余额，超时不支持取消或退款。</div>
+        </div>
+        <div style="position:absolute;left:0;right:0;bottom:0;background:#fff;padding:14px 16px 22px;box-shadow:0 -6px 18px rgba(80,50,20,.08);display:flex;align-items:center;gap:14px">
+          <div><div style="font-size:11px;color:#8C8279">应付</div><div style="color:#E0392B;font-weight:900;font-size:21px">{{ co.totalStr }}</div></div>
+          <button onClick="{{ co.pay }}" style="flex:1;height:50px;border:none;border-radius:25px;background:{{ co.payBg }};color:#fff;font-weight:900;font-size:16px;cursor:pointer">确认支付</button>
+        </div>
+      </sc-if>
+
+      <!-- ================= PAY RESULT ================= -->
+      <sc-if value="{{ isPayResult }}" hint-placeholder-val="{{ false }}">
+        <div style="text-align:center;padding:40px 24px;animation:popIn .4s">
+          <div style="width:84px;height:84px;border-radius:50%;background:#2E7D4F;display:flex;align-items:center;justify-content:center;font-size:46px;margin:10px auto 0;color:#fff;box-shadow:0 12px 30px rgba(46,125,79,.3)">✓</div>
+          <div style="font-family:'Noto Serif SC',serif;font-weight:900;font-size:23px;color:#221C18;margin-top:18px">下单成功</div>
+          <div style="font-size:13px;color:#8C8279;margin-top:6px">餐厅将按汇总订单提前备货</div>
+          <div style="background:#fff;border-radius:18px;padding:20px;margin:20px 0;text-align:left">
+            <div style="text-align:center;margin-bottom:16px">
+              <div style="font-size:12px;color:#8C8279">取餐码</div>
+              <div style="font-family:'Noto Serif SC',serif;font-weight:900;font-size:40px;color:#E0392B;letter-spacing:6px;margin-top:2px">{{ pr.code }}</div>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;color:#5a524a;padding:6px 0"><span>订单号</span><span style="font-weight:600">{{ pr.orderNo }}</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;color:#5a524a;padding:6px 0"><span>餐食日期</span><span>{{ pr.dates }}</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;color:#5a524a;padding:6px 0"><span>交付方式</span><span>{{ pr.deliver }}</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;color:#5a524a;padding:6px 0"><span>实付金额</span><span style="color:#E0392B;font-weight:700">{{ pr.total }}</span></div>
+          </div>
+          <button onClick="{{ pr.viewOrders }}" style="width:100%;height:48px;border:none;border-radius:24px;background:#E0392B;color:#fff;font-weight:900;font-size:15px;cursor:pointer">查看我的订单</button>
+          <button onClick="{{ goHome }}" style="width:100%;height:46px;border:none;background:none;color:#8C8279;font-size:14px;cursor:pointer;margin-top:6px">返回首页</button>
+        </div>
+      </sc-if>
+
+      <!-- ================= ORDERS ================= -->
+      <sc-if value="{{ isOrders }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:12px 16px 24px">
+          <div style="display:flex;align-items:center;justify-content:space-between;background:linear-gradient(120deg,#221C18,#3a312a);color:#fff;border-radius:16px;padding:14px 18px;margin-bottom:14px">
+            <div><div style="font-size:12px;opacity:.75">账户余额</div><div style="font-weight:900;font-size:22px;margin-top:2px">{{ balanceStr }}</div></div>
+            <div style="font-size:11px;opacity:.75;text-align:right;line-height:1.6">取消订单<br>自动退回余额</div>
+          </div>
+          <sc-if value="{{ ordersEmpty }}" hint-placeholder-val="{{ false }}">
+            <div style="text-align:center;padding:70px 20px;color:#8C8279"><div style="font-size:54px">📋</div><div style="margin-top:12px;font-size:14px">还没有订单</div></div>
+          </sc-if>
+          <sc-for list="{{ orderList }}" as="o" hint-placeholder-count="2">
+            <div onClick="{{ o.open }}" style="background:#fff;border-radius:16px;padding:14px 15px;margin-bottom:12px;cursor:pointer;box-shadow:0 4px 14px rgba(80,50,20,.05)">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+                <span style="font-size:12px;color:#8C8279">{{ o.orderNo }}</span>
+                <span style="{{ o.statusStyle }}">{{ o.statusLabel }}</span>
+              </div>
+              <sc-for list="{{ o.lines }}" as="ln" hint-placeholder-count="2">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+                  <div style="width:40px;height:40px;border-radius:10px;background:{{ ln.bg }};display:flex;align-items:center;justify-content:center;font-size:21px;flex:none">{{ ln.emoji }}</div>
+                  <div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600;color:#221C18">{{ ln.name }}</div><div style="font-size:11px;color:#8C8279">{{ ln.sub }}</div></div>
+                  <span style="font-size:12px;color:#8C8279">×{{ ln.qty }}</span>
+                </div>
+              </sc-for>
+              <div style="display:flex;align-items:center;justify-content:space-between;border-top:1px dashed #EEE5D6;padding-top:10px;margin-top:4px">
+                <span style="font-size:12px;color:#8C8279">{{ o.deliver }}</span>
+                <span style="font-size:13px;color:#221C18">合计 <b style="color:#E0392B">{{ o.total }}</b></span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <!-- ================= ORDER DETAIL ================= -->
+      <sc-if value="{{ isOrderDetail }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:14px 16px 110px">
+          <div style="background:linear-gradient(135deg,#E0392B,#B5241B);color:#fff;border-radius:18px;padding:18px 20px;text-align:center">
+            <div style="font-size:12px;opacity:.85">{{ od.statusLabel }} · 取餐码</div>
+            <div style="font-family:'Noto Serif SC',serif;font-weight:900;font-size:42px;letter-spacing:8px;margin-top:4px">{{ od.code }}</div>
+            <div style="font-size:11.5px;opacity:.85;margin-top:4px">{{ od.deliver }}</div>
+          </div>
+          <div style="background:#fff;border-radius:14px;padding:14px 16px;margin-top:14px">
+            <div style="font-weight:700;font-size:13px;color:#221C18;margin-bottom:12px">餐食明细</div>
+            <sc-for list="{{ od.items }}" as="it" hint-placeholder-count="2">
+              <div style="display:flex;gap:11px;margin-bottom:12px">
+                <div style="width:48px;height:48px;border-radius:11px;background:{{ it.bg }};display:flex;align-items:center;justify-content:center;font-size:24px;flex:none">{{ it.emoji }}</div>
+                <div style="flex:1"><div style="font-size:13.5px;font-weight:600;color:#221C18">{{ it.name }}</div><div style="font-size:11px;color:#8C8279;margin-top:2px">{{ it.sub }}</div><div style="font-size:11px;color:#8C8279">{{ it.optStr }}</div></div>
+                <div style="text-align:right"><div style="font-size:13px;color:#E0392B;font-weight:700">{{ it.priceStr }}</div><div style="font-size:11px;color:#8C8279">×{{ it.qty }}</div></div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="background:#fff;border-radius:14px;padding:14px 16px;margin-top:12px;font-size:13px;color:#5a524a">
+            <div style="display:flex;justify-content:space-between;padding:5px 0"><span style="color:#8C8279">订单号</span><span>{{ od.orderNo }}</span></div>
+            <div style="display:flex;justify-content:space-between;padding:5px 0"><span style="color:#8C8279">下单时间</span><span>{{ od.createdAt }}</span></div>
+            <div style="display:flex;justify-content:space-between;padding:5px 0"><span style="color:#8C8279">交付</span><span>{{ od.deliverFull }}</span></div>
+            <div style="display:flex;justify-content:space-between;padding:5px 0"><span style="color:#8C8279">取消截止</span><span>{{ od.cutoff }}</span></div>
+            <div style="border-top:1px dashed #E5DBCC;margin:8px 0"></div>
+            <div style="display:flex;justify-content:space-between;padding:3px 0"><span style="color:#8C8279">餐食金额</span><span>{{ od.food }}</span></div>
+            <div style="display:flex;justify-content:space-between;padding:3px 0"><span style="color:#8C8279">配送费</span><span>{{ od.fee }}</span></div>
+            <div style="display:flex;justify-content:space-between;padding:5px 0"><span style="font-weight:700;color:#221C18">实付</span><span style="color:#E0392B;font-weight:900;font-size:16px">{{ od.total }}</span></div>
+          </div>
+        </div>
+        <div style="position:absolute;left:0;right:0;bottom:0;background:#fff;padding:12px 16px 22px;box-shadow:0 -6px 18px rgba(80,50,20,.08);display:flex;gap:12px">
+          <button onClick="{{ goSupport }}" style="flex:none;width:120px;height:46px;border:1px solid #E5DBCC;background:#fff;color:#221C18;font-weight:700;font-size:14px;border-radius:23px;cursor:pointer">联系客服</button>
+          <button onClick="{{ od.cancel }}" style="{{ od.cancelStyle }}">{{ od.cancelLabel }}</button>
+        </div>
+      </sc-if>
+
+      <!-- ================= PICKUP INFO ================= -->
+      <sc-if value="{{ isPickup }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:14px 16px 24px">
+          <div style="font-size:13px;color:#8C8279;line-height:1.7;margin-bottom:14px">自提为默认推荐方式，免配送费。凭取餐码在指定时间到自提点取餐。</div>
+          <sc-for list="{{ pickupFull }}" as="pp" hint-placeholder-count="3">
+            <div style="background:#fff;border-radius:16px;padding:15px 16px;margin-bottom:12px">
+              <div style="display:flex;align-items:center;gap:10px"><span style="font-size:22px">📍</span><span style="font-weight:700;font-size:15px;color:#221C18">{{ pp.name }}</span></div>
+              <div style="height:96px;border-radius:12px;background:linear-gradient(135deg,#E8EFE6,#D7E4D0);margin:10px 0;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center">
+                <span style="font-size:30px">🗺️</span>
+                <span style="position:absolute;bottom:8px;left:10px;font-size:11px;color:#5a6b50;background:rgba(255,255,255,.7);padding:2px 7px;border-radius:6px">{{ pp.address }}</span>
+              </div>
+              <div style="font-size:12.5px;color:#5a524a;line-height:1.9">
+                <div>🕛 取餐时间：{{ pp.time }}</div>
+                <div>🅿️ {{ pp.parking }}</div>
+                <div>📞 联系人：{{ pp.contact }}</div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <!-- ================= DELIVERY INFO ================= -->
+      <sc-if value="{{ isDelivery }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:14px 16px 24px">
+          <div style="font-size:13px;color:#8C8279;line-height:1.7;margin-bottom:14px">试运营期间仅支持 Irvine 指定区域配送，固定时间段送达，不承诺精确到分钟。</div>
+          <sc-for list="{{ zones }}" as="z" hint-placeholder-count="3">
+            <div style="display:flex;align-items:center;gap:12px;background:#fff;border-radius:14px;padding:14px 16px;margin-bottom:10px">
+              <div style="width:44px;height:44px;border-radius:12px;background:{{ z.bg }};display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;font-weight:900">{{ z.tag }}</div>
+              <div style="flex:1"><div style="font-weight:700;font-size:14px;color:#221C18">{{ z.name }}</div><div style="font-size:11.5px;color:#8C8279;margin-top:2px">{{ z.desc }}</div></div>
+              <div style="color:#E0392B;font-weight:900;font-size:16px">{{ z.fee }}</div>
+            </div>
+          </sc-for>
+          <div style="background:#FFF8EE;border:1px solid #F2E4CE;border-radius:14px;padding:14px 16px;margin-top:6px;font-size:12px;color:#8C8279;line-height:1.8">
+            · 配送最低消费 $20<br>· 满 $35 减 $2 配送费（P1）<br>· 超出配送区域请改选自提<br>· 配送异常由平台客服联系
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ================= ENTERPRISE ================= -->
+      <sc-if value="{{ isEnterprise }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:0 0 24px">
+          <div style="background:linear-gradient(135deg,#221C18,#3a312a);color:#fff;padding:26px 20px">
+            <div style="font-family:'Noto Serif SC',serif;font-weight:900;font-size:24px">公司 / 机构团餐合作</div>
+            <div style="font-size:13px;opacity:.8;margin-top:8px;line-height:1.7">为办公室、补习机构、教会社团、活动场地与老人中心提供稳定周餐、活动餐与午餐包月服务。</div>
+          </div>
+          <div style="padding:16px">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
+              <sc-for list="{{ entFeatures }}" as="f" hint-placeholder-count="4">
+                <div style="background:#fff;border-radius:14px;padding:14px"><div style="font-size:24px">{{ f.icon }}</div><div style="font-weight:700;font-size:13px;color:#221C18;margin-top:6px">{{ f.title }}</div><div style="font-size:11px;color:#8C8279;margin-top:2px">{{ f.sub }}</div></div>
+              </sc-for>
+            </div>
+            <div style="background:#fff;border-radius:16px;padding:16px">
+              <div style="font-weight:700;font-size:14px;color:#221C18;margin-bottom:12px">留下合作意向</div>
+              <input placeholder="公司 / 机构名称" style="width:100%;border:1px solid #E5DBCC;border-radius:10px;padding:11px 12px;font-size:13px;margin-bottom:10px;outline:none;font-family:inherit">
+              <input placeholder="联系人 + 电话" style="width:100%;border:1px solid #E5DBCC;border-radius:10px;padding:11px 12px;font-size:13px;margin-bottom:10px;outline:none;font-family:inherit">
+              <input placeholder="预计每日餐数" style="width:100%;border:1px solid #E5DBCC;border-radius:10px;padding:11px 12px;font-size:13px;margin-bottom:12px;outline:none;font-family:inherit">
+              <button onClick="{{ submitEnterprise }}" style="width:100%;height:46px;border:none;border-radius:23px;background:#E0392B;color:#fff;font-weight:900;font-size:15px;cursor:pointer">提交合作意向</button>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ================= SUPPORT ================= -->
+      <sc-if value="{{ isSupport }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:14px 16px 24px">
+          <div style="background:#fff;border-radius:16px;padding:18px;margin-bottom:14px;text-align:center">
+            <div style="font-size:40px">💬</div>
+            <div style="font-weight:700;font-size:16px;color:#221C18;margin-top:8px">联系客服</div>
+            <div style="font-size:12.5px;color:#8C8279;margin-top:4px">服务时间 10:00 – 20:00</div>
+            <div style="display:flex;gap:10px;margin-top:16px">
+              <div style="flex:1;border:1px solid #E5DBCC;border-radius:12px;padding:12px"><div style="font-size:20px">📱</div><div style="font-size:12px;color:#221C18;margin-top:4px;font-weight:600">微信客服</div><div style="font-size:11px;color:#8C8279">meishituan</div></div>
+              <div style="flex:1;border:1px solid #E5DBCC;border-radius:12px;padding:12px"><div style="font-size:20px">☎️</div><div style="font-size:12px;color:#221C18;margin-top:4px;font-weight:600">客服电话</div><div style="font-size:11px;color:#8C8279">(949) 555-0188</div></div>
+            </div>
+          </div>
+          <div style="font-weight:700;font-size:14px;color:#221C18;margin:6px 0 10px">常见问题</div>
+          <sc-for list="{{ faqs }}" as="q" hint-placeholder-count="4">
+            <div style="background:#fff;border-radius:12px;padding:13px 15px;margin-bottom:8px"><div style="font-weight:600;font-size:13px;color:#221C18">{{ q.q }}</div><div style="font-size:12px;color:#8C8279;margin-top:5px;line-height:1.6">{{ q.a }}</div></div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+    </div>
+
+    <!-- ================= BOTTOM TAB ================= -->
+    <sc-if value="{{ showTab }}" hint-placeholder-val="{{ true }}">
+      <div style="flex:none;height:62px;background:#fff;border-top:1px solid #F0E8DA;display:flex;padding-bottom:6px;z-index:25">
+        <sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="4">
+          <button onClick="{{ tb.go }}" style="flex:1;border:none;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:{{ tb.color }}">
+            <span style="font-size:21px;position:relative">{{ tb.icon }}<sc-if value="{{ tb.showBadge }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:-3px;right:-8px;min-width:15px;height:15px;background:#E0392B;color:#fff;border-radius:8px;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 3px">{{ cartCount }}</span></sc-if></span>
+            <span style="font-size:10px;font-weight:{{ tb.weight }}">{{ tb.label }}</span>
+          </button>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <!-- toast -->
+    <sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(34,28,24,.94);color:#fff;font-size:13px;font-weight:500;padding:11px 20px;border-radius:24px;z-index:40;animation:toastIn .25s;white-space:nowrap">{{ toast }}</div>
+    </sc-if>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.menu = this.buildMenu();
+    this.pickups = [
+      {id:'p1', name:'自提点 A · Irvine Spectrum 商务楼', address:'100 Spectrum Center Dr, Irvine', time:'12:00–13:00', parking:'地库 P1 免费停车 30 分钟', contact:'Lisa (949) 555-0101'},
+      {id:'p2', name:'自提点 B · Diamond Plaza', address:'2700 Alton Pkwy, Irvine', time:'12:00–13:00', parking:'地面停车场，靠奶茶店入口', contact:'Kevin (949) 555-0102'},
+      {id:'p3', name:'自提点 C · Northpark 社区门口', address:'5365 Portola Pkwy, Irvine', time:'18:00–19:00', parking:'路边临停 10 分钟', contact:'Amy (949) 555-0103'}
+    ];
+    this.zones = [
+      {tag:'免', name:'自提', desc:'到指定自提点免费取餐', fee:'$0', bg:'#2E7D4F'},
+      {tag:'A', name:'Zone A · 近距离', desc:'Spectrum / Woodbury 一带', fee:'$3.5', bg:'#E0392B'},
+      {tag:'B', name:'Zone B · 中距离', desc:'Northwood / University Park', fee:'$5.0', bg:'#D89A2A'},
+      {tag:'C', name:'Zone C · 远距离', desc:'暂不支持，可单独报价', fee:'报价', bg:'#A89A8A'}
+    ];
+    this.state = {
+      screen:'home', selectedDay:'周一',
+      detailPkgId:null, detailQty:1,
+      detailSel:{meats:[], veggies:[], spicy:'正常', staple:'白饭', utensil:false},
+      cart:[],
+      orders:[ this.seedOrder() ],
+      balance:25,
+      checkout:{deliverType:'pickup', pickup:'p1', name:'', phone:'', wechat:'', address:'', unit:'', atDoor:false, pay:'card'},
+      lastOrderId:null, viewOrderId:null,
+      toast:''
+    };
+  }
+
+  money(n){ return '$'+n.toFixed(2); }
+
+  buildMenu(){
+    const days = [
+      {day:'周一', date:'6/29'},{day:'周二', date:'6/30'},{day:'周三', date:'7/1'},
+      {day:'周四', date:'7/2'},{day:'周五', date:'7/3'}
+    ];
+    const meats=['宫保鸡丁','红烧牛腩','鱼香肉丝'];
+    const veggies=['番茄炒蛋','蒜蓉西兰花','干煸四季豆'];
+    const restA = (day)=>({ id:'A', name:'家常小馆', cuisine:'家常中餐', emoji:'🥘', bg:'linear-gradient(135deg,#F6D8C3,#EFC2A6)', packages:[
+      {type:'grid', name:'一荤一素套餐', desc:'1 荤 1 素 + 米饭，经典家常', price:12.99, supply:8, stock:40, sold:0, tags:['不辣'], emoji:'🍚', bg:'linear-gradient(135deg,#FBE3CE,#F4C9A8)', meats, veggies, meatN:1, vegN:1},
+      {type:'grid', name:'两荤一素套餐', desc:'2 荤 1 素 + 米饭，吃得满足', price:15.99, supply:10, stock:35, sold:0, tags:['人气'], emoji:'🍱', bg:'linear-gradient(135deg,#F7D6B8,#EFBE97)', meats, veggies, meatN:2, vegN:1},
+      {type:'grid', name:'两荤两素套餐', desc:'2 荤 2 素 + 米饭，营养均衡', price:17.99, supply:11, stock:30, sold:0, tags:['家庭餐'], emoji:'🍛', bg:'linear-gradient(135deg,#F4CDA6,#E9B488)', meats, veggies, meatN:2, vegN:2}
+    ]});
+    const restB = (day)=>({ id:'B', name:'元气便当', cuisine:'日式便当', emoji:'🍙', bg:'linear-gradient(135deg,#CFE0F2,#AFC9EC)', packages:[
+      {type:'fixed', name:'A 套餐 · 照烧鸡便当', desc:'照烧鸡腿 + 玉子烧 + 时蔬', price:13.99, supply:9, stock:30, sold:0, tags:['微辣'], emoji:'🍗', bg:'linear-gradient(135deg,#FBE6C8,#F3CFA0)', content:'照烧鸡腿、玉子烧、时令蔬菜、白饭'},
+      {type:'fixed', name:'B 套餐 · 牛肉饭便当', desc:'洋葱牛肉 + 温泉蛋 + 海苔', price:15.99, supply:11, stock:28, sold:0, tags:['人气'], emoji:'🥩', bg:'linear-gradient(135deg,#E9CFBE,#D9B49C)', content:'洋葱牛肉、温泉蛋、海苔、白饭'},
+      {type:'fixed', name:'C 套餐 · 三文鱼便当', desc:'香煎三文鱼 + 牛油果 + 糙米', price:17.99, supply:13, stock:22, sold:0, tags:['高蛋白'], emoji:'🍣', bg:'linear-gradient(135deg,#F6CFC9,#EBAEA6)', content:'香煎三文鱼、牛油果、糙米饭、味噌汤'}
+    ]});
+    const restC = (day)=>({ id:'C', name:'轻盈轻食', cuisine:'健康轻食', emoji:'🥗', bg:'linear-gradient(135deg,#D5EAD2,#B6D9B0)', packages:[
+      {type:'fixed', name:'鸡胸肉健康碗', desc:'低脂鸡胸 + 蔬菜 + 糙米', price:13.99, supply:9, stock:26, sold:0, tags:['高蛋白','轻食'], emoji:'🥗', bg:'linear-gradient(135deg,#D9EBCE,#BFDCAE)', content:'香煎鸡胸、综合蔬菜、糙米饭、和风酱', sauce:true},
+      {type:'fixed', name:'牛肉沙拉', desc:'嫩煎牛肉 + 时蔬沙拉', price:15.99, supply:11, stock:20, sold:0, tags:['高蛋白'], emoji:'🥙', bg:'linear-gradient(135deg,#E7E0C4,#D6CCA0)', content:'嫩煎牛肉、罗马生菜、樱桃番茄、油醋汁', sauce:true},
+      {type:'fixed', name:'素食能量碗', desc:'鹰嘴豆 + 藜麦 + 牛油果', price:12.99, supply:8, stock:24, sold:0, tags:['素食'], emoji:'🫛', bg:'linear-gradient(135deg,#D2E9D9,#B0D6BC)', content:'鹰嘴豆、藜麦、牛油果、烤蔬菜、芝麻酱', sauce:true}
+    ]});
+    const hot = {
+      '周三':{type:'fixed', name:'周三烤鸭饭日', desc:'限量 50 份 · 现片烤鸭 + 卤汁饭', price:16.99, supply:11, stock:50, sold:36, tags:['爆款','限量'], emoji:'🦆', bg:'linear-gradient(135deg,#F3C0A0,#E59B6E)', content:'现片烤鸭、黄瓜葱丝、甜面酱、卤汁饭', restId:'A'},
+      '周五':{type:'fixed', name:'周五酸菜鱼饭日', desc:'限量 40 份 · 酸辣开胃巴沙鱼', price:15.99, supply:10, stock:40, sold:21, tags:['爆款','限量','微辣'], emoji:'🐟', bg:'linear-gradient(135deg,#F6D7B0,#EEBA7E)', content:'酸菜巴沙鱼片、黄豆芽、米饭', restId:'A'}
+    };
+    const out = {};
+    days.forEach((dObj, di)=>{
+      const a=restA(dObj.day), b=restB(dObj.day), c=restC(dObj.day);
+      // vary sold/stock a bit
+      [a,b,c].forEach(r=>r.packages.forEach((p,pi)=>{ p.sold = 6+((di*3+pi*5)%18); p.id = dObj.day+'-'+r.id+'-'+pi; }));
+      const rests=[a,b,c];
+      if(hot[dObj.day]){ const h=hot[dObj.day]; h.id=dObj.day+'-HOT'; const tgt=rests.find(r=>r.id===h.restId); tgt.packages.unshift(h); }
+      out[dObj.day] = {date:dObj.date, rests};
+    });
+    this.days = days;
+    return out;
+  }
+
+  seedOrder(){
+    return {
+      id:'seed1', orderNo:'MST-20627-0042', code:'3821',
+      status:'已确认', createdAt:'6/27 14:20',
+      deliverType:'pickup', pickup:'p1',
+      items:[
+        {name:'两荤一素套餐', restName:'家常小馆', day:'周二', emoji:'🍱', bg:'linear-gradient(135deg,#F7D6B8,#EFBE97)', optStr:'宫保鸡丁 · 红烧牛腩 · 蒜蓉西兰花 / 正常辣 / 白饭', price:15.99, qty:1},
+        {name:'鸡胸肉健康碗', restName:'轻盈轻食', day:'周二', emoji:'🥗', bg:'linear-gradient(135deg,#D9EBCE,#BFDCAE)', optStr:'糙米 / 少酱 / 需要餐具', price:13.99, qty:1}
+      ],
+      food:29.98, fee:0, total:29.98, cutoff:'周一 12:00'
+    };
+  }
+
+  // ---- helpers ----
+  pkgById(id){
+    for(const d of Object.keys(this.menu)){
+      for(const r of this.menu[d].rests){
+        for(const p of r.packages){ if(p.id===id) return {p, r, day:d, date:this.menu[d].date}; }
+      }
+    }
+    return null;
+  }
+  setScreen(s){ this.setState({screen:s}); document.querySelectorAll('div').forEach(()=>{}); const sc=this.scrollEl(); if(sc) sc.scrollTop=0; }
+  scrollEl(){ return null; }
+  showToast(t){ this.setState({toast:t}); clearTimeout(this._t); this._t=setTimeout(()=>this.setState({toast:''}),1600); }
+  cartCount(){ return this.state.cart.reduce((a,c)=>a+c.qty,0); }
+  cartFood(){ return this.state.cart.reduce((a,c)=>a+c.price*c.qty,0); }
+  mealTypeOf(day){ return (day==='周一'||day==='周三') ? '午餐' : (day==='周五'?'午餐':'午餐'); }
+  cutoffOf(day){ const i=this.days.findIndex(d=>d.day===day); const prev = i>0?this.days[i-1].day:'前一天'; return prev+' 12:00'; }
+
+  openDetail(id){
+    this.setState({screen:'detail', detailPkgId:id, detailQty:1, detailSel:{meats:[], veggies:[], spicy:'正常', staple:'白饭', utensil:false}});
+  }
+
+  toggleSel(kind, name, max){
+    const sel = {...this.state.detailSel};
+    const arr = [...sel[kind]];
+    const i = arr.indexOf(name);
+    if(i>=0){ arr.splice(i,1); }
+    else { if(arr.length>=max){ this.showToast('最多选择 '+max+' 个'); return; } arr.push(name); }
+    sel[kind]=arr; this.setState({detailSel:sel});
+  }
+
+  addCurrentDetail(){
+    const info = this.pkgById(this.state.detailPkgId); if(!info) return;
+    const {p, r, day} = info; const sel = this.state.detailSel;
+    if(p.type==='grid'){
+      if(sel.meats.length!==p.meatN){ this.showToast('请选择 '+p.meatN+' 个荤菜'); return; }
+      if(sel.veggies.length!==p.vegN){ this.showToast('请选择 '+p.vegN+' 个素菜'); return; }
+    }
+    const parts=[];
+    if(p.type==='grid') parts.push([...sel.meats,...sel.veggies].join(' · '));
+    parts.push(sel.spicy+'辣'); parts.push(sel.staple); if(sel.utensil) parts.push('需要餐具');
+    const optStr = parts.filter(Boolean).join(' / ');
+    const key = p.id+'|'+optStr;
+    const cart=[...this.state.cart];
+    const ex = cart.find(c=>c.key===key);
+    if(ex){ ex.qty += this.state.detailQty; }
+    else cart.push({key, pkgId:p.id, day, restName:r.name, name:p.name, emoji:p.emoji, bg:p.bg, price:p.price, qty:this.state.detailQty, optStr});
+    this.setState({cart, screen:'cart'});
+    this.showToast('已加入购物车');
+  }
+  quickAdd(id){
+    const info=this.pkgById(id); if(!info) return; const {p,r,day}=info;
+    if(p.type==='grid'){ this.openDetail(id); return; }
+    const optStr='正常辣 / 白饭';
+    const key=p.id+'|'+optStr; const cart=[...this.state.cart];
+    const ex=cart.find(c=>c.key===key); if(ex) ex.qty+=1; else cart.push({key,pkgId:p.id,day,restName:r.name,name:p.name,emoji:p.emoji,bg:p.bg,price:p.price,qty:1,optStr});
+    this.setState({cart}); this.showToast('已加入购物车');
+  }
+  changeQty(key,delta){
+    let cart=[...this.state.cart]; const it=cart.find(c=>c.key===key); if(!it) return;
+    it.qty+=delta; if(it.qty<=0) cart=cart.filter(c=>c.key!==key); this.setState({cart});
+  }
+  removeItem(key){ this.setState({cart:this.state.cart.filter(c=>c.key!==key)}); }
+
+  setCo(patch){ this.setState({checkout:{...this.state.checkout, ...patch}}); }
+  deliveryFee(){ return this.state.checkout.deliverType==='pickup'?0:3.5; }
+  payNow(){
+    const co=this.state.checkout;
+    if(!co.name.trim()||!co.phone.trim()){ this.setState({screen:'checkout'}); this.showToast('请填写姓名和手机号'); return; }
+    if(co.deliverType==='deliver'){ if(!co.address.trim()){ this.showToast('请填写配送地址'); return; } if(this.cartFood()<20){ this.showToast('配送需满 $20'); return; } }
+    const code = String(1000+Math.floor(Math.random()*9000));
+    const no = 'MST-'+ '2'+String(Math.floor(Math.random()*900000)+100000);
+    const items = this.state.cart.map(c=>({name:c.name, restName:c.restName, day:c.day, emoji:c.emoji, bg:c.bg, optStr:c.optStr, price:c.price, qty:c.qty}));
+    const food=this.cartFood(), fee=this.deliveryFee();
+    const order={ id:'o'+Date.now(), orderNo:no, code, status:'已付款', createdAt:'刚刚',
+      deliverType:co.deliverType, pickup:co.pickup, address:co.address, unit:co.unit,
+      items, food, fee, total:food+fee, cutoff: this.cutoffOf(items[0]? items[0].day:'周一') };
+    this.setState({ orders:[order, ...this.state.orders], cart:[], lastOrderId:order.id, screen:'payResult' });
+  }
+  cancelOrder(id){
+    const orders=this.state.orders.map(o=> o.id===id ? {...o, status:'已取消'} : o);
+    const o=this.state.orders.find(x=>x.id===id);
+    this.setState({orders, balance: this.state.balance + (o?o.total:0)});
+    this.showToast('已取消，金额退回余额');
+  }
+
+  statusStyle(s){
+    const base='font-size:11px;font-weight:700;padding:3px 9px;border-radius:8px;';
+    const map={'已付款':'background:#FCE9E7;color:#E0392B','已确认':'background:#E6F0FB;color:#2563B5','备餐中':'background:#FFF3DD;color:#C7891B','已到自提点':'background:#E5F3EA;color:#2E7D4F','配送中':'background:#E6F0FB;color:#2563B5','已完成':'background:#EFEAE2;color:#8C8279','已取消':'background:#EEE;color:#999','退款中':'background:#FFF3DD;color:#C7891B','已退款':'background:#EFEAE2;color:#8C8279'};
+    return base+(map[s]||'background:#EEE;color:#999');
+  }
+
+  renderVals(){
+    const st=this.state; const screen=st.screen;
+    const titles={home:'万能美食团', menu:'下周菜单', detail:'套餐详情', cart:'购物车', checkout:'确认订单', payResult:'下单成功', orders:'我的订单', orderDetail:'订单详情', pickup:'自提点', delivery:'配送范围', enterprise:'团餐合作', support:'联系客服'};
+    const noBackBars={home:1, menu:1, orders:1};
+    const noTab={detail:1, checkout:1, payResult:1, orderDetail:1};
+    const cartCount=this.cartCount();
+
+    const tagStyle=(t)=>{
+      const m={'爆款':'background:#FBE9D6;color:#C7700F','限量':'background:#FCE9E7;color:#C7350F','不辣':'background:#E5F3EA;color:#2E7D4F','微辣':'background:#FBE9D6;color:#C7891B','素食':'background:#E5F3EA;color:#2E7D4F','高蛋白':'background:#E6F0FB;color:#2563B5','家庭餐':'background:#F0EAFB;color:#6B4BB5','学生餐':'background:#E6F0FB;color:#2563B5','人气':'background:#FCE9E7;color:#E0392B','轻食':'background:#E5F3EA;color:#2E7D4F'};
+      return 'font-size:10px;font-weight:700;padding:2.5px 7px;border-radius:7px;'+(m[t]||'background:#EFEAE2;color:#8C8279');
+    };
+
+    const vals={
+      topBarBg: screen==='enterprise' ? '#221C18' : '#FBF5EC',
+      showBack: !noBackBars[screen],
+      screenTitle: titles[screen]||'万能美食团',
+      goBack: ()=>this.goBack(),
+      goCart: ()=>this.setState({screen:'cart'}),
+      goHome: ()=>this.setState({screen:'home'}),
+      goMenu: ()=>this.setState({screen:'menu'}),
+      goCheckout: ()=>this.setState({screen:'checkout'}),
+      goPickup: ()=>this.setState({screen:'pickup'}),
+      goDelivery: ()=>this.setState({screen:'delivery'}),
+      goEnterprise: ()=>this.setState({screen:'enterprise'}),
+      goSupport: ()=>this.setState({screen:'support'}),
+      submitEnterprise: ()=>this.showToast('已收到，我们会尽快联系您'),
+      hasCart: cartCount>0, cartCount,
+      showTab: !noTab[screen],
+      hasToast: !!st.toast, toast: st.toast,
+      isHome:screen==='home', isMenu:screen==='menu', isDetail:screen==='detail', isCart:screen==='cart', isCheckout:screen==='checkout', isPayResult:screen==='payResult', isOrders:screen==='orders', isOrderDetail:screen==='orderDetail', isPickup:screen==='pickup', isDelivery:screen==='delivery', isEnterprise:screen==='enterprise', isSupport:screen==='support'
+    };
+
+    // tabs
+    const tabDef=[['home','🏠','首页'],['menu','🍱','菜单'],['orders','📋','订单'],['support','🙋','客服']];
+    const activeTab = screen==='cart'||screen==='checkout'||screen==='payResult' ? 'menu' : (screen==='orderDetail'?'orders':(screen==='detail'?'menu':screen));
+    vals.tabs = tabDef.map(([k,icon,label])=>({ icon, label, go:()=>this.setState({screen:k}), color: activeTab===k?'#E0392B':'#A89A8A', weight: activeTab===k?'700':'500', showBadge:false }));
+
+    // HOME
+    const hot=[];
+    Object.keys(this.menu).forEach(day=>{ this.menu[day].rests.forEach(r=>r.packages.forEach(p=>{ if(p.tags && p.tags.includes('爆款')) hot.push({...p, day, restName:r.name}); })); });
+    // add a couple of人气 if few
+    if(hot.length<3){ Object.keys(this.menu).forEach(day=>{ this.menu[day].rests.forEach(r=>r.packages.forEach(p=>{ if(hot.length<3 && p.tags && (p.tags.includes('人气')||p.tags.includes('高蛋白')) && !hot.find(h=>h.name===p.name)) hot.push({...p,day,restName:r.name}); })); }); }
+    vals.hotList = hot.slice(0,5).map(h=>({ name:h.name, day:h.day, restName:h.restName, emoji:h.emoji, bg:h.bg, stock:h.stock, sold:h.sold, priceStr:this.money(h.price), open:()=>this.openDetail(h.id) }));
+    vals.restList = this.menu['周一'].rests.map(r=>({ name:r.name, cuisine:r.cuisine, emoji:r.emoji, bg:r.bg, skuStr:r.packages.length+' 个套餐' }));
+
+    // MENU
+    vals.dayTabs = this.days.map(d=>({ label:d.day, date:d.date, onClick:()=>this.setState({selectedDay:d.day}),
+      style: st.selectedDay===d.day
+        ? 'flex:none;min-width:58px;display:flex;flex-direction:column;align-items:center;padding:8px 12px;border:none;border-radius:14px;background:#E0392B;color:#fff;cursor:pointer'
+        : 'flex:none;min-width:58px;display:flex;flex-direction:column;align-items:center;padding:8px 12px;border:none;border-radius:14px;background:#fff;color:#221C18;cursor:pointer' }));
+    vals.cutoffStr = this.cutoffOf(st.selectedDay);
+    const md=this.menu[st.selectedDay];
+    vals.dayRestaurants = md.rests.map(r=>({ name:r.name, cuisine:r.cuisine, emoji:r.emoji, bg:r.bg,
+      packages: r.packages.map(p=>{
+        const sold=p.sold, left=p.stock-sold, out=left<=0;
+        return { name:p.name, desc:p.desc, emoji:p.emoji, bg:p.bg, priceStr:this.money(p.price),
+          tags:(p.tags||[]).map(t=>({label:t, style:tagStyle(t)})),
+          stockStr: out?'已售罄':('剩'+left+'份'),
+          open:()=>this.openDetail(p.id),
+          add:(e)=>{ if(e&&e.stopPropagation)e.stopPropagation(); if(out){this.showToast('已售罄');return;} this.quickAdd(p.id); },
+          btnLabel: out?'售罄':(p.type==='grid'?'选菜':'加入'),
+          btnStyle: out
+            ? 'border:none;background:#EFEAE2;color:#A89A8A;font-size:13px;font-weight:700;padding:7px 14px;border-radius:18px;cursor:not-allowed'
+            : 'border:none;background:#E0392B;color:#fff;font-size:13px;font-weight:700;padding:7px 16px;border-radius:18px;cursor:pointer' };
+      }) }));
+
+    // DETAIL
+    if(screen==='detail'){
+      const info=this.pkgById(st.detailPkgId);
+      if(info){ const {p,r,day,date}=info; const sel=st.detailSel;
+        const content = p.type==='grid' ? ('荤菜 '+p.meatN+' 选 + 素菜 '+p.vegN+' 选 + 米饭，自由搭配') : (p.content||p.desc);
+        vals.d={ name:p.name, restName:r.name, day:day, priceStr:this.money(p.price), desc:p.desc, content,
+          emoji:p.emoji, bg:p.bg, tags:(p.tags||[]).map(t=>({label:t,style:tagStyle(t)})),
+          isGrid:p.type==='grid',
+          meatCntStr: sel.meats.length+'/'+(p.meatN||0), vegCntStr: sel.veggies.length+'/'+(p.vegN||0),
+          meatCntColor: sel.meats.length===p.meatN?'#2E7D4F':'#8C8279',
+          vegCntColor: sel.veggies.length===p.vegN?'#2E7D4F':'#8C8279',
+          meats:(p.meats||[]).map(m=>{ const on=sel.meats.includes(m); return {name:m, check:on?'☑':'☐', toggle:()=>this.toggleSel('meats',m,p.meatN), style:'display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-radius:12px;cursor:pointer;border:1.5px solid '+(on?'#E0392B':'#EAE0D0')+';background:'+(on?'#FCEFEC':'#fff')+';color:'+(on?'#E0392B':'#221C18')}; }),
+          veggies:(p.veggies||[]).map(v=>{ const on=sel.veggies.includes(v); return {name:v, check:on?'☑':'☐', toggle:()=>this.toggleSel('veggies',v,p.vegN), style:'display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-radius:12px;cursor:pointer;border:1.5px solid '+(on?'#2E7D4F':'#EAE0D0')+';background:'+(on?'#EAF4ED':'#fff')+';color:'+(on?'#2E7D4F':'#221C18')}; }),
+          spicyOpts:['不辣','微辣','正常'].map(s=>({label:s, set:()=>this.setState({detailSel:{...sel,spicy:s}}), style:this.chip(sel.spicy===s)})),
+          stapleOpts:['白饭','糙米','加饭'].map(s=>({label:s, set:()=>this.setState({detailSel:{...sel,staple:s}}), style:this.chip(sel.staple===s)})),
+          toggleUtensil:()=>this.setState({detailSel:{...sel,utensil:!sel.utensil}}),
+          utensilBg: sel.utensil?'#E0392B':'#D8CEBE', utensilDot: sel.utensil?'21px':'3px',
+          stockNum: p.stock-p.sold, cutoff:this.cutoffOf(day),
+          qty:st.detailQty, qtyUp:()=>this.setState({detailQty:st.detailQty+1}), qtyDown:()=>this.setState({detailQty:Math.max(1,st.detailQty-1)}),
+          addToCart:()=>this.addCurrentDetail(), addLabel:'加入购物车 · '+this.money(p.price*st.detailQty), addBg:'#E0392B' };
+      }
+    }
+
+    // CART
+    vals.cartEmpty = st.cart.length===0; vals.cartNotEmpty = st.cart.length>0;
+    const groupsMap={};
+    st.cart.forEach(c=>{ (groupsMap[c.day]=groupsMap[c.day]||[]).push(c); });
+    vals.cartGroups = this.days.filter(d=>groupsMap[d.day]).map(d=>({ day:d.day, date:d.date, mealType:this.mealTypeOf(d.day), cutoff:this.cutoffOf(d.day),
+      items: groupsMap[d.day].map(c=>({ name:c.name, emoji:c.emoji, bg:c.bg, optStr:c.optStr, priceStr:this.money(c.price*c.qty), qty:c.qty,
+        inc:()=>this.changeQty(c.key,1), dec:()=>this.changeQty(c.key,-1), remove:()=>this.removeItem(c.key) })) }));
+    vals.cartTotalStr = this.money(this.cartFood());
+
+    // CHECKOUT
+    const co=st.checkout; const food=this.cartFood(); const fee=this.deliveryFee();
+    const inputStyle='width:100%;border:1px solid #E5DBCC;border-radius:10px;padding:11px 12px;font-size:13px;margin-bottom:10px;outline:none;font-family:inherit;background:#FCFAF6';
+    vals.co={
+      setPickup:()=>this.setCo({deliverType:'pickup'}), setDeliver:()=>this.setCo({deliverType:'deliver'}),
+      isPickup:co.deliverType==='pickup', isDeliver:co.deliverType==='deliver',
+      pickupTabStyle:this.coTab(co.deliverType==='pickup'), deliverTabStyle:this.coTab(co.deliverType==='deliver'),
+      pickupPoints:this.pickups.map(p=>({ name:p.name, address:p.address, time:p.time, parking:p.parking, set:()=>this.setCo({pickup:p.id}),
+        dot: co.pickup===p.id?'◉':'○', dotColor: co.pickup===p.id?'#E0392B':'#C9BFB0',
+        style:'display:flex;align-items:center;gap:10px;padding:13px 12px;cursor:pointer;border-radius:12px;'+(co.pickup===p.id?'background:#FCEFEC':'') })),
+      address:co.address, unit:co.unit, onAddress:e=>this.setCo({address:e.target.value}), onUnit:e=>this.setCo({unit:e.target.value}),
+      inputStyle, inputStyleLast:inputStyle.replace('margin-bottom:10px','margin-bottom:0'),
+      toggleDoor:()=>this.setCo({atDoor:!co.atDoor}), doorBorder:co.atDoor?'#E0392B':'#C9BFB0', doorBg:co.atDoor?'#E0392B':'#fff', doorCheck:co.atDoor?'✓':'',
+      name:co.name, phone:co.phone, wechat:co.wechat, onName:e=>this.setCo({name:e.target.value}), onPhone:e=>this.setCo({phone:e.target.value}), onWechat:e=>this.setCo({wechat:e.target.value}),
+      payOpts:[['card','💳 信用卡 (Stripe)'],['apple','🍎 Apple Pay'],['manual','💸 Zelle / 微信（人工确认）']].map(([k,label])=>({ label, set:()=>this.setCo({pay:k}), dot:co.pay===k?'◉':'○', dotColor:co.pay===k?'#E0392B':'#C9BFB0', style:'display:flex;align-items:center;justify-content:space-between;padding:11px 4px;cursor:pointer;border-bottom:1px solid #F4EDE0' })),
+      foodStr:this.money(food), feeStr: fee===0?'免费':this.money(fee), totalStr:this.money(food+fee), payBg:'#E0392B', pay:()=>this.payNow()
+    };
+
+    // PAY RESULT
+    if(screen==='payResult'){ const o=st.orders.find(x=>x.id===st.lastOrderId);
+      if(o) vals.pr={ code:o.code, orderNo:o.orderNo, dates:[...new Set(o.items.map(i=>i.day))].join('、'),
+        deliver: o.deliverType==='pickup'?('自提 · '+(this.pickups.find(p=>p.id===o.pickup)||{}).name):'区域配送',
+        total:this.money(o.total), viewOrders:()=>this.setState({screen:'orders'}) };
+    }
+
+    // ORDERS
+    vals.balanceStr=this.money(st.balance);
+    vals.ordersEmpty=st.orders.length===0;
+    vals.orderList = st.orders.map(o=>({ orderNo:o.orderNo, statusLabel:o.status, statusStyle:this.statusStyle(o.status),
+      total:this.money(o.total), deliver: o.deliverType==='pickup'?'自提':'配送',
+      lines:o.items.map(i=>({ name:i.name, sub:i.day+' · '+i.restName, emoji:i.emoji, bg:i.bg, qty:i.qty })),
+      open:()=>this.setState({screen:'orderDetail', viewOrderId:o.id}) }));
+
+    // ORDER DETAIL
+    if(screen==='orderDetail'){ const o=st.orders.find(x=>x.id===st.viewOrderId);
+      if(o){ const canCancel = o.status!=='已取消' && o.status!=='已完成';
+        vals.od={ code:o.code, statusLabel:o.status, orderNo:o.orderNo, createdAt:o.createdAt, cutoff:o.cutoff,
+          deliver: o.deliverType==='pickup'?'自提取餐':'区域配送',
+          deliverFull: o.deliverType==='pickup'?('自提 · '+((this.pickups.find(p=>p.id===o.pickup)||{}).name||'')):('配送 · '+(o.address||'')),
+          items:o.items.map(i=>({ name:i.name, sub:i.day+' · '+i.restName, optStr:i.optStr, emoji:i.emoji, bg:i.bg, priceStr:this.money(i.price), qty:i.qty })),
+          food:this.money(o.food), fee:o.fee===0?'免费':this.money(o.fee), total:this.money(o.total),
+          cancel:()=>{ if(canCancel) this.cancelOrder(o.id); }, cancelLabel: canCancel?'取消订单':'不可取消',
+          cancelStyle: canCancel ? 'flex:1;height:46px;border:none;border-radius:23px;background:#E0392B;color:#fff;font-weight:700;font-size:14px;cursor:pointer' : 'flex:1;height:46px;border:none;border-radius:23px;background:#EFEAE2;color:#A89A8A;font-weight:700;font-size:14px;cursor:not-allowed' };
+      }
+    }
+
+    // INFO
+    vals.pickupFull=this.pickups.map(p=>({ name:p.name, address:p.address, time:p.time, parking:p.parking, contact:p.contact }));
+    vals.zones=this.zones;
+    vals.entFeatures=[{icon:'📅',title:'每周固定供餐',sub:'周餐 / 包月'},{icon:'🎉',title:'活动餐',sub:'会议 / 培训'},{icon:'🎓',title:'学生餐',sub:'补习机构'},{icon:'💰',title:'团购价',sub:'量大更优惠'}];
+    vals.faqs=[
+      {q:'什么时候发布下周菜单？',a:'每周三或周四发布下周一到周五菜单，可提前预订。'},
+      {q:'最晚什么时候可以取消？',a:'餐食日前一天中午 12:00 前可取消或修改，超时餐厅已备货不支持取消。'},
+      {q:'取消后钱怎么退？',a:'截止前取消 100% 退回账户余额，可用于下次订餐。'},
+      {q:'可以备注忌口吗？',a:'试运营暂不支持复杂定制，仅支持辣度、主食、餐具等选项。严重过敏请谨慎下单。'}
+    ];
+
+    return vals;
+  }
+
+  chip(active){ return active ? 'border:none;background:#E0392B;color:#fff;font-size:13px;font-weight:600;padding:9px 18px;border-radius:20px;cursor:pointer' : 'border:1px solid #E5DBCC;background:#fff;color:#221C18;font-size:13px;padding:9px 18px;border-radius:20px;cursor:pointer'; }
+  coTab(active){ return active ? 'flex:1;border:none;border-radius:14px;background:#E0392B;color:#fff;font-weight:700;font-size:15px;padding:14px 0;cursor:pointer' : 'flex:1;border:1px solid #E5DBCC;border-radius:14px;background:#fff;color:#221C18;font-weight:700;font-size:15px;padding:14px 0;cursor:pointer'; }
+
+  goBack(){
+    const s=this.state.screen;
+    const back={detail:'menu', cart:'menu', checkout:'cart', payResult:'home', orderDetail:'orders', pickup:'home', delivery:'home', enterprise:'home', support:'home'};
+    this.setState({screen: back[s]||'home'});
+  }
+}
+</script>
+</body>
+</html>

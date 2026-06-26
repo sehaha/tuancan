@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=Noto+Serif+SC:wght@600;700;900&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  a{text-decoration:none}
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+</style>
+</helmet>
+<div style="min-height:100vh;background:radial-gradient(120% 90% at 50% 0%,#FBF5EC 0%,#F0E6D6 60%,#E7DAC6 100%);font-family:'Noto Sans SC',sans-serif;color:#221C18;display:flex;flex-direction:column;align-items:center;padding:64px 24px 60px">
+
+  <div style="text-align:center;max-width:680px;animation:rise .5s">
+    <div style="display:inline-flex;align-items:center;gap:11px;background:#fff;padding:8px 16px 8px 9px;border-radius:30px;box-shadow:0 4px 16px rgba(80,50,20,.08)">
+      <span style="width:34px;height:34px;border-radius:9px;background:#E0392B;display:flex;align-items:center;justify-content:center;font-size:18px">🍱</span>
+      <span style="font-weight:700;font-size:14px">万能美食团 · H5 试运营版</span>
+    </div>
+    <h1 style="font-family:'Noto Serif SC',serif;font-weight:900;font-size:46px;line-height:1.2;margin:26px 0 0">下周吃什么<br>今天一次订好</h1>
+    <p style="font-size:16px;color:#8C8279;line-height:1.7;margin:18px auto 0;max-width:520px">面向 Irvine / OC 华人家庭、学生与上班族的预售制团餐系统。三家餐厅套餐任选，自提免费，区域低价配送 —— 餐厅按汇总订单备货，平台统一分拣交付。</p>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:22px;max-width:880px;width:100%;margin-top:46px;animation:rise .6s">
+    <a href="美食团-H5.dc.html" style="display:block;background:#fff;border-radius:22px;padding:30px 28px;box-shadow:0 8px 30px rgba(80,50,20,.08);border:1px solid #F0E7D8;color:inherit;transition:transform .15s" style-hover="transform:translateY(-4px)">
+      <div style="display:flex;align-items:center;gap:14px">
+        <div style="width:54px;height:54px;border-radius:15px;background:linear-gradient(135deg,#E0392B,#B5241B);display:flex;align-items:center;justify-content:center;font-size:27px">📱</div>
+        <div><div style="font-weight:900;font-size:20px;font-family:'Noto Serif SC',serif">顾客端 H5</div><div style="font-size:12.5px;color:#9A8E80;margin-top:2px">手机预订小程序 · C 端</div></div>
+      </div>
+      <p style="font-size:13.5px;color:#8C8279;line-height:1.8;margin:18px 0 16px">首页 · 下周菜单 · 套餐详情与选菜 · 购物车 · 自提 / 配送结算 · 支付 · 我的订单 · 取消退余额 · 自提点 / 配送 / 团餐合作 / 客服</p>
+      <div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px">
+        <sc-for list="{{ h5tags }}" as="t" hint-placeholder-count="5"><span style="font-size:11.5px;font-weight:600;background:#FBF1E8;color:#C7350F;padding:4px 10px;border-radius:8px">{{ t }}</span></sc-for>
+      </div>
+      <span style="display:inline-flex;align-items:center;gap:6px;color:#E0392B;font-weight:700;font-size:14px">打开顾客端 →</span>
+    </a>
+
+    <a href="美食团-后台.dc.html" style="display:block;background:#221C18;border-radius:22px;padding:30px 28px;box-shadow:0 8px 30px rgba(40,25,10,.18);color:#fff;transition:transform .15s" style-hover="transform:translateY(-4px)">
+      <div style="display:flex;align-items:center;gap:14px">
+        <div style="width:54px;height:54px;border-radius:15px;background:#3a312a;display:flex;align-items:center;justify-content:center;font-size:27px">🖥️</div>
+        <div><div style="font-weight:900;font-size:20px;font-family:'Noto Serif SC',serif">运营管理后台</div><div style="font-size:12.5px;color:#9A8E80;margin-top:2px">桌面端管理系统 · B 端</div></div>
+      </div>
+      <p style="font-size:13.5px;color:#C9BEAF;line-height:1.8;margin:18px 0 16px">数据概览 · 餐厅 / 套餐 / 菜品 / 每周菜单 · 订单与异常 · 自提点 / 配送区域 · 备餐单 / 分拣单 / 配送单导出 · 用户 / 退款 / 餐厅结算</p>
+      <div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px">
+        <sc-for list="{{ adtags }}" as="t" hint-placeholder-count="5"><span style="font-size:11.5px;font-weight:600;background:#34291f;color:#E8B68C;padding:4px 10px;border-radius:8px">{{ t }}</span></sc-for>
+      </div>
+      <span style="display:inline-flex;align-items:center;gap:6px;color:#F1A57F;font-weight:700;font-size:14px">打开管理后台 →</span>
+    </a>
+  </div>
+
+  <div style="display:flex;gap:36px;margin-top:48px;flex-wrap:wrap;justify-content:center;animation:rise .7s">
+    <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="4">
+      <div style="text-align:center"><div style="font-family:'Noto Serif SC',serif;font-weight:900;font-size:26px;color:#E0392B">{{ k.v }}</div><div style="font-size:12px;color:#9A8E80;margin-top:3px">{{ k.l }}</div></div>
+    </sc-for>
+  </div>
+
+  <div style="font-size:12px;color:#A89A8A;margin-top:40px">预售制团餐 · 套餐供应 · 自提优先 · 区域配送 — MVP 验证版</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals(){
+    return {
+      h5tags:['套餐预售','格子选菜','自提/配送','取餐码','取消退余额'],
+      adtags:['看板','菜单编排','三单导出','分拣交付','餐厅结算'],
+      kpis:[{v:'3 家',l:'合作餐厅'},{v:'8–10',l:'每日 SKU'},{v:'50%+',l:'自提比例目标'},{v:'4 周',l:'试运营周期'}]
+    };
+  }
+}
+</script>
+</body>
+</html>
