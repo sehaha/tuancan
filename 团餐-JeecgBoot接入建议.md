@@ -156,3 +156,25 @@ org.jeecg.modules.tuancan
 
 ## 8. 可直接粘进新对话的启动语
 > 我要在 JeecgBoot（本仓库 `jeecg-boot`）上用 **Java + 底座 MySQL** 实现"万能团餐"系统，架构**与 scrm 平级**。规格见 `../tuancan-design/project/tuancan/需求v2-设计文档.md`，交互照 `order.html`/`admin.html`，数据结构以 `assets/store.js` 为 API 契约蓝本，接入策略与已定决策见 `团餐-JeecgBoot接入建议.md`（第 ★ 节）。请先读这几份，然后从 P0 开始：①把 scrm 的 C 访客鉴权（`CTokenUtil`/`CVisitorTokenFilter`/`CVisitorContext`/`CVisitorInfo`）上提到 `jeecg-boot-base-core` 做成通用 C 鉴权；②新建平级模块 `jeecg-module-tuancan` 并注册到工程；③按第 3、9 节写 `tc_*` 建表 SQL（JeecgEntity 规范、utf8mb4、`tc_` 前缀）；④搭出 `/tuancan/c/**` 菜单查询 + 下单接口跑通核心闭环。多租户/Flowable/支付暂不做。
+
+## 10. 一期开发启动语（详版 · 新对话直接照此执行）
+
+> 用途：在新对话里贴这一节（或让它"读本文件第 10 节并执行"）。已带准确的构建/运行/验证命令、一期验收标准、自主连续执行纪律。环境已核对：后端 `jeecg-boot`，启动模块 `jeecg-module-system/jeecg-system-start`（端口 8080，context-path `/jeecg-boot`，profile dev）；MySQL `127.0.0.1:3306` 库 `jeecg-boot` root/root；Redis `127.0.0.1:6379`；模块注册两处（`jeecg-boot-module/pom.xml` 的 `<modules>` + 启动模块 pom 的 `<dependency>`，照 scrm 写法）。
+
+【任务】在 JeecgBoot 上用 Java + 底座 MySQL 实现"万能团餐"一期（前后台）并全部跑通。自主连续执行，遇不明确处按最优解自行决定，不要停下来问；只有下方"验收标准"全部 ✅ 才算完成。
+
+【先读】本文件（看 ★已定决策 / ⚠️领域边界 / 第2、2.5、3、9节）、`需求v2-设计文档.md`、`assets/store.js`（API 契约蓝本）；交互视觉照 `order-v2.html` / `admin.html`。
+
+【已定决策】平级模块 `jeecg-module-tuancan`；B2C 预售市场（个人顾客 `tc_customer` + X-C-Token，**不要**企业签约/授信挂账/绑 sys_user/早午晚餐次）；C 鉴权上提 base-core；`tc_` 表遵循 JeecgEntity 规范、utf8mb4、金额 BigDecimal 用 compareTo；暂不做多租户/Flowable/真支付；跨模块用 Spring Event（事件类放 base-core，tuancan 不反向 import scrm）。
+
+【一期范围 P0】
+后端：①上提 C 鉴权到 base-core；②建并注册 `jeecg-module-tuancan`（包 `org.jeecg.modules.tuancan.*`）；③按需求v2第3节建表+种子+后台菜单 SQL（放模块 `src/main/resources/sql/` 并导库）。一期必备表：`tc_restaurant, tc_package, tc_weekly_menu, tc_pickup_point, tc_delivery_zone, tc_customer, tc_order, tc_order_item, tc_order_mode`；④后台 CRUD：餐厅/套餐/每周菜单/自提点/配送区域 + 订餐模式开关；⑤C 端接口（`/tuancan/c/**`，X-C-Token）：`POST /login`、`GET /menu`(按订餐模式返回开放日)、`GET /pickups`、`POST /order`(一个事务：校验+条件更新扣 `tc_weekly_menu.stock` 防超卖+写订单，payChannel 占位)、`GET /orders`。
+前台：⑥把 `order-v2.html` 接真实接口（fetch 调 `/tuancan/c/**` 替换 store.js mock），跑通"登录→看菜单→下单→看订单"；⑦后台 CRUD 页用代码生成器按 `tc_*` 生成（前端仓库 `jeecgboot-vue3` 不在本机则用 Swagger `/jeecg-boot/doc.html` 或 curl 验证，并产出建表+菜单SQL备注前端待生成）。
+
+【命令】见本文件随附说明（确认/起 MySQL+Redis → 导库 → 注册模块 → `mvn -pl jeecg-module-system/jeecg-system-start -am clean package -DskipTests` → `nohup java -jar .../jeecg-system-start-*.jar --spring.profiles.active=dev > /tmp/tc-boot.log 2>&1 &` → 轮询 `/jeecg-boot/actuator/health` → C 端冒烟脚本 login/menu/order/orders + 查 `tc_order`/库存）。
+
+【验收标准（全 ✅ 才算完成）】①构建通过、dev 起在 8080、health=UP；②`tc_*` 建表+种子齐（餐厅3/套餐/下周一~五菜单/自提点3）；③冒烟：login 拿 X-C-Token→menu 真数据→order 入库→orders 可查→库存扣减无超卖；④后台五类 CRUD 可用 + 订餐模式开关改后 `/tuancan/c/menu` 实时反映；⑤`order-v2.html` 接真实接口浏览器跑通闭环；⑥scrm 原功能不被破坏。
+
+【执行纪律】自主推进按里程碑（上提C鉴权→建模块/注册→建表导库→后端CRUD+C接口→冒烟→接前台→跑通），每步自检即继续不停问；不明确处按 JeecgBoot 惯例+已定决策取最优解并一行注释记之；报错读 `/tmp/tc-boot.log` 改了重跑直到全过；改 base-core/ShiroConfig 勿破坏 scrm 的 `/scrm/c/**`；在 `jeecg-boot` 仓库开分支 `feature/tuancan-phase1` 提交（别动 main、别动 scrm 在途改动）；全过后输出"一期完成报告"（表/接口/页面、冒烟结果、本地复跑步骤、二期 TODO）。
+
+> 若中途停下未完成，可对它发 `/loop 10m 继续团餐一期开发，按验收标准逐项跑通，未完成就继续` 自动续推。
