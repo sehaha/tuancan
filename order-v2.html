@@ -176,7 +176,7 @@
                       <div style="margin-top:auto;display:flex;align-items:flex-end;justify-content:space-between;padding-top:9px">
                         <div style="display:flex;align-items:baseline;gap:7px">
                           <span style="color:#DB4A2B;font-weight:900;font-size:19px">{{ p.priceStr }}</span>
-                          <span style="font-size:10.5px;color:#968B7E">{{ p.stockStr }}</span>
+                          <span style="font-size:10.5px;color:{{ p.stockColor }};font-weight:{{ p.stockWeight }}">{{ p.stockStr }}</span>
                         </div>
                         <button onClick="{{ p.add }}" style="{{ p.btnStyle }}">{{ p.btnLabel }}</button>
                       </div>
@@ -797,6 +797,15 @@
 
     </div>
 
+    <!-- 菜单页底部购物车摘要条 -->
+    <sc-if value="{{ showMenuCartBar }}" hint-placeholder-val="{{ false }}">
+      <div onClick="{{ goCartBar }}" style="position:absolute;left:14px;right:14px;bottom:80px;z-index:26;background:#1C1813;color:#fff;border-radius:30px;padding:12px 16px 12px 18px;display:flex;align-items:center;gap:12px;cursor:pointer;box-shadow:0 16px 34px -10px rgba(28,24,19,.55);animation:riseIn .3s">
+        <span style="position:relative;font-size:20px">🛒<span style="position:absolute;top:-6px;right:-9px;min-width:17px;height:17px;background:#DB4A2B;color:#fff;border-radius:9px;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;padding:0 4px;border:1.5px solid #1C1813">{{ menuCartCount }}</span></span>
+        <div style="flex:1;min-width:0"><div style="font-size:11px;opacity:.65">购物车合计</div><div style="font-weight:900;font-size:17px">{{ menuCartTotalStr }}</div></div>
+        <span style="background:#DB4A2B;color:#fff;font-weight:800;font-size:13.5px;padding:9px 18px;border-radius:22px">去结算 ›</span>
+      </div>
+    </sc-if>
+
     <!-- ================= BOTTOM TAB ================= -->
     <sc-if value="{{ showTab }}" hint-placeholder-val="{{ true }}">
       <div style="flex:none;height:70px;background:rgba(255,255,255,.92);backdrop-filter:blur(14px);border-top:1px solid #F0E8DA;display:flex;padding:6px 8px 12px;z-index:25;box-shadow:0 -8px 24px -14px rgba(60,40,20,.25)">
@@ -1075,6 +1084,12 @@ class Component extends DCLogic {
     const activeTab = screen==='cart'||screen==='checkout'||screen==='payResult' ? 'menu' : (screen==='orderDetail'?'orders':(screen==='detail'?'menu':(meScreens[screen]?'me':screen)));
     vals.tabs = tabDef.map(([k,icon,label])=>({ icon, label, go:()=>this.setState({screen:k}), color: activeTab===k?'#DB4A2B':'#A89A8A', weight: activeTab===k?'800':'500', chipBg: activeTab===k?'#FBE7DF':'transparent', showBadge:(k==='me'&&unread>0), badgeCount:unread }));
 
+    // 菜单页底部购物车摘要条（点餐转化）
+    vals.showMenuCartBar = (screen==='menu') && cartCount>0;
+    vals.menuCartCount = cartCount;
+    vals.menuCartTotalStr = this.money(this.cartFood());
+    vals.goCartBar = ()=>this.setState({screen:'cart'});
+
     // HOME
     const hot=[];
     Object.keys(this.menu).forEach(day=>{ this.menu[day].rests.forEach(r=>r.packages.forEach(p=>{ if(p.tags && p.tags.includes('爆款')) hot.push({...p, day, restName:r.name}); })); });
@@ -1092,10 +1107,11 @@ class Component extends DCLogic {
     const md=this.menu[st.selectedDay];
     vals.dayRestaurants = md.rests.map(r=>({ name:r.name, cuisine:r.cuisine, emoji:r.emoji, bg:r.bg,
       packages: r.packages.map(p=>{
-        const sold=p.sold, left=p.stock-sold, out=left<=0;
+        const sold=p.sold, left=p.stock-sold, out=left<=0, low=!out&&left<=5;
         return { name:p.name, desc:p.desc, emoji:p.emoji, bg:p.bg, priceStr:this.money(p.price),
           tags:(p.tags||[]).map(t=>({label:t, style:tagStyle(t)})),
-          stockStr: out?'已售罄':('剩'+left+'份'),
+          stockStr: out?'已售罄':(low?('🔥 仅剩 '+left+' 份'):('剩 '+left+' 份')),
+          stockColor: low?'#DB4A2B':'#968B7E', stockWeight: low?'800':'400',
           open:()=>this.openDetail(p.id),
           add:(e)=>{ if(e&&e.stopPropagation)e.stopPropagation(); if(out){this.showToast('已售罄');return;} this.quickAdd(p.id); },
           btnLabel: out?'售罄':(p.type==='grid'?'选菜':'加入'),
