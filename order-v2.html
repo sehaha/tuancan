@@ -195,9 +195,10 @@
 
       <!-- ================= DETAIL ================= -->
       <sc-if value="{{ isDetail }}" hint-placeholder-val="{{ false }}">
-        <div style="animation:popIn .3s;padding-bottom:20px">
-          <div style="height:200px;background:{{ d.bg }};display:flex;align-items:center;justify-content:center;font-size:96px;position:relative">{{ d.emoji }}
-            <div style="position:absolute;left:14px;top:12px;display:flex;gap:6px">
+        <div style="animation:popIn .3s;padding-bottom:24px">
+          <div style="height:232px;background:{{ d.bg }};display:flex;align-items:center;justify-content:center;font-size:104px;position:relative;overflow:hidden">{{ d.emoji }}
+            <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,14,10,.04),rgba(20,14,10,.18))"></div>
+            <div style="position:absolute;left:16px;top:14px;display:flex;gap:6px">
               <sc-for list="{{ d.tags }}" as="tg" hint-placeholder-count="2">
                 <span style="{{ tg.style }}">{{ tg.label }}</span>
               </sc-for>
@@ -214,8 +215,8 @@
             <div style="font-size:13px;color:#5a524a;line-height:1.7;margin-top:12px">{{ d.desc }}</div>
 
             <!-- 套餐内容 -->
-            <div style="background:#fff;border-radius:14px;padding:14px 16px;margin-top:14px">
-              <div style="font-weight:700;font-size:13px;color:#1C1813;margin-bottom:8px">套餐内容</div>
+            <div class="card" style="padding:15px 16px;margin-top:15px">
+              <div style="font-weight:800;font-size:13px;color:#1C1813;margin-bottom:8px">套餐内容</div>
               <div style="font-size:12.5px;color:#5a524a;line-height:1.8">{{ d.content }}</div>
             </div>
 
@@ -628,31 +629,34 @@
       <!-- ================= ME（会员中心）================= -->
       <sc-if value="{{ isMe }}" hint-placeholder-val="{{ false }}">
         <div style="animation:popIn .35s;padding-bottom:24px">
-          <div onClick="{{ goLogin }}" style="background:linear-gradient(135deg,#1C1813,#332A22);color:#fff;padding:24px 18px 28px;display:flex;align-items:center;gap:14px;cursor:pointer">
-            <div style="width:56px;height:56px;border-radius:50%;background:#DB4A2B;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;flex:none">{{ meAvatar }}</div>
-            <div style="flex:1;min-width:0">
-              <div style="font-family:'Noto Serif SC',serif;font-weight:900;font-size:19px">{{ meTitle }}</div>
-              <div style="font-size:12px;opacity:.8;margin-top:3px">{{ meSub }}</div>
+          <div style="background:linear-gradient(140deg,#241D16,#3a2f24);padding:22px 18px 48px;position:relative;overflow:hidden">
+            <div style="position:absolute;right:-30px;top:-20px;font-size:150px;opacity:.06">🍱</div>
+            <div onClick="{{ goLogin }}" style="display:flex;align-items:center;gap:14px;cursor:pointer;position:relative">
+              <div style="width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,#DB4A2B,#B23A1C);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;flex:none;color:#fff;box-shadow:0 6px 16px rgba(219,74,43,.4)">{{ meAvatar }}</div>
+              <div style="flex:1;min-width:0">
+                <div class="ttl" style="color:#fff;font-size:19px">{{ meTitle }}</div>
+                <div style="font-size:12px;color:#C9BDAF;opacity:.78;margin-top:3px">{{ meSub }}</div>
+              </div>
+              <span style="font-size:18px;color:#fff;opacity:.6">›</span>
             </div>
-            <span style="font-size:18px;opacity:.7">›</span>
           </div>
 
-          <div style="margin:-16px 16px 0;background:#fff;border-radius:18px;padding:16px 18px;box-shadow:0 8px 24px rgba(80,50,20,.1);display:flex;align-items:center;justify-content:space-between">
+          <div style="margin:-30px 16px 0;background:linear-gradient(135deg,#fff,#FCF7EF);border-radius:20px;padding:18px;box-shadow:0 14px 34px -12px rgba(60,40,20,.28);border:1px solid #F3EADB;display:flex;align-items:center;justify-content:space-between">
             <div onClick="{{ goPointsShop }}" style="cursor:pointer">
-              <div style="font-size:12px;color:#968B7E">我的积分</div>
-              <div style="font-family:'Noto Serif SC',serif;font-weight:900;font-size:26px;color:#DB4A2B;margin-top:2px">{{ pointsBal }}</div>
+              <div style="font-size:11px;color:#B9905A;font-weight:800;letter-spacing:1px">MY POINTS</div>
+              <div class="ttl" style="font-size:30px;color:#DB4A2B;margin-top:3px">{{ pointsBal }}</div>
             </div>
-            <button onClick="{{ goPointsShop }}" style="border:none;background:#FBE9D6;color:#C7700F;font-weight:700;font-size:13px;padding:9px 16px;border-radius:18px;cursor:pointer">积分商城 ›</button>
+            <button onClick="{{ goPointsShop }}" style="border:none;background:#1C1813;color:#fff;font-weight:700;font-size:13px;padding:11px 18px;border-radius:22px;cursor:pointer">积分商城 ›</button>
           </div>
           <sc-if value="{{ hasSoonExpire }}" hint-placeholder-val="{{ false }}">
-            <div style="margin:8px 16px 0;font-size:11px;color:#C2933F">⏳ {{ soonExpireStr }}</div>
+            <div style="margin:9px 18px 0;font-size:11px;color:#C2933F">⏳ {{ soonExpireStr }}</div>
           </sc-if>
 
-          <div style="margin:16px 16px 0;background:#fff;border-radius:18px;padding:6px 6px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px">
+          <div style="margin:16px 16px 0;background:#fff;border-radius:20px;padding:8px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px;box-shadow:0 10px 30px -14px rgba(60,40,20,.16)">
             <sc-for list="{{ meEntries }}" as="en" hint-placeholder-count="6">
-              <div onClick="{{ en.go }}" style="text-align:center;padding:16px 6px;border-radius:14px;cursor:pointer">
-                <div style="font-size:26px">{{ en.icon }}</div>
-                <div style="font-size:13px;font-weight:700;color:#1C1813;margin-top:6px">{{ en.label }}</div>
+              <div onClick="{{ en.go }}" style="text-align:center;padding:17px 6px;border-radius:16px;cursor:pointer">
+                <div style="font-size:27px">{{ en.icon }}</div>
+                <div style="font-size:13px;font-weight:800;color:#1C1813;margin-top:7px">{{ en.label }}</div>
                 <div style="font-size:10px;color:#968B7E;margin-top:2px">{{ en.sub }}</div>
               </div>
             </sc-for>
