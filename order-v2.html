@@ -151,7 +151,11 @@
                 </button>
               </sc-for>
             </div>
-            <div style="font-size:11px;color:#968B7E;padding:10px 16px 0">⏰ 截止 {{ cutoffStr }} · 售完即止</div>
+            <div style="margin:10px 16px 0;background:#FBF1E2;border:1px solid #F0DEBD;border-radius:12px;padding:8px 12px;display:flex;align-items:center;gap:8px">
+              <span style="font-size:14px">⏰</span>
+              <span style="font-size:11.5px;color:#9A6B16;font-weight:700">{{ cutoffDay }}的餐 · {{ cutoffStr }} 截单</span>
+              <span style="font-size:11px;color:#B89A6A;margin-left:auto">越早订越不易售罄</span>
+            </div>
           </div>
 
           <div style="padding:6px 16px 24px">
@@ -329,11 +333,14 @@
         </div>
         <sc-if value="{{ cartNotEmpty }}" hint-placeholder-val="{{ false }}">
           <div style="position:absolute;left:0;right:0;bottom:0;background:#fff;padding:14px 16px 22px;box-shadow:0 -6px 18px rgba(80,50,20,.08)">
-            <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:12px">
-              <div style="font-size:11.5px;color:#968B7E">共 {{ cartCount }} 份 · 自提免配送费</div>
-              <div><span style="font-size:12px;color:#968B7E">合计 </span><span style="color:#DB4A2B;font-weight:900;font-size:22px">{{ cartTotalStr }}</span></div>
+            <div style="margin-bottom:12px">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px">
+                <span style="font-size:11.5px;color:{{ cartNudge.color }};font-weight:700">{{ cartNudge.text }}</span>
+                <span style="font-size:12px;color:#968B7E">合计 <b style="color:#DB4A2B;font-size:18px">{{ cartTotalStr }}</b></span>
+              </div>
+              <div style="height:6px;background:#F0E8DA;border-radius:6px;overflow:hidden"><div style="height:100%;width:{{ cartNudge.pct }}%;background:{{ cartNudge.color }};border-radius:6px;transition:width .3s"></div></div>
             </div>
-            <button onClick="{{ goCheckout }}" style="width:100%;height:50px;border:none;border-radius:25px;background:#DB4A2B;color:#fff;font-weight:900;font-size:16px;cursor:pointer">去结算</button>
+            <button onClick="{{ goCheckout }}" style="width:100%;height:50px;border:none;border-radius:25px;background:#DB4A2B;color:#fff;font-weight:900;font-size:16px;cursor:pointer;box-shadow:0 12px 24px -8px rgba(219,74,43,.5)">去结算 · {{ cartTotalStr }}</button>
           </div>
         </sc-if>
       </sc-if>
@@ -445,9 +452,21 @@
             <div style="display:flex;justify-content:space-between;font-size:13px;color:#5a524a;padding:6px 0"><span>实付金额</span><span style="color:#DB4A2B;font-weight:700">{{ pr.total }}</span></div>
           </div>
           <sc-if value="{{ pr.hasEarned }}" hint-placeholder-val="{{ false }}">
-            <div onClick="{{ pr.goMe }}" style="background:#FBF6EC;border:1px solid #EFE3CF;border-radius:14px;padding:13px 16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer">
+            <div onClick="{{ pr.goMe }}" style="background:#FBF6EC;border:1px solid #EFE3CF;border-radius:14px;padding:13px 16px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;cursor:pointer">
               <span style="font-size:13px;color:#C7891B;font-weight:700">⭐ 本单获得 {{ pr.earned }} 积分</span>
               <span style="font-size:12px;color:#C7891B">去会员中心 ›</span>
+            </div>
+          </sc-if>
+          <sc-if value="{{ pr.isPickup }}" hint-placeholder-val="{{ false }}">
+            <div class="card" style="padding:16px;margin-bottom:16px;text-align:left">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span style="font-size:17px">📍</span><span style="font-weight:800;font-size:14px;color:#1C1813">取餐提醒</span></div>
+              <div style="font-size:12.5px;color:#5a524a;line-height:1.9">
+                <div>🏠 {{ pr.pickName }}</div>
+                <div>🕛 取餐时间 {{ pr.pickTime }}</div>
+                <div style="color:#968B7E">{{ pr.pickAddr }}</div>
+              </div>
+              <div style="font-size:11px;color:#968B7E;margin-top:8px">🔔 {{ pr.remindNote }}</div>
+              <button onClick="{{ pr.addCal }}" style="width:100%;height:42px;margin-top:12px;border:1px solid #ECE4D6;border-radius:21px;background:#fff;color:#1C1813;font-weight:700;font-size:13.5px;cursor:pointer">📅 加入日历提醒</button>
             </div>
           </sc-if>
           <button onClick="{{ pr.viewOrders }}" style="width:100%;height:48px;border:none;border-radius:24px;background:#DB4A2B;color:#fff;font-weight:900;font-size:15px;cursor:pointer">查看我的订单</button>
@@ -985,6 +1004,24 @@ class Component extends DCLogic {
   setCo(patch){ this.setState({checkout:{...this.state.checkout, ...patch}}); }
   deliveryFee(){ return this.state.checkout.deliverType==='pickup'?0:3.5; }
   cartRestNames(){ return [...new Set(this.state.cart.map(c=>c.restName))]; }
+  addToCalendar(o){
+    const pk=this.pickups.find(p=>p.id===o.pickup)||{};
+    const dt=new Date(); dt.setDate(dt.getDate()+1); dt.setHours(12,0,0,0);
+    const pad=n=>String(n).padStart(2,'0');
+    const fmt=d=>d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+'T'+pad(d.getHours())+pad(d.getMinutes())+'00';
+    const end=new Date(dt.getTime()+30*60000);
+    const ics=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//tuancan//ZH','BEGIN:VEVENT',
+      'UID:'+o.orderNo+'@tuancan','DTSTART:'+fmt(dt),'DTEND:'+fmt(end),
+      'SUMMARY:万能团餐取餐 · 取餐码 '+o.code,
+      'LOCATION:'+(pk.name||'')+' '+(pk.address||''),
+      'DESCRIPTION:订单 '+o.orderNo+'\\n取餐码 '+o.code+'\\n取餐时间 '+(pk.time||''),
+      'BEGIN:VALARM','TRIGGER:-PT60M','ACTION:DISPLAY','DESCRIPTION:该取餐啦','END:VALARM',
+      'END:VEVENT','END:VCALENDAR'].join('\r\n');
+    try{ const blob=new Blob([ics],{type:'text/calendar'}); const url=URL.createObjectURL(blob);
+      const a=document.createElement('a'); a.href=url; a.download='tuancan-pickup.ics'; document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(()=>URL.revokeObjectURL(url),1000); }catch(e){}
+    this.showToast('已生成取餐日历提醒 📅');
+  }
   selectedVoucher(){ const id=this.state.checkout.voucherId; if(!id||!window.Store) return null; return Store.allVouchers().find(v=>v.id===id)||null; }
   voucherDiscount(){ const v=this.selectedVoucher(); return (v&&window.Store)?Store.voucherDiscount(v, this.cartFood()):0; }
   payNow(){
@@ -1104,6 +1141,7 @@ class Component extends DCLogic {
         ? 'flex:none;min-width:60px;display:flex;flex-direction:column;align-items:center;padding:9px 14px;border:none;border-radius:16px;background:#1C1813;color:#fff;cursor:pointer;box-shadow:0 8px 18px -8px rgba(28,24,19,.5)'
         : 'flex:none;min-width:60px;display:flex;flex-direction:column;align-items:center;padding:9px 14px;border:1px solid #ECE4D6;border-radius:16px;background:#fff;color:#1C1813;cursor:pointer' }));
     vals.cutoffStr = this.cutoffOf(st.selectedDay);
+    vals.cutoffDay = st.selectedDay;
     const md=this.menu[st.selectedDay];
     vals.dayRestaurants = md.rests.map(r=>({ name:r.name, cuisine:r.cuisine, emoji:r.emoji, bg:r.bg,
       packages: r.packages.map(p=>{
@@ -1151,6 +1189,12 @@ class Component extends DCLogic {
       items: groupsMap[d.day].map(c=>({ name:c.name, emoji:c.emoji, bg:c.bg, optStr:c.optStr, priceStr:this.money(c.price*c.qty), qty:c.qty,
         inc:()=>this.changeQty(c.key,1), dec:()=>this.changeQty(c.key,-1), remove:()=>this.removeItem(c.key) })) }));
     vals.cartTotalStr = this.money(this.cartFood());
+    // 凑单进度（围绕配送门槛 $20 起送 / 满$35减$2）
+    { const f=this.cartFood();
+      if(f<20){ vals.cartNudge={ text:'再点 '+this.money(20-f)+' 即可选配送（满 $20 起送）', pct:Math.min(100,Math.round(f/20*100)), color:'#C2933F' }; }
+      else if(f<35){ vals.cartNudge={ text:'再加 '+this.money(35-f)+' 享满 $35 减 $2 配送费', pct:Math.min(100,Math.round(f/35*100)), color:'#2E7D4F' }; }
+      else { vals.cartNudge={ text:'已满 $35 · 配送立减 $2 🎉', pct:100, color:'#2E7D4F' }; }
+    }
 
     // CHECKOUT
     const co=st.checkout; const food=this.cartFood(); const fee=this.deliveryFee();
@@ -1182,11 +1226,15 @@ class Component extends DCLogic {
 
     // PAY RESULT
     if(screen==='payResult'){ const o=st.orders.find(x=>x.id===st.lastOrderId);
-      if(o) vals.pr={ code:o.code, orderNo:o.orderNo, dates:[...new Set(o.items.map(i=>i.day))].join('、'),
-        deliver: o.deliverType==='pickup'?('自提 · '+(this.pickups.find(p=>p.id===o.pickup)||{}).name):'区域配送',
+      if(o){ const pk=this.pickups.find(p=>p.id===o.pickup)||{};
+      vals.pr={ code:o.code, orderNo:o.orderNo, dates:[...new Set(o.items.map(i=>i.day))].join('、'),
+        deliver: o.deliverType==='pickup'?('自提 · '+pk.name):'区域配送',
         total:this.money(o.total), payMethod:o.payMethod||'信用卡',
         earned:o.pointsEarned||0, hasEarned:(o.pointsEarned||0)>0,
+        isPickup:o.deliverType==='pickup', pickName:pk.name||'', pickTime:pk.time||'', pickAddr:pk.address||'',
+        addCal:()=>this.addToCalendar(o), remindNote:'我们会在取餐当天通过消息中心 / 微信提醒你',
         viewOrders:()=>this.setState({screen:'orders'}), goMe:()=>this.setState({screen:'me'}) };
+      }
     }
 
     // ORDERS
