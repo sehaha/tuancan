@@ -17,35 +17,40 @@
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{margin:0;padding:0}
   ::-webkit-scrollbar{width:0;height:0}
-  @keyframes popIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-  @keyframes toastIn{from{opacity:0;transform:transl(-50%,8px)}to{opacity:1}}
+  @keyframes popIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  @keyframes riseIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+  @keyframes toastIn{from{opacity:0;transform:translate(-50%,8px)}to{opacity:1}}
   @keyframes badgePop{0%{transform:scale(.5)}60%{transform:scale(1.25)}100%{transform:scale(1)}}
+  .v2 .ttl{font-family:'Noto Serif SC',serif;font-weight:900;color:#1C1813;letter-spacing:-.2px}
+  .v2 .sect{font-family:'Noto Serif SC',serif;font-weight:900;font-size:20px;color:#1C1813;letter-spacing:-.3px}
+  .v2 .eyebrow{font-size:11px;font-weight:800;letter-spacing:2px;color:#B9905A}
+  .v2 .card{background:#fff;border-radius:22px;box-shadow:0 10px 30px -12px rgba(60,40,20,.18)}
 </style>
 </helmet>
-<div style="min-height:100vh;background:#E9E0D2;display:flex;align-items:flex-start;justify-content:center;padding:32px 16px;font-family:'Noto Sans SC',sans-serif">
-  <div style="width:390px;height:844px;background:#FBF5EC;border-radius:46px;box-shadow:0 2px 0 #fff inset,0 30px 80px rgba(60,40,20,.28),0 0 0 11px #1b1714,0 0 0 13px #2c2520;overflow:hidden;position:relative;display:flex;flex-direction:column">
+<div class="v2" style="min-height:100vh;background:radial-gradient(120% 80% at 50% 0%,#F0EAE0,#E4DCCF);display:flex;align-items:flex-start;justify-content:center;padding:30px 16px;font-family:'Noto Sans SC',sans-serif">
+  <div style="width:390px;height:844px;background:#FCFAF6;border-radius:52px;box-shadow:0 2px 0 rgba(255,255,255,.6) inset,0 40px 90px -20px rgba(50,32,16,.4),0 0 0 10px #16120f,0 0 0 12px #2a231d;overflow:hidden;position:relative;display:flex;flex-direction:column">
 
     <!-- status bar -->
-    <div style="height:48px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 30px 0 34px;font-size:15px;font-weight:700;color:#221C18;z-index:30;position:relative">
+    <div style="height:46px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 30px 0 34px;font-size:15px;font-weight:700;color:#1C1813;z-index:30;position:relative">
       <span>9:41</span>
       <div style="display:flex;align-items:center;gap:7px">
         <span style="font-size:12px">●●●●</span>
         <span style="font-size:13px">5G</span>
-        <span style="display:inline-block;width:24px;height:12px;border:1.5px solid #221C18;border-radius:3px;position:relative"><span style="position:absolute;inset:1.5px;width:70%;background:#221C18;border-radius:1px"></span></span>
+        <span style="display:inline-block;width:24px;height:12px;border:1.5px solid #1C1813;border-radius:3px;position:relative"><span style="position:absolute;inset:1.5px;width:70%;background:#1C1813;border-radius:1px"></span></span>
       </div>
     </div>
 
     <!-- app top bar -->
-    <div style="flex:none;height:50px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;z-index:20;position:relative;background:{{ topBarBg }}">
-      <div style="display:flex;align-items:center;gap:8px;min-width:0">
+    <div style="flex:none;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;z-index:20;position:relative;background:{{ topBarBg }}">
+      <div style="display:flex;align-items:center;gap:9px;min-width:0">
         <sc-if value="{{ showBack }}" hint-placeholder-val="{{ false }}">
-          <button onClick="{{ goBack }}" style="border:none;background:none;font-size:22px;line-height:1;color:#221C18;cursor:pointer;padding:0 2px">‹</button>
+          <button onClick="{{ goBack }}" style="border:none;background:#fff;width:34px;height:34px;border-radius:50%;box-shadow:0 4px 12px rgba(60,40,20,.12);font-size:20px;line-height:1;color:#1C1813;cursor:pointer;display:flex;align-items:center;justify-content:center">‹</button>
         </sc-if>
-        <span style="font-family:'Noto Serif SC',serif;font-weight:900;font-size:18px;color:#221C18;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ screenTitle }}</span>
+        <span class="ttl" style="font-size:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ screenTitle }}</span>
       </div>
-      <button onClick="{{ goCart }}" style="position:relative;border:none;background:none;cursor:pointer;font-size:20px;padding:4px">🛒
+      <button onClick="{{ goCart }}" style="position:relative;border:none;background:#fff;width:38px;height:38px;border-radius:50%;box-shadow:0 4px 12px rgba(60,40,20,.12);cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center">🛒
         <sc-if value="{{ hasCart }}" hint-placeholder-val="{{ false }}">
-          <span style="position:absolute;top:-2px;right:-4px;min-width:18px;height:18px;padding:0 4px;background:#E0392B;color:#fff;border-radius:9px;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;animation:badgePop .3s">{{ cartCount }}</span>
+          <span style="position:absolute;top:-3px;right:-3px;min-width:18px;height:18px;padding:0 4px;background:#DB4A2B;color:#fff;border-radius:9px;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;animation:badgePop .3s;border:2px solid #fff">{{ cartCount }}</span>
         </sc-if>
       </button>
     </div>
@@ -56,44 +61,47 @@
       <!-- ================= HOME ================= -->
       <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
         <div style="animation:popIn .35s">
-          <div style="margin:6px 16px 0;border-radius:24px;overflow:hidden;background:linear-gradient(150deg,#E0392B,#B5241B);color:#fff;padding:26px 22px 24px;position:relative">
-            <div style="position:absolute;right:-20px;top:-18px;font-size:120px;opacity:.16;transform:rotate(-12deg)">🍱</div>
-            <div style="display:inline-block;background:rgba(255,255,255,.18);backdrop-filter:blur(4px);font-size:12px;font-weight:700;padding:5px 11px;border-radius:20px;letter-spacing:.5px">万能团餐 · Irvine 试运营</div>
-            <div style="font-family:'Noto Serif SC',serif;font-weight:900;font-size:30px;line-height:1.25;margin:14px 0 6px">下周吃什么<br>今天一次订好</div>
-            <div style="font-size:13px;opacity:.92;line-height:1.6;max-width:240px">三家餐厅套餐任选 · 自提免费 · 指定区域低价配送</div>
-            <button onClick="{{ goMenu }}" style="margin-top:18px;border:none;background:#fff;color:#E0392B;font-weight:900;font-size:15px;padding:13px 22px;border-radius:30px;cursor:pointer;box-shadow:0 8px 20px rgba(0,0,0,.18)">立即预订下周餐食 →</button>
-          </div>
-
-          <div style="display:flex;gap:10px;padding:16px">
-            <div onClick="{{ goPickup }}" style="flex:1;background:#fff;border-radius:16px;padding:14px;cursor:pointer;box-shadow:0 4px 14px rgba(80,50,20,.06)">
-              <div style="font-size:22px">📍</div>
-              <div style="font-weight:700;font-size:14px;margin-top:6px;color:#221C18">自提点</div>
-              <div style="font-size:11px;color:#8C8279;margin-top:2px">免配送费 · 3 个取餐点</div>
-            </div>
-            <div onClick="{{ goDelivery }}" style="flex:1;background:#fff;border-radius:16px;padding:14px;cursor:pointer;box-shadow:0 4px 14px rgba(80,50,20,.06)">
-              <div style="font-size:22px">🚗</div>
-              <div style="font-weight:700;font-size:14px;margin-top:6px;color:#221C18">区域配送</div>
-              <div style="font-size:11px;color:#8C8279;margin-top:2px">$3.5–$5 · 满$20起送</div>
+          <div style="position:relative;height:312px;overflow:hidden">
+            <img src="./assets/dishes/hero-dish.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" onerror="this.style.display='none';this.parentNode.style.background='linear-gradient(150deg,#DB4A2B,#B23A1C)'">
+            <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(18,12,8,.20) 0%,rgba(18,12,8,.02) 38%,rgba(18,12,8,.86) 100%)"></div>
+            <div style="position:absolute;left:22px;right:22px;bottom:24px;color:#fff;animation:riseIn .5s">
+              <div class="eyebrow" style="color:#F4CDA0">万能团餐 · IRVINE 试运营</div>
+              <div class="ttl" style="color:#fff;font-size:32px;line-height:1.16;margin:9px 0 9px">下周吃什么<br>今天一次订好</div>
+              <div style="font-size:13px;opacity:.92;line-height:1.6;max-width:255px">三家餐厅 · 每周套餐任选 · 自提免费，指定区域低价配送</div>
+              <button onClick="{{ goMenu }}" style="margin-top:17px;border:none;background:#fff;color:#1C1813;font-weight:800;font-size:15px;padding:13px 26px;border-radius:30px;cursor:pointer;box-shadow:0 12px 28px rgba(0,0,0,.32)">浏览下周菜单 →</button>
             </div>
           </div>
 
-          <div style="padding:0 16px">
-            <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px">
-              <span style="font-family:'Noto Serif SC',serif;font-weight:900;font-size:19px;color:#221C18">🔥 本周爆款限量</span>
-              <span onClick="{{ goMenu }}" style="font-size:12px;color:#8C8279;cursor:pointer">全部菜单 ›</span>
+          <div style="display:flex;gap:12px;padding:16px">
+            <div onClick="{{ goPickup }}" class="card" style="flex:1;padding:15px 16px;cursor:pointer">
+              <div style="width:38px;height:38px;border-radius:12px;background:#FBEFE8;display:flex;align-items:center;justify-content:center;font-size:20px">📍</div>
+              <div style="font-weight:800;font-size:14px;margin-top:11px;color:#1C1813">到店自提</div>
+              <div style="font-size:11px;color:#968B7E;margin-top:3px">免配送费 · 3 个取餐点</div>
             </div>
-            <div style="display:flex;gap:12px;overflow-x:auto;padding-bottom:4px;margin:0 -16px;padding-left:16px;padding-right:16px">
+            <div onClick="{{ goDelivery }}" class="card" style="flex:1;padding:15px 16px;cursor:pointer">
+              <div style="width:38px;height:38px;border-radius:12px;background:#EAF1EC;display:flex;align-items:center;justify-content:center;font-size:20px">🚗</div>
+              <div style="font-weight:800;font-size:14px;margin-top:11px;color:#1C1813">区域配送</div>
+              <div style="font-size:11px;color:#968B7E;margin-top:3px">$3.5–$5 · 满$20 起送</div>
+            </div>
+          </div>
+
+          <div style="padding:4px 16px 0">
+            <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:13px">
+              <div><div class="eyebrow">本周限定</div><div class="sect" style="margin-top:3px">招牌爆款</div></div>
+              <span onClick="{{ goMenu }}" style="font-size:12.5px;color:#DB4A2B;font-weight:700;cursor:pointer">全部菜单 ›</span>
+            </div>
+            <div style="display:flex;gap:13px;overflow-x:auto;padding-bottom:6px;margin:0 -16px;padding-left:16px;padding-right:16px">
               <sc-for list="{{ hotList }}" as="h" hint-placeholder-count="3">
-                <div onClick="{{ h.open }}" style="flex:none;width:160px;background:#fff;border-radius:18px;overflow:hidden;cursor:pointer;box-shadow:0 6px 18px rgba(80,50,20,.08)">
-                  <div style="height:104px;background:{{ h.bg }};display:flex;align-items:center;justify-content:center;font-size:46px;position:relative">{{ h.emoji }}
-                    <span style="position:absolute;top:8px;left:8px;background:#D89A2A;color:#fff;font-size:10px;font-weight:700;padding:3px 7px;border-radius:8px">限量{{ h.stock }}份</span>
+                <div onClick="{{ h.open }}" class="card" style="flex:none;width:172px;overflow:hidden;cursor:pointer">
+                  <div style="height:126px;background:{{ h.bg }};display:flex;align-items:center;justify-content:center;font-size:54px;position:relative">{{ h.emoji }}
+                    <span style="position:absolute;top:10px;left:10px;background:rgba(28,24,19,.78);color:#fff;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;backdrop-filter:blur(4px)">限量 {{ h.stock }} 份</span>
                   </div>
-                  <div style="padding:10px 11px 12px">
-                    <div style="font-weight:700;font-size:14px;color:#221C18;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ h.name }}</div>
-                    <div style="font-size:11px;color:#8C8279;margin-top:2px">{{ h.day }} · {{ h.restName }}</div>
-                    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px">
-                      <span style="color:#E0392B;font-weight:900;font-size:16px">{{ h.priceStr }}</span>
-                      <span style="font-size:10px;color:#B5241B;background:#FCE9E7;padding:2px 6px;border-radius:6px">已订{{ h.sold }}</span>
+                  <div style="padding:12px 13px 14px">
+                    <div style="font-weight:800;font-size:14.5px;color:#1C1813;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ h.name }}</div>
+                    <div style="font-size:11px;color:#968B7E;margin-top:3px">{{ h.day }} · {{ h.restName }}</div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:9px">
+                      <span style="color:#DB4A2B;font-weight:900;font-size:17px">{{ h.priceStr }}</span>
+                      <span style="font-size:10px;color:#B23A1C;background:#FBEbe3;padding:3px 8px;border-radius:20px">已订 {{ h.sold }}</span>
                     </div>
                   </div>
                 </div>
@@ -101,21 +109,22 @@
             </div>
           </div>
 
-          <div style="padding:20px 16px 6px">
-            <div style="font-family:'Noto Serif SC',serif;font-weight:900;font-size:19px;color:#221C18;margin-bottom:10px">合作餐厅</div>
+          <div style="padding:22px 16px 6px">
+            <div class="eyebrow">精选供应</div>
+            <div class="sect" style="margin:3px 0 13px">合作餐厅</div>
             <sc-for list="{{ restList }}" as="r" hint-placeholder-count="3">
-              <div onClick="{{ goMenu }}" style="display:flex;align-items:center;gap:13px;background:#fff;border-radius:16px;padding:12px 14px;margin-bottom:10px;cursor:pointer;box-shadow:0 4px 14px rgba(80,50,20,.05)">
-                <div style="width:50px;height:50px;border-radius:14px;background:{{ r.bg }};display:flex;align-items:center;justify-content:center;font-size:26px;flex:none">{{ r.emoji }}</div>
+              <div onClick="{{ goMenu }}" class="card" style="display:flex;align-items:center;gap:14px;padding:13px 15px;margin-bottom:11px;cursor:pointer">
+                <div style="width:54px;height:54px;border-radius:16px;background:{{ r.bg }};display:flex;align-items:center;justify-content:center;font-size:28px;flex:none">{{ r.emoji }}</div>
                 <div style="flex:1;min-width:0">
-                  <div style="font-weight:700;font-size:15px;color:#221C18">{{ r.name }}</div>
-                  <div style="font-size:12px;color:#8C8279;margin-top:2px">{{ r.cuisine }} · {{ r.skuStr }}</div>
+                  <div style="font-weight:800;font-size:15px;color:#1C1813">{{ r.name }}</div>
+                  <div style="font-size:12px;color:#968B7E;margin-top:3px">{{ r.cuisine }} · {{ r.skuStr }}</div>
                 </div>
-                <span style="color:#8C8279;font-size:18px">›</span>
+                <span style="color:#C9BEAF;font-size:20px">›</span>
               </div>
             </sc-for>
           </div>
 
-          <div onClick="{{ goEnterprise }}" style="margin:8px 16px;background:linear-gradient(120deg,#221C18,#3a312a);color:#fff;border-radius:18px;padding:18px 20px;cursor:pointer;display:flex;align-items:center;justify-content:space-between">
+          <div onClick="{{ goEnterprise }}" style="margin:8px 16px;background:linear-gradient(120deg,#1C1813,#332A22);color:#fff;border-radius:18px;padding:18px 20px;cursor:pointer;display:flex;align-items:center;justify-content:space-between">
             <div>
               <div style="font-weight:900;font-size:16px">公司 / 机构团餐合作</div>
               <div style="font-size:12px;opacity:.78;margin-top:4px">办公室 · 补习机构 · 活动 · 周餐包月</div>
@@ -123,9 +132,9 @@
             <span style="font-size:24px">🏢</span>
           </div>
 
-          <div style="margin:4px 16px 24px;background:#FFF8EE;border:1px solid #F2E4CE;border-radius:14px;padding:14px 16px">
-            <div style="font-weight:700;font-size:13px;color:#221C18;margin-bottom:6px">⏰ 取消规则</div>
-            <div style="font-size:12px;color:#8C8279;line-height:1.7">餐食日前一天中午 12:00 前可取消或修改，超过时间后餐厅已备货，不支持取消或退款。截止前取消 100% 退回账户余额。</div>
+          <div style="margin:4px 16px 24px;background:#FBF6EC;border:1px solid #EFE3CF;border-radius:14px;padding:14px 16px">
+            <div style="font-weight:700;font-size:13px;color:#1C1813;margin-bottom:6px">⏰ 取消规则</div>
+            <div style="font-size:12px;color:#968B7E;line-height:1.7">餐食日前一天中午 12:00 前可取消或修改，超过时间后餐厅已备货，不支持取消或退款。截止前取消 100% 退回账户余额。</div>
           </div>
         </div>
       </sc-if>
@@ -133,41 +142,41 @@
       <!-- ================= MENU ================= -->
       <sc-if value="{{ isMenu }}" hint-placeholder-val="{{ false }}">
         <div>
-          <div style="position:sticky;top:0;z-index:10;background:#FBF5EC;padding:10px 0 8px;box-shadow:0 6px 10px -8px rgba(80,50,20,.2)">
-            <div style="display:flex;gap:8px;overflow-x:auto;padding:0 16px">
+          <div style="position:sticky;top:0;z-index:10;background:rgba(252,250,246,.94);backdrop-filter:blur(10px);padding:12px 0 10px;border-bottom:1px solid #F0E8DA">
+            <div style="display:flex;gap:9px;overflow-x:auto;padding:0 16px">
               <sc-for list="{{ dayTabs }}" as="t" hint-placeholder-count="5">
                 <button onClick="{{ t.onClick }}" style="{{ t.style }}">
-                  <span style="font-size:14px;font-weight:700">{{ t.label }}</span>
-                  <span style="font-size:10px;opacity:.7;margin-top:1px">{{ t.date }}</span>
+                  <span style="font-size:14px;font-weight:800">{{ t.label }}</span>
+                  <span style="font-size:10px;opacity:.7;margin-top:2px">{{ t.date }}</span>
                 </button>
               </sc-for>
             </div>
-            <div style="font-size:11px;color:#8C8279;padding:8px 16px 0">截止时间：{{ cutoffStr }} · 售完即止</div>
+            <div style="font-size:11px;color:#968B7E;padding:10px 16px 0">⏰ 截止 {{ cutoffStr }} · 售完即止</div>
           </div>
 
-          <div style="padding:6px 16px 20px">
+          <div style="padding:6px 16px 24px">
             <sc-for list="{{ dayRestaurants }}" as="r" hint-placeholder-count="3">
-              <div style="margin-bottom:8px">
-                <div style="display:flex;align-items:center;gap:9px;margin:16px 0 10px">
-                  <div style="width:32px;height:32px;border-radius:10px;background:{{ r.bg }};display:flex;align-items:center;justify-content:center;font-size:17px">{{ r.emoji }}</div>
-                  <div style="font-family:'Noto Serif SC',serif;font-weight:700;font-size:16px;color:#221C18">{{ r.name }}</div>
-                  <div style="font-size:11px;color:#8C8279">{{ r.cuisine }}</div>
+              <div style="margin-bottom:6px">
+                <div style="display:flex;align-items:center;gap:10px;margin:20px 0 12px">
+                  <div style="width:34px;height:34px;border-radius:11px;background:{{ r.bg }};display:flex;align-items:center;justify-content:center;font-size:18px">{{ r.emoji }}</div>
+                  <div class="ttl" style="font-size:17px">{{ r.name }}</div>
+                  <div style="font-size:11px;color:#968B7E;background:#F3ECE0;padding:3px 9px;border-radius:20px">{{ r.cuisine }}</div>
                 </div>
                 <sc-for list="{{ r.packages }}" as="p" hint-placeholder-count="3">
-                  <div onClick="{{ p.open }}" style="display:flex;gap:12px;background:#fff;border-radius:16px;padding:11px;margin-bottom:10px;cursor:pointer;box-shadow:0 4px 14px rgba(80,50,20,.05);position:relative">
-                    <div style="width:84px;height:84px;border-radius:12px;background:{{ p.bg }};display:flex;align-items:center;justify-content:center;font-size:38px;flex:none;position:relative">{{ p.emoji }}</div>
+                  <div onClick="{{ p.open }}" class="card" style="display:flex;gap:13px;padding:12px;margin-bottom:12px;cursor:pointer;position:relative">
+                    <div style="width:94px;height:94px;border-radius:16px;background:{{ p.bg }};display:flex;align-items:center;justify-content:center;font-size:42px;flex:none;position:relative">{{ p.emoji }}</div>
                     <div style="flex:1;min-width:0;display:flex;flex-direction:column">
-                      <div style="font-weight:700;font-size:15px;color:#221C18">{{ p.name }}</div>
-                      <div style="font-size:11.5px;color:#8C8279;margin-top:3px;line-height:1.45;overflow:hidden">{{ p.desc }}</div>
-                      <div style="display:flex;gap:5px;margin-top:6px;flex-wrap:wrap">
+                      <div style="font-weight:800;font-size:15px;color:#1C1813">{{ p.name }}</div>
+                      <div style="font-size:11.5px;color:#968B7E;margin-top:3px;line-height:1.45;overflow:hidden">{{ p.desc }}</div>
+                      <div style="display:flex;gap:5px;margin-top:7px;flex-wrap:wrap">
                         <sc-for list="{{ p.tags }}" as="tg" hint-placeholder-count="2">
                           <span style="{{ tg.style }}">{{ tg.label }}</span>
                         </sc-for>
                       </div>
-                      <div style="margin-top:auto;display:flex;align-items:flex-end;justify-content:space-between;padding-top:8px">
-                        <div>
-                          <span style="color:#E0392B;font-weight:900;font-size:18px">{{ p.priceStr }}</span>
-                          <span style="font-size:10.5px;color:#B79; color:#A89;margin-left:6px;color:#8C8279">{{ p.stockStr }}</span>
+                      <div style="margin-top:auto;display:flex;align-items:flex-end;justify-content:space-between;padding-top:9px">
+                        <div style="display:flex;align-items:baseline;gap:7px">
+                          <span style="color:#DB4A2B;font-weight:900;font-size:19px">{{ p.priceStr }}</span>
+                          <span style="font-size:10.5px;color:#968B7E">{{ p.stockStr }}</span>
                         </div>
                         <button onClick="{{ p.add }}" style="{{ p.btnStyle }}">{{ p.btnLabel }}</button>
                       </div>
@@ -193,16 +202,16 @@
           <div style="padding:16px">
             <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
               <div>
-                <div style="font-family:'Noto Serif SC',serif;font-weight:900;font-size:22px;color:#221C18">{{ d.name }}</div>
-                <div style="font-size:12.5px;color:#8C8279;margin-top:4px">{{ d.restName }} · {{ d.day }}</div>
+                <div style="font-family:'Noto Serif SC',serif;font-weight:900;font-size:22px;color:#1C1813">{{ d.name }}</div>
+                <div style="font-size:12.5px;color:#968B7E;margin-top:4px">{{ d.restName }} · {{ d.day }}</div>
               </div>
-              <div style="color:#E0392B;font-weight:900;font-size:24px;white-space:nowrap">{{ d.priceStr }}</div>
+              <div style="color:#DB4A2B;font-weight:900;font-size:24px;white-space:nowrap">{{ d.priceStr }}</div>
             </div>
             <div style="font-size:13px;color:#5a524a;line-height:1.7;margin-top:12px">{{ d.desc }}</div>
 
             <!-- 套餐内容 -->
             <div style="background:#fff;border-radius:14px;padding:14px 16px;margin-top:14px">
-              <div style="font-weight:700;font-size:13px;color:#221C18;margin-bottom:8px">套餐内容</div>
+              <div style="font-weight:700;font-size:13px;color:#1C1813;margin-bottom:8px">套餐内容</div>
               <div style="font-size:12.5px;color:#5a524a;line-height:1.8">{{ d.content }}</div>
             </div>
 
@@ -210,7 +219,7 @@
             <sc-if value="{{ d.isGrid }}" hint-placeholder-val="{{ false }}">
               <div style="margin-top:14px">
                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-                  <span style="font-weight:700;font-size:14px;color:#221C18">选择荤菜</span>
+                  <span style="font-weight:700;font-size:14px;color:#1C1813">选择荤菜</span>
                   <span style="font-size:11px;color:{{ d.meatCntColor }}">{{ d.meatCntStr }}</span>
                 </div>
                 <div style="display:flex;flex-direction:column;gap:8px">
@@ -222,7 +231,7 @@
                   </sc-for>
                 </div>
                 <div style="display:flex;align-items:center;justify-content:space-between;margin:14px 0 8px">
-                  <span style="font-weight:700;font-size:14px;color:#221C18">选择素菜</span>
+                  <span style="font-weight:700;font-size:14px;color:#1C1813">选择素菜</span>
                   <span style="font-size:11px;color:{{ d.vegCntColor }}">{{ d.vegCntStr }}</span>
                 </div>
                 <div style="display:flex;flex-direction:column;gap:8px">
@@ -238,36 +247,36 @@
 
             <!-- options -->
             <div style="margin-top:16px">
-              <div style="font-weight:700;font-size:14px;color:#221C18;margin-bottom:8px">辣度</div>
+              <div style="font-weight:700;font-size:14px;color:#1C1813;margin-bottom:8px">辣度</div>
               <div style="display:flex;gap:8px">
                 <sc-for list="{{ d.spicyOpts }}" as="s" hint-placeholder-count="3">
                   <button onClick="{{ s.set }}" style="{{ s.style }}">{{ s.label }}</button>
                 </sc-for>
               </div>
-              <div style="font-weight:700;font-size:14px;color:#221C18;margin:14px 0 8px">主食</div>
+              <div style="font-weight:700;font-size:14px;color:#1C1813;margin:14px 0 8px">主食</div>
               <div style="display:flex;gap:8px">
                 <sc-for list="{{ d.stapleOpts }}" as="s" hint-placeholder-count="3">
                   <button onClick="{{ s.set }}" style="{{ s.style }}">{{ s.label }}</button>
                 </sc-for>
               </div>
               <div onClick="{{ d.toggleUtensil }}" style="display:flex;align-items:center;justify-content:space-between;background:#fff;border-radius:12px;padding:13px 15px;margin-top:14px;cursor:pointer">
-                <span style="font-size:14px;color:#221C18">需要餐具</span>
+                <span style="font-size:14px;color:#1C1813">需要餐具</span>
                 <span style="width:44px;height:26px;border-radius:14px;background:{{ d.utensilBg }};position:relative;transition:.2s"><span style="position:absolute;top:3px;left:{{ d.utensilDot }};width:20px;height:20px;border-radius:50%;background:#fff;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.3)"></span></span>
               </div>
             </div>
 
-            <div style="background:#FFF8EE;border:1px solid #F2E4CE;border-radius:12px;padding:12px 14px;margin-top:16px;font-size:11.5px;color:#8C8279;line-height:1.7">
-              <div>库存剩余 <b style="color:#E0392B">{{ d.stockNum }}</b> 份 · 截止 {{ d.cutoff }}</div>
+            <div style="background:#FBF6EC;border:1px solid #EFE3CF;border-radius:12px;padding:12px 14px;margin-top:16px;font-size:11.5px;color:#968B7E;line-height:1.7">
+              <div>库存剩余 <b style="color:#DB4A2B">{{ d.stockNum }}</b> 份 · 截止 {{ d.cutoff }}</div>
               <div style="margin-top:4px">⚠️ 含常见食材，对食材过敏或严格忌口请谨慎下单。试运营期间暂不支持复杂定制。</div>
             </div>
           </div>
         </div>
         <!-- bottom add bar -->
         <div style="position:absolute;left:0;right:0;bottom:0;background:#fff;padding:12px 16px 22px;box-shadow:0 -6px 18px rgba(80,50,20,.08);display:flex;align-items:center;gap:14px">
-          <div style="display:flex;align-items:center;border:1px solid #E5DBCC;border-radius:24px;overflow:hidden">
-            <button onClick="{{ d.qtyDown }}" style="width:38px;height:40px;border:none;background:none;font-size:20px;color:#221C18;cursor:pointer">−</button>
+          <div style="display:flex;align-items:center;border:1px solid #ECE4D6;border-radius:24px;overflow:hidden">
+            <button onClick="{{ d.qtyDown }}" style="width:38px;height:40px;border:none;background:none;font-size:20px;color:#1C1813;cursor:pointer">−</button>
             <span style="width:30px;text-align:center;font-weight:700;font-size:15px">{{ d.qty }}</span>
-            <button onClick="{{ d.qtyUp }}" style="width:38px;height:40px;border:none;background:none;font-size:20px;color:#221C18;cursor:pointer">+</button>
+            <button onClick="{{ d.qtyUp }}" style="width:38px;height:40px;border:none;background:none;font-size:20px;color:#1C1813;cursor:pointer">+</button>
           </div>
           <button onClick="{{ d.addToCart }}" style="flex:1;height:48px;border:none;border-radius:24px;background:{{ d.addBg }};color:#fff;font-weight:900;font-size:15px;cursor:pointer">{{ d.addLabel }}</button>
         </div>
@@ -277,10 +286,10 @@
       <sc-if value="{{ isCart }}" hint-placeholder-val="{{ false }}">
         <div style="padding:12px 16px 130px">
           <sc-if value="{{ cartEmpty }}" hint-placeholder-val="{{ true }}">
-            <div style="text-align:center;padding:90px 20px;color:#8C8279">
+            <div style="text-align:center;padding:90px 20px;color:#968B7E">
               <div style="font-size:60px">🛒</div>
               <div style="font-size:15px;margin-top:14px">购物车还是空的</div>
-              <button onClick="{{ goMenu }}" style="margin-top:18px;border:none;background:#E0392B;color:#fff;font-weight:700;font-size:14px;padding:11px 26px;border-radius:24px;cursor:pointer">去看看下周菜单</button>
+              <button onClick="{{ goMenu }}" style="margin-top:18px;border:none;background:#DB4A2B;color:#fff;font-weight:700;font-size:14px;padding:11px 26px;border-radius:24px;cursor:pointer">去看看下周菜单</button>
             </div>
           </sc-if>
           <sc-if value="{{ cartNotEmpty }}" hint-placeholder-val="{{ false }}">
@@ -288,43 +297,43 @@
               <sc-for list="{{ cartGroups }}" as="g" hint-placeholder-count="2">
                 <div style="margin-bottom:16px">
                   <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-                    <span style="font-weight:900;font-size:14px;color:#221C18">{{ g.day }}</span>
-                    <span style="font-size:11px;color:#8C8279">{{ g.date }} · {{ g.mealType }}</span>
+                    <span style="font-weight:900;font-size:14px;color:#1C1813">{{ g.day }}</span>
+                    <span style="font-size:11px;color:#968B7E">{{ g.date }} · {{ g.mealType }}</span>
                   </div>
                   <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="2">
                     <div style="display:flex;gap:11px;background:#fff;border-radius:14px;padding:11px;margin-bottom:8px">
                       <div style="width:62px;height:62px;border-radius:11px;background:{{ it.bg }};display:flex;align-items:center;justify-content:center;font-size:30px;flex:none">{{ it.emoji }}</div>
                       <div style="flex:1;min-width:0">
                         <div style="display:flex;justify-content:space-between;gap:8px">
-                          <span style="font-weight:700;font-size:14px;color:#221C18">{{ it.name }}</span>
+                          <span style="font-weight:700;font-size:14px;color:#1C1813">{{ it.name }}</span>
                           <span onClick="{{ it.remove }}" style="font-size:12px;color:#C4B; color:#b0a499;cursor:pointer">删除</span>
                         </div>
-                        <div style="font-size:11px;color:#8C8279;margin-top:3px;line-height:1.5">{{ it.optStr }}</div>
+                        <div style="font-size:11px;color:#968B7E;margin-top:3px;line-height:1.5">{{ it.optStr }}</div>
                         <div style="display:flex;align-items:center;justify-content:space-between;margin-top:7px">
-                          <span style="color:#E0392B;font-weight:900;font-size:15px">{{ it.priceStr }}</span>
-                          <div style="display:flex;align-items:center;border:1px solid #E5DBCC;border-radius:20px">
-                            <button onClick="{{ it.dec }}" style="width:30px;height:30px;border:none;background:none;font-size:17px;cursor:pointer;color:#221C18">−</button>
+                          <span style="color:#DB4A2B;font-weight:900;font-size:15px">{{ it.priceStr }}</span>
+                          <div style="display:flex;align-items:center;border:1px solid #ECE4D6;border-radius:20px">
+                            <button onClick="{{ it.dec }}" style="width:30px;height:30px;border:none;background:none;font-size:17px;cursor:pointer;color:#1C1813">−</button>
                             <span style="width:24px;text-align:center;font-weight:700;font-size:14px">{{ it.qty }}</span>
-                            <button onClick="{{ it.inc }}" style="width:30px;height:30px;border:none;background:none;font-size:17px;cursor:pointer;color:#221C18">+</button>
+                            <button onClick="{{ it.inc }}" style="width:30px;height:30px;border:none;background:none;font-size:17px;cursor:pointer;color:#1C1813">+</button>
                           </div>
                         </div>
                       </div>
                     </div>
                   </sc-for>
-                  <div style="font-size:11px;color:#8C8279;text-align:right">取消截止：{{ g.cutoff }}</div>
+                  <div style="font-size:11px;color:#968B7E;text-align:right">取消截止：{{ g.cutoff }}</div>
                 </div>
               </sc-for>
-              <button onClick="{{ goMenu }}" style="width:100%;border:1px dashed #D7CBB8;background:#fff;color:#8C8279;font-size:13px;padding:12px;border-radius:14px;cursor:pointer">+ 继续选餐</button>
+              <button onClick="{{ goMenu }}" style="width:100%;border:1px dashed #D7CBB8;background:#fff;color:#968B7E;font-size:13px;padding:12px;border-radius:14px;cursor:pointer">+ 继续选餐</button>
             </div>
           </sc-if>
         </div>
         <sc-if value="{{ cartNotEmpty }}" hint-placeholder-val="{{ false }}">
           <div style="position:absolute;left:0;right:0;bottom:0;background:#fff;padding:14px 16px 22px;box-shadow:0 -6px 18px rgba(80,50,20,.08)">
             <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:12px">
-              <div style="font-size:11.5px;color:#8C8279">共 {{ cartCount }} 份 · 自提免配送费</div>
-              <div><span style="font-size:12px;color:#8C8279">合计 </span><span style="color:#E0392B;font-weight:900;font-size:22px">{{ cartTotalStr }}</span></div>
+              <div style="font-size:11.5px;color:#968B7E">共 {{ cartCount }} 份 · 自提免配送费</div>
+              <div><span style="font-size:12px;color:#968B7E">合计 </span><span style="color:#DB4A2B;font-weight:900;font-size:22px">{{ cartTotalStr }}</span></div>
             </div>
-            <button onClick="{{ goCheckout }}" style="width:100%;height:50px;border:none;border-radius:25px;background:#E0392B;color:#fff;font-weight:900;font-size:16px;cursor:pointer">去结算</button>
+            <button onClick="{{ goCheckout }}" style="width:100%;height:50px;border:none;border-radius:25px;background:#DB4A2B;color:#fff;font-weight:900;font-size:16px;cursor:pointer">去结算</button>
           </div>
         </sc-if>
       </sc-if>
@@ -342,9 +351,9 @@
               <sc-for list="{{ co.pickupPoints }}" as="pp" hint-placeholder-count="3">
                 <div onClick="{{ pp.set }}" style="{{ pp.style }}">
                   <div style="flex:1">
-                    <div style="font-weight:700;font-size:14px;color:#221C18">{{ pp.name }}</div>
-                    <div style="font-size:11.5px;color:#8C8279;margin-top:3px">{{ pp.address }}</div>
-                    <div style="font-size:11px;color:#8C8279;margin-top:2px">取餐 {{ pp.time }} · {{ pp.parking }}</div>
+                    <div style="font-weight:700;font-size:14px;color:#1C1813">{{ pp.name }}</div>
+                    <div style="font-size:11.5px;color:#968B7E;margin-top:3px">{{ pp.address }}</div>
+                    <div style="font-size:11px;color:#968B7E;margin-top:2px">取餐 {{ pp.time }} · {{ pp.parking }}</div>
                   </div>
                   <span style="font-size:18px;color:{{ pp.dotColor }}">{{ pp.dot }}</span>
                 </div>
@@ -354,10 +363,10 @@
 
           <sc-if value="{{ co.isDeliver }}" hint-placeholder-val="{{ false }}">
             <div style="background:#fff;border-radius:14px;padding:14px 16px;margin-bottom:14px">
-              <div style="font-weight:700;font-size:13px;color:#221C18;margin-bottom:10px">配送地址</div>
+              <div style="font-weight:700;font-size:13px;color:#1C1813;margin-bottom:10px">配送地址</div>
               <input value="{{ co.address }}" onInput="{{ co.onAddress }}" placeholder="街道地址，如 123 Main St, Irvine" style="{{ co.inputStyle }}">
               <input value="{{ co.unit }}" onInput="{{ co.onUnit }}" placeholder="门牌号 / 单元号" style="{{ co.inputStyle }}">
-              <div style="font-size:11px;color:#D89A2A;margin-top:4px">⚠️ 配送最低消费 $20。仅支持 Zone A / B 指定区域。</div>
+              <div style="font-size:11px;color:#C2933F;margin-top:4px">⚠️ 配送最低消费 $20。仅支持 Zone A / B 指定区域。</div>
               <div onClick="{{ co.toggleDoor }}" style="display:flex;align-items:center;gap:8px;margin-top:10px;cursor:pointer">
                 <span style="width:20px;height:20px;border-radius:6px;border:2px solid {{ co.doorBorder }};background:{{ co.doorBg }};display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px">{{ co.doorCheck }}</span>
                 <span style="font-size:13px;color:#5a524a">可放门口（无接触配送）</span>
@@ -366,7 +375,7 @@
           </sc-if>
 
           <div style="background:#fff;border-radius:14px;padding:14px 16px;margin-bottom:14px">
-            <div style="font-weight:700;font-size:13px;color:#221C18;margin-bottom:10px">联系信息</div>
+            <div style="font-weight:700;font-size:13px;color:#1C1813;margin-bottom:10px">联系信息</div>
             <input value="{{ co.name }}" onInput="{{ co.onName }}" placeholder="姓名" style="{{ co.inputStyle }}">
             <input value="{{ co.phone }}" onInput="{{ co.onPhone }}" placeholder="手机号" style="{{ co.inputStyle }}">
             <input value="{{ co.wechat }}" onInput="{{ co.onWechat }}" placeholder="微信号（选填）" style="{{ co.inputStyleLast }}">
@@ -374,13 +383,13 @@
 
           <div style="background:#fff;border-radius:14px;padding:14px 16px;margin-bottom:14px">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-              <span style="font-weight:700;font-size:13px;color:#221C18">🎟️ 抵用券</span>
-              <span style="font-size:11px;color:#8C8279">海螺升学返利 / 活动券可用</span>
+              <span style="font-weight:700;font-size:13px;color:#1C1813">🎟️ 抵用券</span>
+              <span style="font-size:11px;color:#968B7E">海螺升学返利 / 活动券可用</span>
             </div>
             <sc-if value="{{ co.hasVouchers }}" hint-placeholder-val="{{ false }}">
               <sc-for list="{{ co.availVouchers }}" as="vc" hint-placeholder-count="2">
                 <div onClick="{{ vc.pick }}" style="{{ vc.style }}">
-                  <div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:700;color:#221C18">{{ vc.title }}</div><div style="font-size:11px;color:#8C8279;margin-top:2px">{{ vc.sub }}</div></div>
+                  <div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:700;color:#1C1813">{{ vc.title }}</div><div style="font-size:11px;color:#968B7E;margin-top:2px">{{ vc.sub }}</div></div>
                   <span style="font-size:16px;color:{{ vc.markColor }}">{{ vc.mark }}</span>
                 </div>
               </sc-for>
@@ -391,10 +400,10 @@
           </div>
 
           <div style="background:#fff;border-radius:14px;padding:14px 16px;margin-bottom:14px">
-            <div style="font-weight:700;font-size:13px;color:#221C18;margin-bottom:10px">支付方式</div>
+            <div style="font-weight:700;font-size:13px;color:#1C1813;margin-bottom:10px">支付方式</div>
             <sc-for list="{{ co.payOpts }}" as="pm" hint-placeholder-count="2">
               <div onClick="{{ pm.set }}" style="{{ pm.style }}">
-                <span style="font-size:14px;color:#221C18">{{ pm.label }}</span>
+                <span style="font-size:14px;color:#1C1813">{{ pm.label }}</span>
                 <span style="font-size:16px;color:{{ pm.dotColor }}">{{ pm.dot }}</span>
               </div>
             </sc-for>
@@ -406,14 +415,14 @@
             <sc-if value="{{ co.hasDiscount }}" hint-placeholder-val="{{ false }}">
               <div style="display:flex;justify-content:space-between;font-size:13px;color:#2E7D4F;margin-bottom:8px"><span>抵用券</span><span>{{ co.discountStr }}</span></div>
             </sc-if>
-            <div style="border-top:1px dashed #E5DBCC;margin:10px 0"></div>
-            <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-weight:700;font-size:14px;color:#221C18">应付总额</span><span style="color:#E0392B;font-weight:900;font-size:22px">{{ co.totalStr }}</span></div>
-            <div style="font-size:11px;color:#D89A2A;margin-top:8px">⭐ {{ co.pointsHint }}</div>
+            <div style="border-top:1px dashed #ECE4D6;margin:10px 0"></div>
+            <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-weight:700;font-size:14px;color:#1C1813">应付总额</span><span style="color:#DB4A2B;font-weight:900;font-size:22px">{{ co.totalStr }}</span></div>
+            <div style="font-size:11px;color:#C2933F;margin-top:8px">⭐ {{ co.pointsHint }}</div>
           </div>
-          <div style="font-size:11px;color:#8C8279;line-height:1.7;margin-top:12px">下单即同意：餐食日前一天 12:00 前可取消并退回账户余额，超时不支持取消或退款。</div>
+          <div style="font-size:11px;color:#968B7E;line-height:1.7;margin-top:12px">下单即同意：餐食日前一天 12:00 前可取消并退回账户余额，超时不支持取消或退款。</div>
         </div>
         <div style="position:absolute;left:0;right:0;bottom:0;background:#fff;padding:14px 16px 22px;box-shadow:0 -6px 18px rgba(80,50,20,.08);display:flex;align-items:center;gap:14px">
-          <div><div style="font-size:11px;color:#8C8279">应付</div><div style="color:#E0392B;font-weight:900;font-size:21px">{{ co.totalStr }}</div></div>
+          <div><div style="font-size:11px;color:#968B7E">应付</div><div style="color:#DB4A2B;font-weight:900;font-size:21px">{{ co.totalStr }}</div></div>
           <button onClick="{{ co.pay }}" style="flex:1;height:50px;border:none;border-radius:25px;background:{{ co.payBg }};color:#fff;font-weight:900;font-size:16px;cursor:pointer">确认支付</button>
         </div>
       </sc-if>
@@ -422,56 +431,56 @@
       <sc-if value="{{ isPayResult }}" hint-placeholder-val="{{ false }}">
         <div style="text-align:center;padding:40px 24px;animation:popIn .4s">
           <div style="width:84px;height:84px;border-radius:50%;background:#2E7D4F;display:flex;align-items:center;justify-content:center;font-size:46px;margin:10px auto 0;color:#fff;box-shadow:0 12px 30px rgba(46,125,79,.3)">✓</div>
-          <div style="font-family:'Noto Serif SC',serif;font-weight:900;font-size:23px;color:#221C18;margin-top:18px">下单成功</div>
-          <div style="font-size:13px;color:#8C8279;margin-top:6px">餐厅将按汇总订单提前备货</div>
+          <div style="font-family:'Noto Serif SC',serif;font-weight:900;font-size:23px;color:#1C1813;margin-top:18px">下单成功</div>
+          <div style="font-size:13px;color:#968B7E;margin-top:6px">餐厅将按汇总订单提前备货</div>
           <div style="background:#fff;border-radius:18px;padding:20px;margin:20px 0;text-align:left">
             <div style="text-align:center;margin-bottom:16px">
-              <div style="font-size:12px;color:#8C8279">取餐码</div>
-              <div style="font-family:'Noto Serif SC',serif;font-weight:900;font-size:40px;color:#E0392B;letter-spacing:6px;margin-top:2px">{{ pr.code }}</div>
+              <div style="font-size:12px;color:#968B7E">取餐码</div>
+              <div style="font-family:'Noto Serif SC',serif;font-weight:900;font-size:40px;color:#DB4A2B;letter-spacing:6px;margin-top:2px">{{ pr.code }}</div>
             </div>
             <div style="display:flex;justify-content:space-between;font-size:13px;color:#5a524a;padding:6px 0"><span>订单号</span><span style="font-weight:600">{{ pr.orderNo }}</span></div>
             <div style="display:flex;justify-content:space-between;font-size:13px;color:#5a524a;padding:6px 0"><span>餐食日期</span><span>{{ pr.dates }}</span></div>
             <div style="display:flex;justify-content:space-between;font-size:13px;color:#5a524a;padding:6px 0"><span>交付方式</span><span>{{ pr.deliver }}</span></div>
             <div style="display:flex;justify-content:space-between;font-size:13px;color:#5a524a;padding:6px 0"><span>支付方式</span><span>{{ pr.payMethod }}</span></div>
-            <div style="display:flex;justify-content:space-between;font-size:13px;color:#5a524a;padding:6px 0"><span>实付金额</span><span style="color:#E0392B;font-weight:700">{{ pr.total }}</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;color:#5a524a;padding:6px 0"><span>实付金额</span><span style="color:#DB4A2B;font-weight:700">{{ pr.total }}</span></div>
           </div>
           <sc-if value="{{ pr.hasEarned }}" hint-placeholder-val="{{ false }}">
-            <div onClick="{{ pr.goMe }}" style="background:#FFF8EE;border:1px solid #F2E4CE;border-radius:14px;padding:13px 16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer">
+            <div onClick="{{ pr.goMe }}" style="background:#FBF6EC;border:1px solid #EFE3CF;border-radius:14px;padding:13px 16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer">
               <span style="font-size:13px;color:#C7891B;font-weight:700">⭐ 本单获得 {{ pr.earned }} 积分</span>
               <span style="font-size:12px;color:#C7891B">去会员中心 ›</span>
             </div>
           </sc-if>
-          <button onClick="{{ pr.viewOrders }}" style="width:100%;height:48px;border:none;border-radius:24px;background:#E0392B;color:#fff;font-weight:900;font-size:15px;cursor:pointer">查看我的订单</button>
-          <button onClick="{{ goHome }}" style="width:100%;height:46px;border:none;background:none;color:#8C8279;font-size:14px;cursor:pointer;margin-top:6px">返回首页</button>
+          <button onClick="{{ pr.viewOrders }}" style="width:100%;height:48px;border:none;border-radius:24px;background:#DB4A2B;color:#fff;font-weight:900;font-size:15px;cursor:pointer">查看我的订单</button>
+          <button onClick="{{ goHome }}" style="width:100%;height:46px;border:none;background:none;color:#968B7E;font-size:14px;cursor:pointer;margin-top:6px">返回首页</button>
         </div>
       </sc-if>
 
       <!-- ================= ORDERS ================= -->
       <sc-if value="{{ isOrders }}" hint-placeholder-val="{{ false }}">
         <div style="padding:12px 16px 24px">
-          <div style="display:flex;align-items:center;justify-content:space-between;background:linear-gradient(120deg,#221C18,#3a312a);color:#fff;border-radius:16px;padding:14px 18px;margin-bottom:14px">
+          <div style="display:flex;align-items:center;justify-content:space-between;background:linear-gradient(120deg,#1C1813,#332A22);color:#fff;border-radius:16px;padding:14px 18px;margin-bottom:14px">
             <div><div style="font-size:12px;opacity:.75">账户余额</div><div style="font-weight:900;font-size:22px;margin-top:2px">{{ balanceStr }}</div></div>
             <div style="font-size:11px;opacity:.75;text-align:right;line-height:1.6">取消订单<br>自动退回余额</div>
           </div>
           <sc-if value="{{ ordersEmpty }}" hint-placeholder-val="{{ false }}">
-            <div style="text-align:center;padding:70px 20px;color:#8C8279"><div style="font-size:54px">📋</div><div style="margin-top:12px;font-size:14px">还没有订单</div></div>
+            <div style="text-align:center;padding:70px 20px;color:#968B7E"><div style="font-size:54px">📋</div><div style="margin-top:12px;font-size:14px">还没有订单</div></div>
           </sc-if>
           <sc-for list="{{ orderList }}" as="o" hint-placeholder-count="2">
             <div onClick="{{ o.open }}" style="background:#fff;border-radius:16px;padding:14px 15px;margin-bottom:12px;cursor:pointer;box-shadow:0 4px 14px rgba(80,50,20,.05)">
               <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-                <span style="font-size:12px;color:#8C8279">{{ o.orderNo }}</span>
+                <span style="font-size:12px;color:#968B7E">{{ o.orderNo }}</span>
                 <span style="{{ o.statusStyle }}">{{ o.statusLabel }}</span>
               </div>
               <sc-for list="{{ o.lines }}" as="ln" hint-placeholder-count="2">
                 <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
                   <div style="width:40px;height:40px;border-radius:10px;background:{{ ln.bg }};display:flex;align-items:center;justify-content:center;font-size:21px;flex:none">{{ ln.emoji }}</div>
-                  <div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600;color:#221C18">{{ ln.name }}</div><div style="font-size:11px;color:#8C8279">{{ ln.sub }}</div></div>
-                  <span style="font-size:12px;color:#8C8279">×{{ ln.qty }}</span>
+                  <div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600;color:#1C1813">{{ ln.name }}</div><div style="font-size:11px;color:#968B7E">{{ ln.sub }}</div></div>
+                  <span style="font-size:12px;color:#968B7E">×{{ ln.qty }}</span>
                 </div>
               </sc-for>
               <div style="display:flex;align-items:center;justify-content:space-between;border-top:1px dashed #EEE5D6;padding-top:10px;margin-top:4px">
-                <span style="font-size:12px;color:#8C8279">{{ o.deliver }}</span>
-                <span style="font-size:13px;color:#221C18">合计 <b style="color:#E0392B">{{ o.total }}</b></span>
+                <span style="font-size:12px;color:#968B7E">{{ o.deliver }}</span>
+                <span style="font-size:13px;color:#1C1813">合计 <b style="color:#DB4A2B">{{ o.total }}</b></span>
               </div>
             </div>
           </sc-for>
@@ -481,37 +490,37 @@
       <!-- ================= ORDER DETAIL ================= -->
       <sc-if value="{{ isOrderDetail }}" hint-placeholder-val="{{ false }}">
         <div style="padding:14px 16px 110px">
-          <div style="background:linear-gradient(135deg,#E0392B,#B5241B);color:#fff;border-radius:18px;padding:18px 20px;text-align:center">
+          <div style="background:linear-gradient(135deg,#DB4A2B,#B23A1C);color:#fff;border-radius:18px;padding:18px 20px;text-align:center">
             <div style="font-size:12px;opacity:.85">{{ od.statusLabel }} · 取餐码</div>
             <div style="font-family:'Noto Serif SC',serif;font-weight:900;font-size:42px;letter-spacing:8px;margin-top:4px">{{ od.code }}</div>
             <div style="font-size:11.5px;opacity:.85;margin-top:4px">{{ od.deliver }}</div>
           </div>
           <div style="background:#fff;border-radius:14px;padding:14px 16px;margin-top:14px">
-            <div style="font-weight:700;font-size:13px;color:#221C18;margin-bottom:12px">餐食明细</div>
+            <div style="font-weight:700;font-size:13px;color:#1C1813;margin-bottom:12px">餐食明细</div>
             <sc-for list="{{ od.items }}" as="it" hint-placeholder-count="2">
               <div style="display:flex;gap:11px;margin-bottom:12px">
                 <div style="width:48px;height:48px;border-radius:11px;background:{{ it.bg }};display:flex;align-items:center;justify-content:center;font-size:24px;flex:none">{{ it.emoji }}</div>
-                <div style="flex:1"><div style="font-size:13.5px;font-weight:600;color:#221C18">{{ it.name }}</div><div style="font-size:11px;color:#8C8279;margin-top:2px">{{ it.sub }}</div><div style="font-size:11px;color:#8C8279">{{ it.optStr }}</div></div>
-                <div style="text-align:right"><div style="font-size:13px;color:#E0392B;font-weight:700">{{ it.priceStr }}</div><div style="font-size:11px;color:#8C8279">×{{ it.qty }}</div></div>
+                <div style="flex:1"><div style="font-size:13.5px;font-weight:600;color:#1C1813">{{ it.name }}</div><div style="font-size:11px;color:#968B7E;margin-top:2px">{{ it.sub }}</div><div style="font-size:11px;color:#968B7E">{{ it.optStr }}</div></div>
+                <div style="text-align:right"><div style="font-size:13px;color:#DB4A2B;font-weight:700">{{ it.priceStr }}</div><div style="font-size:11px;color:#968B7E">×{{ it.qty }}</div></div>
               </div>
             </sc-for>
           </div>
           <div style="background:#fff;border-radius:14px;padding:14px 16px;margin-top:12px;font-size:13px;color:#5a524a">
-            <div style="display:flex;justify-content:space-between;padding:5px 0"><span style="color:#8C8279">订单号</span><span>{{ od.orderNo }}</span></div>
-            <div style="display:flex;justify-content:space-between;padding:5px 0"><span style="color:#8C8279">下单时间</span><span>{{ od.createdAt }}</span></div>
-            <div style="display:flex;justify-content:space-between;padding:5px 0"><span style="color:#8C8279">交付</span><span>{{ od.deliverFull }}</span></div>
-            <div style="display:flex;justify-content:space-between;padding:5px 0"><span style="color:#8C8279">取消截止</span><span>{{ od.cutoff }}</span></div>
-            <div style="border-top:1px dashed #E5DBCC;margin:8px 0"></div>
-            <div style="display:flex;justify-content:space-between;padding:3px 0"><span style="color:#8C8279">餐食金额</span><span>{{ od.food }}</span></div>
-            <div style="display:flex;justify-content:space-between;padding:3px 0"><span style="color:#8C8279">配送费</span><span>{{ od.fee }}</span></div>
-            <div style="display:flex;justify-content:space-between;padding:5px 0"><span style="font-weight:700;color:#221C18">实付</span><span style="color:#E0392B;font-weight:900;font-size:16px">{{ od.total }}</span></div>
+            <div style="display:flex;justify-content:space-between;padding:5px 0"><span style="color:#968B7E">订单号</span><span>{{ od.orderNo }}</span></div>
+            <div style="display:flex;justify-content:space-between;padding:5px 0"><span style="color:#968B7E">下单时间</span><span>{{ od.createdAt }}</span></div>
+            <div style="display:flex;justify-content:space-between;padding:5px 0"><span style="color:#968B7E">交付</span><span>{{ od.deliverFull }}</span></div>
+            <div style="display:flex;justify-content:space-between;padding:5px 0"><span style="color:#968B7E">取消截止</span><span>{{ od.cutoff }}</span></div>
+            <div style="border-top:1px dashed #ECE4D6;margin:8px 0"></div>
+            <div style="display:flex;justify-content:space-between;padding:3px 0"><span style="color:#968B7E">餐食金额</span><span>{{ od.food }}</span></div>
+            <div style="display:flex;justify-content:space-between;padding:3px 0"><span style="color:#968B7E">配送费</span><span>{{ od.fee }}</span></div>
+            <div style="display:flex;justify-content:space-between;padding:5px 0"><span style="font-weight:700;color:#1C1813">实付</span><span style="color:#DB4A2B;font-weight:900;font-size:16px">{{ od.total }}</span></div>
           </div>
           <sc-if value="{{ od.canReview }}" hint-placeholder-val="{{ false }}">
             <button onClick="{{ od.review }}" style="{{ od.reviewStyle }}">{{ od.reviewLabel }}</button>
           </sc-if>
         </div>
         <div style="position:absolute;left:0;right:0;bottom:0;background:#fff;padding:12px 16px 22px;box-shadow:0 -6px 18px rgba(80,50,20,.08);display:flex;gap:12px">
-          <button onClick="{{ goSupport }}" style="flex:none;width:120px;height:46px;border:1px solid #E5DBCC;background:#fff;color:#221C18;font-weight:700;font-size:14px;border-radius:23px;cursor:pointer">联系客服</button>
+          <button onClick="{{ goSupport }}" style="flex:none;width:120px;height:46px;border:1px solid #ECE4D6;background:#fff;color:#1C1813;font-weight:700;font-size:14px;border-radius:23px;cursor:pointer">联系客服</button>
           <button onClick="{{ od.cancel }}" style="{{ od.cancelStyle }}">{{ od.cancelLabel }}</button>
         </div>
       </sc-if>
@@ -519,10 +528,10 @@
       <!-- ================= PICKUP INFO ================= -->
       <sc-if value="{{ isPickup }}" hint-placeholder-val="{{ false }}">
         <div style="padding:14px 16px 24px">
-          <div style="font-size:13px;color:#8C8279;line-height:1.7;margin-bottom:14px">自提为默认推荐方式，免配送费。凭取餐码在指定时间到自提点取餐。</div>
+          <div style="font-size:13px;color:#968B7E;line-height:1.7;margin-bottom:14px">自提为默认推荐方式，免配送费。凭取餐码在指定时间到自提点取餐。</div>
           <sc-for list="{{ pickupFull }}" as="pp" hint-placeholder-count="3">
             <div style="background:#fff;border-radius:16px;padding:15px 16px;margin-bottom:12px">
-              <div style="display:flex;align-items:center;gap:10px"><span style="font-size:22px">📍</span><span style="font-weight:700;font-size:15px;color:#221C18">{{ pp.name }}</span></div>
+              <div style="display:flex;align-items:center;gap:10px"><span style="font-size:22px">📍</span><span style="font-weight:700;font-size:15px;color:#1C1813">{{ pp.name }}</span></div>
               <div style="height:96px;border-radius:12px;background:linear-gradient(135deg,#E8EFE6,#D7E4D0);margin:10px 0;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center">
                 <span style="font-size:30px">🗺️</span>
                 <span style="position:absolute;bottom:8px;left:10px;font-size:11px;color:#5a6b50;background:rgba(255,255,255,.7);padding:2px 7px;border-radius:6px">{{ pp.address }}</span>
@@ -540,15 +549,15 @@
       <!-- ================= DELIVERY INFO ================= -->
       <sc-if value="{{ isDelivery }}" hint-placeholder-val="{{ false }}">
         <div style="padding:14px 16px 24px">
-          <div style="font-size:13px;color:#8C8279;line-height:1.7;margin-bottom:14px">试运营期间仅支持 Irvine 指定区域配送，固定时间段送达，不承诺精确到分钟。</div>
+          <div style="font-size:13px;color:#968B7E;line-height:1.7;margin-bottom:14px">试运营期间仅支持 Irvine 指定区域配送，固定时间段送达，不承诺精确到分钟。</div>
           <sc-for list="{{ zones }}" as="z" hint-placeholder-count="3">
             <div style="display:flex;align-items:center;gap:12px;background:#fff;border-radius:14px;padding:14px 16px;margin-bottom:10px">
               <div style="width:44px;height:44px;border-radius:12px;background:{{ z.bg }};display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;font-weight:900">{{ z.tag }}</div>
-              <div style="flex:1"><div style="font-weight:700;font-size:14px;color:#221C18">{{ z.name }}</div><div style="font-size:11.5px;color:#8C8279;margin-top:2px">{{ z.desc }}</div></div>
-              <div style="color:#E0392B;font-weight:900;font-size:16px">{{ z.fee }}</div>
+              <div style="flex:1"><div style="font-weight:700;font-size:14px;color:#1C1813">{{ z.name }}</div><div style="font-size:11.5px;color:#968B7E;margin-top:2px">{{ z.desc }}</div></div>
+              <div style="color:#DB4A2B;font-weight:900;font-size:16px">{{ z.fee }}</div>
             </div>
           </sc-for>
-          <div style="background:#FFF8EE;border:1px solid #F2E4CE;border-radius:14px;padding:14px 16px;margin-top:6px;font-size:12px;color:#8C8279;line-height:1.8">
+          <div style="background:#FBF6EC;border:1px solid #EFE3CF;border-radius:14px;padding:14px 16px;margin-top:6px;font-size:12px;color:#968B7E;line-height:1.8">
             · 配送最低消费 $20<br>· 满 $35 减 $2 配送费（P1）<br>· 超出配送区域请改选自提<br>· 配送异常由平台客服联系
           </div>
         </div>
@@ -557,22 +566,22 @@
       <!-- ================= ENTERPRISE ================= -->
       <sc-if value="{{ isEnterprise }}" hint-placeholder-val="{{ false }}">
         <div style="padding:0 0 24px">
-          <div style="background:linear-gradient(135deg,#221C18,#3a312a);color:#fff;padding:26px 20px">
+          <div style="background:linear-gradient(135deg,#1C1813,#332A22);color:#fff;padding:26px 20px">
             <div style="font-family:'Noto Serif SC',serif;font-weight:900;font-size:24px">公司 / 机构团餐合作</div>
             <div style="font-size:13px;opacity:.8;margin-top:8px;line-height:1.7">为办公室、补习机构、教会社团、活动场地与老人中心提供稳定周餐、活动餐与午餐包月服务。</div>
           </div>
           <div style="padding:16px">
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
               <sc-for list="{{ entFeatures }}" as="f" hint-placeholder-count="4">
-                <div style="background:#fff;border-radius:14px;padding:14px"><div style="font-size:24px">{{ f.icon }}</div><div style="font-weight:700;font-size:13px;color:#221C18;margin-top:6px">{{ f.title }}</div><div style="font-size:11px;color:#8C8279;margin-top:2px">{{ f.sub }}</div></div>
+                <div style="background:#fff;border-radius:14px;padding:14px"><div style="font-size:24px">{{ f.icon }}</div><div style="font-weight:700;font-size:13px;color:#1C1813;margin-top:6px">{{ f.title }}</div><div style="font-size:11px;color:#968B7E;margin-top:2px">{{ f.sub }}</div></div>
               </sc-for>
             </div>
             <div style="background:#fff;border-radius:16px;padding:16px">
-              <div style="font-weight:700;font-size:14px;color:#221C18;margin-bottom:12px">留下合作意向</div>
-              <input placeholder="公司 / 机构名称" style="width:100%;border:1px solid #E5DBCC;border-radius:10px;padding:11px 12px;font-size:13px;margin-bottom:10px;outline:none;font-family:inherit">
-              <input placeholder="联系人 + 电话" style="width:100%;border:1px solid #E5DBCC;border-radius:10px;padding:11px 12px;font-size:13px;margin-bottom:10px;outline:none;font-family:inherit">
-              <input placeholder="预计每日餐数" style="width:100%;border:1px solid #E5DBCC;border-radius:10px;padding:11px 12px;font-size:13px;margin-bottom:12px;outline:none;font-family:inherit">
-              <button onClick="{{ submitEnterprise }}" style="width:100%;height:46px;border:none;border-radius:23px;background:#E0392B;color:#fff;font-weight:900;font-size:15px;cursor:pointer">提交合作意向</button>
+              <div style="font-weight:700;font-size:14px;color:#1C1813;margin-bottom:12px">留下合作意向</div>
+              <input placeholder="公司 / 机构名称" style="width:100%;border:1px solid #ECE4D6;border-radius:10px;padding:11px 12px;font-size:13px;margin-bottom:10px;outline:none;font-family:inherit">
+              <input placeholder="联系人 + 电话" style="width:100%;border:1px solid #ECE4D6;border-radius:10px;padding:11px 12px;font-size:13px;margin-bottom:10px;outline:none;font-family:inherit">
+              <input placeholder="预计每日餐数" style="width:100%;border:1px solid #ECE4D6;border-radius:10px;padding:11px 12px;font-size:13px;margin-bottom:12px;outline:none;font-family:inherit">
+              <button onClick="{{ submitEnterprise }}" style="width:100%;height:46px;border:none;border-radius:23px;background:#DB4A2B;color:#fff;font-weight:900;font-size:15px;cursor:pointer">提交合作意向</button>
             </div>
           </div>
         </div>
@@ -583,16 +592,16 @@
         <div style="padding:14px 16px 24px">
           <div style="background:#fff;border-radius:16px;padding:18px;margin-bottom:14px;text-align:center">
             <div style="font-size:40px">💬</div>
-            <div style="font-weight:700;font-size:16px;color:#221C18;margin-top:8px">联系客服</div>
-            <div style="font-size:12.5px;color:#8C8279;margin-top:4px">服务时间 10:00 – 20:00</div>
+            <div style="font-weight:700;font-size:16px;color:#1C1813;margin-top:8px">联系客服</div>
+            <div style="font-size:12.5px;color:#968B7E;margin-top:4px">服务时间 10:00 – 20:00</div>
             <div style="display:flex;gap:10px;margin-top:16px">
-              <div style="flex:1;border:1px solid #E5DBCC;border-radius:12px;padding:12px"><div style="font-size:20px">📱</div><div style="font-size:12px;color:#221C18;margin-top:4px;font-weight:600">微信客服</div><div style="font-size:11px;color:#8C8279">meishituan</div></div>
-              <div style="flex:1;border:1px solid #E5DBCC;border-radius:12px;padding:12px"><div style="font-size:20px">☎️</div><div style="font-size:12px;color:#221C18;margin-top:4px;font-weight:600">客服电话</div><div style="font-size:11px;color:#8C8279">(949) 555-0188</div></div>
+              <div style="flex:1;border:1px solid #ECE4D6;border-radius:12px;padding:12px"><div style="font-size:20px">📱</div><div style="font-size:12px;color:#1C1813;margin-top:4px;font-weight:600">微信客服</div><div style="font-size:11px;color:#968B7E">meishituan</div></div>
+              <div style="flex:1;border:1px solid #ECE4D6;border-radius:12px;padding:12px"><div style="font-size:20px">☎️</div><div style="font-size:12px;color:#1C1813;margin-top:4px;font-weight:600">客服电话</div><div style="font-size:11px;color:#968B7E">(949) 555-0188</div></div>
             </div>
           </div>
-          <div style="font-weight:700;font-size:14px;color:#221C18;margin:6px 0 10px">常见问题</div>
+          <div style="font-weight:700;font-size:14px;color:#1C1813;margin:6px 0 10px">常见问题</div>
           <sc-for list="{{ faqs }}" as="q" hint-placeholder-count="4">
-            <div style="background:#fff;border-radius:12px;padding:13px 15px;margin-bottom:8px"><div style="font-weight:600;font-size:13px;color:#221C18">{{ q.q }}</div><div style="font-size:12px;color:#8C8279;margin-top:5px;line-height:1.6">{{ q.a }}</div></div>
+            <div style="background:#fff;border-radius:12px;padding:13px 15px;margin-bottom:8px"><div style="font-weight:600;font-size:13px;color:#1C1813">{{ q.q }}</div><div style="font-size:12px;color:#968B7E;margin-top:5px;line-height:1.6">{{ q.a }}</div></div>
           </sc-for>
         </div>
       </sc-if>
@@ -600,8 +609,8 @@
       <!-- ================= ME（会员中心）================= -->
       <sc-if value="{{ isMe }}" hint-placeholder-val="{{ false }}">
         <div style="animation:popIn .35s;padding-bottom:24px">
-          <div onClick="{{ goLogin }}" style="background:linear-gradient(135deg,#221C18,#3a312a);color:#fff;padding:24px 18px 28px;display:flex;align-items:center;gap:14px;cursor:pointer">
-            <div style="width:56px;height:56px;border-radius:50%;background:#E0392B;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;flex:none">{{ meAvatar }}</div>
+          <div onClick="{{ goLogin }}" style="background:linear-gradient(135deg,#1C1813,#332A22);color:#fff;padding:24px 18px 28px;display:flex;align-items:center;gap:14px;cursor:pointer">
+            <div style="width:56px;height:56px;border-radius:50%;background:#DB4A2B;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;flex:none">{{ meAvatar }}</div>
             <div style="flex:1;min-width:0">
               <div style="font-family:'Noto Serif SC',serif;font-weight:900;font-size:19px">{{ meTitle }}</div>
               <div style="font-size:12px;opacity:.8;margin-top:3px">{{ meSub }}</div>
@@ -611,21 +620,21 @@
 
           <div style="margin:-16px 16px 0;background:#fff;border-radius:18px;padding:16px 18px;box-shadow:0 8px 24px rgba(80,50,20,.1);display:flex;align-items:center;justify-content:space-between">
             <div onClick="{{ goPointsShop }}" style="cursor:pointer">
-              <div style="font-size:12px;color:#8C8279">我的积分</div>
-              <div style="font-family:'Noto Serif SC',serif;font-weight:900;font-size:26px;color:#E0392B;margin-top:2px">{{ pointsBal }}</div>
+              <div style="font-size:12px;color:#968B7E">我的积分</div>
+              <div style="font-family:'Noto Serif SC',serif;font-weight:900;font-size:26px;color:#DB4A2B;margin-top:2px">{{ pointsBal }}</div>
             </div>
             <button onClick="{{ goPointsShop }}" style="border:none;background:#FBE9D6;color:#C7700F;font-weight:700;font-size:13px;padding:9px 16px;border-radius:18px;cursor:pointer">积分商城 ›</button>
           </div>
           <sc-if value="{{ hasSoonExpire }}" hint-placeholder-val="{{ false }}">
-            <div style="margin:8px 16px 0;font-size:11px;color:#D89A2A">⏳ {{ soonExpireStr }}</div>
+            <div style="margin:8px 16px 0;font-size:11px;color:#C2933F">⏳ {{ soonExpireStr }}</div>
           </sc-if>
 
           <div style="margin:16px 16px 0;background:#fff;border-radius:18px;padding:6px 6px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px">
             <sc-for list="{{ meEntries }}" as="en" hint-placeholder-count="6">
               <div onClick="{{ en.go }}" style="text-align:center;padding:16px 6px;border-radius:14px;cursor:pointer">
                 <div style="font-size:26px">{{ en.icon }}</div>
-                <div style="font-size:13px;font-weight:700;color:#221C18;margin-top:6px">{{ en.label }}</div>
-                <div style="font-size:10px;color:#8C8279;margin-top:2px">{{ en.sub }}</div>
+                <div style="font-size:13px;font-weight:700;color:#1C1813;margin-top:6px">{{ en.label }}</div>
+                <div style="font-size:10px;color:#968B7E;margin-top:2px">{{ en.sub }}</div>
               </div>
             </sc-for>
           </div>
@@ -641,11 +650,11 @@
         <div style="padding:40px 24px;animation:popIn .35s">
           <div style="text-align:center;margin-bottom:30px">
             <div style="font-size:54px">🍱</div>
-            <div style="font-family:'Noto Serif SC',serif;font-weight:900;font-size:22px;color:#221C18;margin-top:10px">登录万能团餐</div>
-            <div style="font-size:13px;color:#8C8279;margin-top:6px">手机号即可登录（试运营免验证码）</div>
+            <div style="font-family:'Noto Serif SC',serif;font-weight:900;font-size:22px;color:#1C1813;margin-top:10px">登录万能团餐</div>
+            <div style="font-size:13px;color:#968B7E;margin-top:6px">手机号即可登录（试运营免验证码）</div>
           </div>
-          <input value="{{ loginPhoneVal }}" onInput="{{ onLoginPhone }}" placeholder="请输入手机号" style="width:100%;border:1px solid #E5DBCC;border-radius:12px;padding:14px 14px;font-size:15px;outline:none;font-family:inherit;background:#FCFAF6;margin-bottom:14px">
-          <button onClick="{{ submitLogin }}" style="width:100%;height:50px;border:none;border-radius:25px;background:#E0392B;color:#fff;font-weight:900;font-size:16px;cursor:pointer">登录 / 注册</button>
+          <input value="{{ loginPhoneVal }}" onInput="{{ onLoginPhone }}" placeholder="请输入手机号" style="width:100%;border:1px solid #ECE4D6;border-radius:12px;padding:14px 14px;font-size:15px;outline:none;font-family:inherit;background:#FCFAF6;margin-bottom:14px">
+          <button onClick="{{ submitLogin }}" style="width:100%;height:50px;border:none;border-radius:25px;background:#DB4A2B;color:#fff;font-weight:900;font-size:16px;cursor:pointer">登录 / 注册</button>
           <div style="font-size:11px;color:#A89A8A;text-align:center;line-height:1.7;margin-top:16px">登录即同意《用户协议》与《隐私政策》<br>未来可升级为微信登录 / 短信验证码</div>
         </div>
       </sc-if>
@@ -653,7 +662,7 @@
       <!-- ================= CHECKIN（每日签到）================= -->
       <sc-if value="{{ isCheckin }}" hint-placeholder-val="{{ false }}">
         <div style="padding:16px 16px 24px;animation:popIn .35s">
-          <div style="background:linear-gradient(135deg,#E0392B,#B5241B);color:#fff;border-radius:18px;padding:20px;text-align:center">
+          <div style="background:linear-gradient(135deg,#DB4A2B,#B23A1C);color:#fff;border-radius:18px;padding:20px;text-align:center">
             <div style="font-size:13px;opacity:.9">已连续签到</div>
             <div style="font-family:'Noto Serif SC',serif;font-weight:900;font-size:40px;margin:4px 0">{{ ck.streak }} 天</div>
             <div style="font-size:12px;opacity:.85">累计签到 {{ ck.total }} 天</div>
@@ -662,16 +671,16 @@
             <sc-for list="{{ ck.week }}" as="w" hint-placeholder-count="7">
               <div style="{{ w.style }}">
                 <div style="{{ w.dotStyle }}">{{ w.mark }}</div>
-                <div style="font-size:10px;color:#8C8279;margin-top:4px">{{ w.day }}</div>
+                <div style="font-size:10px;color:#968B7E;margin-top:4px">{{ w.day }}</div>
                 <div style="font-size:10px;color:#C7700F;font-weight:700">{{ w.reward }}</div>
               </div>
             </sc-for>
           </div>
           <button onClick="{{ ck.sign }}" style="{{ ck.btnStyle }}">{{ ck.btnLabel }}</button>
           <div style="background:#fff;border-radius:14px;padding:14px 16px;margin-top:16px">
-            <div style="font-weight:700;font-size:13px;color:#221C18;margin-bottom:8px">签到规则</div>
+            <div style="font-weight:700;font-size:13px;color:#1C1813;margin-bottom:8px">签到规则</div>
             <sc-for list="{{ ck.rules }}" as="ru" hint-placeholder-count="4">
-              <div style="font-size:12px;color:#8C8279;line-height:1.9">· {{ ru }}</div>
+              <div style="font-size:12px;color:#968B7E;line-height:1.9">· {{ ru }}</div>
             </sc-for>
           </div>
         </div>
@@ -681,11 +690,11 @@
       <sc-if value="{{ isVouchers }}" hint-placeholder-val="{{ false }}">
         <div style="padding:14px 16px 24px;animation:popIn .35s">
           <div style="background:#fff;border-radius:14px;padding:12px;margin-bottom:14px;display:flex;gap:8px">
-            <input value="{{ voucherCodeVal }}" onInput="{{ onVoucherCode }}" placeholder="输入券码领取（试试 WELCOME5）" style="flex:1;border:1px solid #E5DBCC;border-radius:10px;padding:11px 12px;font-size:13px;outline:none;font-family:inherit;background:#FCFAF6">
-            <button onClick="{{ doClaimVoucher }}" style="flex:none;border:none;background:#E0392B;color:#fff;font-weight:700;font-size:13px;padding:0 16px;border-radius:10px;cursor:pointer">领取</button>
+            <input value="{{ voucherCodeVal }}" onInput="{{ onVoucherCode }}" placeholder="输入券码领取（试试 WELCOME5）" style="flex:1;border:1px solid #ECE4D6;border-radius:10px;padding:11px 12px;font-size:13px;outline:none;font-family:inherit;background:#FCFAF6">
+            <button onClick="{{ doClaimVoucher }}" style="flex:none;border:none;background:#DB4A2B;color:#fff;font-weight:700;font-size:13px;padding:0 16px;border-radius:10px;cursor:pointer">领取</button>
           </div>
           <sc-if value="{{ voucherEmpty }}" hint-placeholder-val="{{ false }}">
-            <div style="text-align:center;padding:60px 20px;color:#8C8279"><div style="font-size:48px">🎟️</div><div style="margin-top:10px;font-size:14px">卡包还是空的</div></div>
+            <div style="text-align:center;padding:60px 20px;color:#968B7E"><div style="font-size:48px">🎟️</div><div style="margin-top:10px;font-size:14px">卡包还是空的</div></div>
           </sc-if>
           <sc-for list="{{ voucherCards }}" as="vc" hint-placeholder-count="3">
             <div style="{{ vc.cardStyle }}">
@@ -694,9 +703,9 @@
                 <div style="font-size:10px;opacity:.9;margin-top:4px">{{ vc.statusLabel }}</div>
               </div>
               <div style="flex:1;padding:13px 14px">
-                <div style="font-weight:700;font-size:14px;color:#221C18">{{ vc.title }}</div>
-                <div style="font-size:11px;color:#8C8279;margin-top:4px">{{ vc.cond }}</div>
-                <div style="font-size:11px;color:#8C8279;margin-top:2px">{{ vc.validStr }}</div>
+                <div style="font-weight:700;font-size:14px;color:#1C1813">{{ vc.title }}</div>
+                <div style="font-size:11px;color:#968B7E;margin-top:4px">{{ vc.cond }}</div>
+                <div style="font-size:11px;color:#968B7E;margin-top:2px">{{ vc.validStr }}</div>
                 <div style="font-size:10px;color:#B9AE9E;margin-top:4px">{{ vc.source }}</div>
               </div>
             </div>
@@ -707,14 +716,14 @@
       <!-- ================= POINTS SHOP（积分商城）================= -->
       <sc-if value="{{ isPointsShop }}" hint-placeholder-val="{{ false }}">
         <div style="padding:16px 16px 24px;animation:popIn .35s">
-          <div style="background:linear-gradient(120deg,#221C18,#3a312a);color:#fff;border-radius:16px;padding:16px 18px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between">
+          <div style="background:linear-gradient(120deg,#1C1813,#332A22);color:#fff;border-radius:16px;padding:16px 18px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between">
             <div><div style="font-size:12px;opacity:.75">当前可用积分</div><div style="font-weight:900;font-size:24px;margin-top:2px">{{ shopBalStr }}</div></div>
             <span style="font-size:30px">🛍️</span>
           </div>
           <sc-for list="{{ shopItems }}" as="si" hint-placeholder-count="4">
             <div style="background:#fff;border-radius:14px;padding:14px 15px;margin-bottom:12px;display:flex;align-items:center;gap:13px;box-shadow:0 4px 14px rgba(80,50,20,.05)">
               <div style="width:48px;height:48px;border-radius:12px;background:#FBF3E6;display:flex;align-items:center;justify-content:center;font-size:26px;flex:none">{{ si.icon }}</div>
-              <div style="flex:1"><div style="font-weight:700;font-size:14px;color:#221C18">{{ si.name }}</div><div style="font-size:12px;color:#C7700F;font-weight:700;margin-top:3px">{{ si.costStr }}</div></div>
+              <div style="flex:1"><div style="font-weight:700;font-size:14px;color:#1C1813">{{ si.name }}</div><div style="font-size:12px;color:#C7700F;font-weight:700;margin-top:3px">{{ si.costStr }}</div></div>
               <button onClick="{{ si.redeem }}" style="{{ si.btnStyle }}">{{ si.btnLabel }}</button>
             </div>
           </sc-for>
@@ -725,7 +734,7 @@
       <!-- ================= INVITE（邀请好友）================= -->
       <sc-if value="{{ isInvite }}" hint-placeholder-val="{{ false }}">
         <div style="padding:16px 16px 24px;animation:popIn .35s">
-          <div style="background:linear-gradient(135deg,#E0392B,#B5241B);color:#fff;border-radius:18px;padding:24px 20px;text-align:center">
+          <div style="background:linear-gradient(135deg,#DB4A2B,#B23A1C);color:#fff;border-radius:18px;padding:24px 20px;text-align:center">
             <div style="font-size:40px">🤝</div>
             <div style="font-family:'Noto Serif SC',serif;font-weight:900;font-size:20px;margin-top:8px">邀请好友 双方得积分</div>
             <div style="font-size:12px;opacity:.9;line-height:1.7;margin-top:8px">{{ invRewardCfg }}</div>
@@ -733,11 +742,11 @@
               <div style="font-size:11px;opacity:.85">我的专属邀请码</div>
               <div style="font-family:'Noto Serif SC',serif;font-weight:900;font-size:28px;letter-spacing:4px;margin-top:2px">{{ invCode }}</div>
             </div>
-            <button onClick="{{ doCopyInvite }}" style="width:100%;height:46px;border:none;border-radius:23px;background:#fff;color:#E0392B;font-weight:900;font-size:15px;cursor:pointer;margin-top:14px">复制邀请链接</button>
+            <button onClick="{{ doCopyInvite }}" style="width:100%;height:46px;border:none;border-radius:23px;background:#fff;color:#DB4A2B;font-weight:900;font-size:15px;cursor:pointer;margin-top:14px">复制邀请链接</button>
           </div>
           <div style="display:flex;gap:12px;margin-top:16px">
-            <div style="flex:1;background:#fff;border-radius:14px;padding:16px;text-align:center"><div style="font-size:12px;color:#8C8279">已邀请好友</div><div style="font-weight:900;font-size:24px;color:#221C18;margin-top:4px">{{ invCount }}</div></div>
-            <div style="flex:1;background:#fff;border-radius:14px;padding:16px;text-align:center"><div style="font-size:12px;color:#8C8279">累计获得积分</div><div style="font-weight:900;font-size:24px;color:#E0392B;margin-top:4px">{{ invReward }}</div></div>
+            <div style="flex:1;background:#fff;border-radius:14px;padding:16px;text-align:center"><div style="font-size:12px;color:#968B7E">已邀请好友</div><div style="font-weight:900;font-size:24px;color:#1C1813;margin-top:4px">{{ invCount }}</div></div>
+            <div style="flex:1;background:#fff;border-radius:14px;padding:16px;text-align:center"><div style="font-size:12px;color:#968B7E">累计获得积分</div><div style="font-weight:900;font-size:24px;color:#DB4A2B;margin-top:4px">{{ invReward }}</div></div>
           </div>
         </div>
       </sc-if>
@@ -746,14 +755,14 @@
       <sc-if value="{{ isMessages }}" hint-placeholder-val="{{ false }}">
         <div style="padding:14px 16px 24px;animation:popIn .35s">
           <sc-if value="{{ msgEmpty }}" hint-placeholder-val="{{ false }}">
-            <div style="text-align:center;padding:60px 20px;color:#8C8279"><div style="font-size:48px">🔔</div><div style="margin-top:10px;font-size:14px">暂无消息</div></div>
+            <div style="text-align:center;padding:60px 20px;color:#968B7E"><div style="font-size:48px">🔔</div><div style="margin-top:10px;font-size:14px">暂无消息</div></div>
           </sc-if>
           <sc-for list="{{ msgList }}" as="ms" hint-placeholder-count="3">
             <div style="background:#fff;border-radius:14px;padding:14px 15px;margin-bottom:10px;display:flex;gap:12px;box-shadow:0 4px 14px rgba(80,50,20,.05)">
               <div style="font-size:24px;flex:none">{{ ms.icon }}</div>
               <div style="flex:1;min-width:0">
-                <div style="font-weight:700;font-size:14px;color:#221C18">{{ ms.title }}</div>
-                <div style="font-size:12px;color:#8C8279;margin-top:4px;line-height:1.6">{{ ms.body }}</div>
+                <div style="font-weight:700;font-size:14px;color:#1C1813">{{ ms.title }}</div>
+                <div style="font-size:12px;color:#968B7E;margin-top:4px;line-height:1.6">{{ ms.body }}</div>
                 <div style="font-size:10px;color:#C9BFB0;margin-top:6px">{{ ms.timeStr }}</div>
               </div>
             </div>
@@ -766,23 +775,23 @@
       <sc-if value="{{ isReview }}" hint-placeholder-val="{{ false }}">
         <div style="padding:18px 16px 24px;animation:popIn .35s">
           <div style="background:#fff;border-radius:16px;padding:18px">
-            <div style="font-weight:700;font-size:14px;color:#221C18;margin-bottom:10px">菜品评分</div>
+            <div style="font-weight:700;font-size:14px;color:#1C1813;margin-bottom:10px">菜品评分</div>
             <div style="display:flex;gap:8px;margin-bottom:18px">
               <sc-for list="{{ rv.foodStars }}" as="s" hint-placeholder-count="5">
                 <span onClick="{{ s.set }}" style="font-size:32px;cursor:pointer;color:{{ s.color }}">{{ s.ch }}</span>
               </sc-for>
             </div>
-            <div style="font-weight:700;font-size:14px;color:#221C18;margin-bottom:10px">餐厅评分</div>
+            <div style="font-weight:700;font-size:14px;color:#1C1813;margin-bottom:10px">餐厅评分</div>
             <div style="display:flex;gap:8px;margin-bottom:18px">
               <sc-for list="{{ rv.restStars }}" as="s" hint-placeholder-count="5">
                 <span onClick="{{ s.set }}" style="font-size:32px;cursor:pointer;color:{{ s.color }}">{{ s.ch }}</span>
               </sc-for>
             </div>
-            <div style="font-weight:700;font-size:14px;color:#221C18;margin-bottom:10px">评价内容</div>
-            <textarea value="{{ rv.text }}" onInput="{{ rv.onText }}" placeholder="说说这餐怎么样？（仅平台可见，用于评估餐厅去留）" style="width:100%;height:100px;border:1px solid #E5DBCC;border-radius:12px;padding:12px;font-size:13px;outline:none;font-family:inherit;background:#FCFAF6;resize:none"></textarea>
+            <div style="font-weight:700;font-size:14px;color:#1C1813;margin-bottom:10px">评价内容</div>
+            <textarea value="{{ rv.text }}" onInput="{{ rv.onText }}" placeholder="说说这餐怎么样？（仅平台可见，用于评估餐厅去留）" style="width:100%;height:100px;border:1px solid #ECE4D6;border-radius:12px;padding:12px;font-size:13px;outline:none;font-family:inherit;background:#FCFAF6;resize:none"></textarea>
             <div style="font-size:11px;color:#A89A8A;margin-top:8px">📷 上传照片凭证（演示占位，真实环境支持）</div>
           </div>
-          <button onClick="{{ rv.submit }}" style="width:100%;height:50px;border:none;border-radius:25px;background:#E0392B;color:#fff;font-weight:900;font-size:16px;cursor:pointer;margin-top:18px">提交评价 · 得 20 积分</button>
+          <button onClick="{{ rv.submit }}" style="width:100%;height:50px;border:none;border-radius:25px;background:#DB4A2B;color:#fff;font-weight:900;font-size:16px;cursor:pointer;margin-top:18px">提交评价 · 得 20 积分</button>
         </div>
       </sc-if>
 
@@ -790,11 +799,11 @@
 
     <!-- ================= BOTTOM TAB ================= -->
     <sc-if value="{{ showTab }}" hint-placeholder-val="{{ true }}">
-      <div style="flex:none;height:62px;background:#fff;border-top:1px solid #F0E8DA;display:flex;padding-bottom:6px;z-index:25">
+      <div style="flex:none;height:70px;background:rgba(255,255,255,.92);backdrop-filter:blur(14px);border-top:1px solid #F0E8DA;display:flex;padding:6px 8px 12px;z-index:25;box-shadow:0 -8px 24px -14px rgba(60,40,20,.25)">
         <sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="4">
-          <button onClick="{{ tb.go }}" style="flex:1;border:none;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:{{ tb.color }}">
-            <span style="font-size:21px;position:relative">{{ tb.icon }}<sc-if value="{{ tb.showBadge }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:-3px;right:-8px;min-width:15px;height:15px;background:#E0392B;color:#fff;border-radius:8px;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 3px">{{ tb.badgeCount }}</span></sc-if></span>
-            <span style="font-size:10px;font-weight:{{ tb.weight }}">{{ tb.label }}</span>
+          <button onClick="{{ tb.go }}" style="flex:1;border:none;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:{{ tb.color }}">
+            <span style="font-size:15px;width:42px;height:30px;border-radius:16px;display:flex;align-items:center;justify-content:center;position:relative;background:{{ tb.chipBg }}">{{ tb.icon }}<sc-if value="{{ tb.showBadge }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:-2px;right:0px;min-width:15px;height:15px;background:#DB4A2B;color:#fff;border-radius:8px;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 3px;border:1.5px solid #fff">{{ tb.badgeCount }}</span></sc-if></span>
+            <span style="font-size:10px;font-weight:{{ tb.weight }};letter-spacing:.3px">{{ tb.label }}</span>
           </button>
         </sc-for>
       </div>
@@ -820,8 +829,8 @@ class Component extends DCLogic {
     ];
     this.zones = [
       {tag:'免', name:'自提', desc:'到指定自提点免费取餐', fee:'$0', bg:'#2E7D4F'},
-      {tag:'A', name:'Zone A · 近距离', desc:'Spectrum / Woodbury 一带', fee:'$3.5', bg:'#E0392B'},
-      {tag:'B', name:'Zone B · 中距离', desc:'Northwood / University Park', fee:'$5.0', bg:'#D89A2A'},
+      {tag:'A', name:'Zone A · 近距离', desc:'Spectrum / Woodbury 一带', fee:'$3.5', bg:'#DB4A2B'},
+      {tag:'B', name:'Zone B · 中距离', desc:'Northwood / University Park', fee:'$5.0', bg:'#C2933F'},
       {tag:'C', name:'Zone C · 远距离', desc:'暂不支持，可单独报价', fee:'报价', bg:'#A89A8A'}
     ];
     const u = (window.Store && Store.currentUser()) || null;
@@ -1022,7 +1031,7 @@ class Component extends DCLogic {
 
   statusStyle(s){
     const base='font-size:11px;font-weight:700;padding:3px 9px;border-radius:8px;';
-    const map={'已付款':'background:#FCE9E7;color:#E0392B','已确认':'background:#E6F0FB;color:#2563B5','备餐中':'background:#FFF3DD;color:#C7891B','已到自提点':'background:#E5F3EA;color:#2E7D4F','配送中':'background:#E6F0FB;color:#2563B5','已完成':'background:#EFEAE2;color:#8C8279','已取消':'background:#EEE;color:#999','退款中':'background:#FFF3DD;color:#C7891B','已退款':'background:#EFEAE2;color:#8C8279'};
+    const map={'已付款':'background:#FBEbe3;color:#DB4A2B','已确认':'background:#E6F0FB;color:#2563B5','备餐中':'background:#FFF3DD;color:#C7891B','已到自提点':'background:#E5F3EA;color:#2E7D4F','配送中':'background:#E6F0FB;color:#2563B5','已完成':'background:#EFEAE2;color:#968B7E','已取消':'background:#EEE;color:#999','退款中':'background:#FFF3DD;color:#C7891B','已退款':'background:#EFEAE2;color:#968B7E'};
     return base+(map[s]||'background:#EEE;color:#999');
   }
 
@@ -1034,12 +1043,12 @@ class Component extends DCLogic {
     const cartCount=this.cartCount();
 
     const tagStyle=(t)=>{
-      const m={'爆款':'background:#FBE9D6;color:#C7700F','限量':'background:#FCE9E7;color:#C7350F','不辣':'background:#E5F3EA;color:#2E7D4F','微辣':'background:#FBE9D6;color:#C7891B','素食':'background:#E5F3EA;color:#2E7D4F','高蛋白':'background:#E6F0FB;color:#2563B5','家庭餐':'background:#F0EAFB;color:#6B4BB5','学生餐':'background:#E6F0FB;color:#2563B5','人气':'background:#FCE9E7;color:#E0392B','轻食':'background:#E5F3EA;color:#2E7D4F'};
-      return 'font-size:10px;font-weight:700;padding:2.5px 7px;border-radius:7px;'+(m[t]||'background:#EFEAE2;color:#8C8279');
+      const m={'爆款':'background:#FBE9D6;color:#C7700F','限量':'background:#FBEbe3;color:#C7350F','不辣':'background:#E5F3EA;color:#2E7D4F','微辣':'background:#FBE9D6;color:#C7891B','素食':'background:#E5F3EA;color:#2E7D4F','高蛋白':'background:#E6F0FB;color:#2563B5','家庭餐':'background:#F0EAFB;color:#6B4BB5','学生餐':'background:#E6F0FB;color:#2563B5','人气':'background:#FBEbe3;color:#DB4A2B','轻食':'background:#E5F3EA;color:#2E7D4F'};
+      return 'font-size:10px;font-weight:700;padding:2.5px 7px;border-radius:7px;'+(m[t]||'background:#EFEAE2;color:#968B7E');
     };
 
     const vals={
-      topBarBg: screen==='enterprise' ? '#221C18' : '#FBF5EC',
+      topBarBg: screen==='enterprise' ? '#1C1813' : '#FCFAF6',
       showBack: !noBackBars[screen],
       screenTitle: titles[screen]||'万能团餐',
       goBack: ()=>this.goBack(),
@@ -1064,7 +1073,7 @@ class Component extends DCLogic {
     const tabDef=[['home','🏠','首页'],['menu','🍱','菜单'],['orders','📋','订单'],['me','👤','我的']];
     const meScreens={me:1,checkin:1,vouchers:1,pointsShop:1,invite:1,messages:1,login:1};
     const activeTab = screen==='cart'||screen==='checkout'||screen==='payResult' ? 'menu' : (screen==='orderDetail'?'orders':(screen==='detail'?'menu':(meScreens[screen]?'me':screen)));
-    vals.tabs = tabDef.map(([k,icon,label])=>({ icon, label, go:()=>this.setState({screen:k}), color: activeTab===k?'#E0392B':'#A89A8A', weight: activeTab===k?'700':'500', showBadge:(k==='me'&&unread>0), badgeCount:unread }));
+    vals.tabs = tabDef.map(([k,icon,label])=>({ icon, label, go:()=>this.setState({screen:k}), color: activeTab===k?'#DB4A2B':'#A89A8A', weight: activeTab===k?'800':'500', chipBg: activeTab===k?'#FBE7DF':'transparent', showBadge:(k==='me'&&unread>0), badgeCount:unread }));
 
     // HOME
     const hot=[];
@@ -1077,8 +1086,8 @@ class Component extends DCLogic {
     // MENU
     vals.dayTabs = this.days.map(d=>({ label:d.day, date:d.date, onClick:()=>this.setState({selectedDay:d.day}),
       style: st.selectedDay===d.day
-        ? 'flex:none;min-width:58px;display:flex;flex-direction:column;align-items:center;padding:8px 12px;border:none;border-radius:14px;background:#E0392B;color:#fff;cursor:pointer'
-        : 'flex:none;min-width:58px;display:flex;flex-direction:column;align-items:center;padding:8px 12px;border:none;border-radius:14px;background:#fff;color:#221C18;cursor:pointer' }));
+        ? 'flex:none;min-width:60px;display:flex;flex-direction:column;align-items:center;padding:9px 14px;border:none;border-radius:16px;background:#1C1813;color:#fff;cursor:pointer;box-shadow:0 8px 18px -8px rgba(28,24,19,.5)'
+        : 'flex:none;min-width:60px;display:flex;flex-direction:column;align-items:center;padding:9px 14px;border:1px solid #ECE4D6;border-radius:16px;background:#fff;color:#1C1813;cursor:pointer' }));
     vals.cutoffStr = this.cutoffOf(st.selectedDay);
     const md=this.menu[st.selectedDay];
     vals.dayRestaurants = md.rests.map(r=>({ name:r.name, cuisine:r.cuisine, emoji:r.emoji, bg:r.bg,
@@ -1091,8 +1100,8 @@ class Component extends DCLogic {
           add:(e)=>{ if(e&&e.stopPropagation)e.stopPropagation(); if(out){this.showToast('已售罄');return;} this.quickAdd(p.id); },
           btnLabel: out?'售罄':(p.type==='grid'?'选菜':'加入'),
           btnStyle: out
-            ? 'border:none;background:#EFEAE2;color:#A89A8A;font-size:13px;font-weight:700;padding:7px 14px;border-radius:18px;cursor:not-allowed'
-            : 'border:none;background:#E0392B;color:#fff;font-size:13px;font-weight:700;padding:7px 16px;border-radius:18px;cursor:pointer' };
+            ? 'border:none;background:#EFEAE2;color:#A89A8A;font-size:13px;font-weight:800;padding:8px 16px;border-radius:20px;cursor:not-allowed'
+            : 'border:none;background:#DB4A2B;color:#fff;font-size:13px;font-weight:800;padding:8px 18px;border-radius:20px;cursor:pointer;box-shadow:0 8px 16px -6px rgba(219,74,43,.5)' };
       }) }));
 
     // DETAIL
@@ -1104,17 +1113,17 @@ class Component extends DCLogic {
           emoji:p.emoji, bg:p.bg, tags:(p.tags||[]).map(t=>({label:t,style:tagStyle(t)})),
           isGrid:p.type==='grid',
           meatCntStr: sel.meats.length+'/'+(p.meatN||0), vegCntStr: sel.veggies.length+'/'+(p.vegN||0),
-          meatCntColor: sel.meats.length===p.meatN?'#2E7D4F':'#8C8279',
-          vegCntColor: sel.veggies.length===p.vegN?'#2E7D4F':'#8C8279',
-          meats:(p.meats||[]).map(m=>{ const on=sel.meats.includes(m); return {name:m, check:on?'☑':'☐', toggle:()=>this.toggleSel('meats',m,p.meatN), style:'display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-radius:12px;cursor:pointer;border:1.5px solid '+(on?'#E0392B':'#EAE0D0')+';background:'+(on?'#FCEFEC':'#fff')+';color:'+(on?'#E0392B':'#221C18')}; }),
-          veggies:(p.veggies||[]).map(v=>{ const on=sel.veggies.includes(v); return {name:v, check:on?'☑':'☐', toggle:()=>this.toggleSel('veggies',v,p.vegN), style:'display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-radius:12px;cursor:pointer;border:1.5px solid '+(on?'#2E7D4F':'#EAE0D0')+';background:'+(on?'#EAF4ED':'#fff')+';color:'+(on?'#2E7D4F':'#221C18')}; }),
+          meatCntColor: sel.meats.length===p.meatN?'#2E7D4F':'#968B7E',
+          vegCntColor: sel.veggies.length===p.vegN?'#2E7D4F':'#968B7E',
+          meats:(p.meats||[]).map(m=>{ const on=sel.meats.includes(m); return {name:m, check:on?'☑':'☐', toggle:()=>this.toggleSel('meats',m,p.meatN), style:'display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-radius:12px;cursor:pointer;border:1.5px solid '+(on?'#DB4A2B':'#EAE0D0')+';background:'+(on?'#FCEFEC':'#fff')+';color:'+(on?'#DB4A2B':'#1C1813')}; }),
+          veggies:(p.veggies||[]).map(v=>{ const on=sel.veggies.includes(v); return {name:v, check:on?'☑':'☐', toggle:()=>this.toggleSel('veggies',v,p.vegN), style:'display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-radius:12px;cursor:pointer;border:1.5px solid '+(on?'#2E7D4F':'#EAE0D0')+';background:'+(on?'#EAF4ED':'#fff')+';color:'+(on?'#2E7D4F':'#1C1813')}; }),
           spicyOpts:['不辣','微辣','正常'].map(s=>({label:s, set:()=>this.setState({detailSel:{...sel,spicy:s}}), style:this.chip(sel.spicy===s)})),
           stapleOpts:['白饭','糙米','加饭'].map(s=>({label:s, set:()=>this.setState({detailSel:{...sel,staple:s}}), style:this.chip(sel.staple===s)})),
           toggleUtensil:()=>this.setState({detailSel:{...sel,utensil:!sel.utensil}}),
-          utensilBg: sel.utensil?'#E0392B':'#D8CEBE', utensilDot: sel.utensil?'21px':'3px',
+          utensilBg: sel.utensil?'#DB4A2B':'#D8CEBE', utensilDot: sel.utensil?'21px':'3px',
           stockNum: p.stock-p.sold, cutoff:this.cutoffOf(day),
           qty:st.detailQty, qtyUp:()=>this.setState({detailQty:st.detailQty+1}), qtyDown:()=>this.setState({detailQty:Math.max(1,st.detailQty-1)}),
-          addToCart:()=>this.addCurrentDetail(), addLabel:'加入购物车 · '+this.money(p.price*st.detailQty), addBg:'#E0392B' };
+          addToCart:()=>this.addCurrentDetail(), addLabel:'加入购物车 · '+this.money(p.price*st.detailQty), addBg:'#DB4A2B' };
       }
     }
 
@@ -1129,30 +1138,30 @@ class Component extends DCLogic {
 
     // CHECKOUT
     const co=st.checkout; const food=this.cartFood(); const fee=this.deliveryFee();
-    const inputStyle='width:100%;border:1px solid #E5DBCC;border-radius:10px;padding:11px 12px;font-size:13px;margin-bottom:10px;outline:none;font-family:inherit;background:#FCFAF6';
+    const inputStyle='width:100%;border:1px solid #ECE4D6;border-radius:10px;padding:11px 12px;font-size:13px;margin-bottom:10px;outline:none;font-family:inherit;background:#FCFAF6';
     vals.co={
       setPickup:()=>this.setCo({deliverType:'pickup'}), setDeliver:()=>this.setCo({deliverType:'deliver'}),
       isPickup:co.deliverType==='pickup', isDeliver:co.deliverType==='deliver',
       pickupTabStyle:this.coTab(co.deliverType==='pickup'), deliverTabStyle:this.coTab(co.deliverType==='deliver'),
       pickupPoints:this.pickups.map(p=>({ name:p.name, address:p.address, time:p.time, parking:p.parking, set:()=>this.setCo({pickup:p.id}),
-        dot: co.pickup===p.id?'◉':'○', dotColor: co.pickup===p.id?'#E0392B':'#C9BFB0',
+        dot: co.pickup===p.id?'◉':'○', dotColor: co.pickup===p.id?'#DB4A2B':'#C9BFB0',
         style:'display:flex;align-items:center;gap:10px;padding:13px 12px;cursor:pointer;border-radius:12px;'+(co.pickup===p.id?'background:#FCEFEC':'') })),
       address:co.address, unit:co.unit, onAddress:e=>this.setCo({address:e.target.value}), onUnit:e=>this.setCo({unit:e.target.value}),
       inputStyle, inputStyleLast:inputStyle.replace('margin-bottom:10px','margin-bottom:0'),
-      toggleDoor:()=>this.setCo({atDoor:!co.atDoor}), doorBorder:co.atDoor?'#E0392B':'#C9BFB0', doorBg:co.atDoor?'#E0392B':'#fff', doorCheck:co.atDoor?'✓':'',
+      toggleDoor:()=>this.setCo({atDoor:!co.atDoor}), doorBorder:co.atDoor?'#DB4A2B':'#C9BFB0', doorBg:co.atDoor?'#DB4A2B':'#fff', doorCheck:co.atDoor?'✓':'',
       name:co.name, phone:co.phone, wechat:co.wechat, onName:e=>this.setCo({name:e.target.value}), onPhone:e=>this.setCo({phone:e.target.value}), onWechat:e=>this.setCo({wechat:e.target.value}),
-      payOpts:[['card','💳 信用卡 · 美元 (Stripe)'],['wechat','💚 微信支付 (WeChat Pay)']].map(([k,label])=>({ label, set:()=>this.setCo({pay:k}), dot:co.pay===k?'◉':'○', dotColor:co.pay===k?'#E0392B':'#C9BFB0', style:'display:flex;align-items:center;justify-content:space-between;padding:11px 4px;cursor:pointer;border-bottom:1px solid #F4EDE0' })),
+      payOpts:[['card','💳 信用卡 · 美元 (Stripe)'],['wechat','💚 微信支付 (WeChat Pay)']].map(([k,label])=>({ label, set:()=>this.setCo({pay:k}), dot:co.pay===k?'◉':'○', dotColor:co.pay===k?'#DB4A2B':'#C9BFB0', style:'display:flex;align-items:center;justify-content:space-between;padding:11px 4px;cursor:pointer;border-bottom:1px solid #F4EDE0' })),
       // 抵用券
       availVouchers: (window.Store?Store.availableVouchers(food, this.cartRestNames()):[]).map(v=>({ title:v.title, sub:(v.type==='direct'?('直减$'+v.amount):('满$'+v.threshold+'减$'+v.amount))+' · '+v.source,
         picked:co.voucherId===v.id, pick:()=>this.pickVoucher(v.id),
-        style:'display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 12px;border-radius:12px;cursor:pointer;margin-bottom:8px;border:1.5px solid '+(co.voucherId===v.id?'#E0392B':'#EFE6D6')+';background:'+(co.voucherId===v.id?'#FCEFEC':'#fff'),
-        mark:co.voucherId===v.id?'◉':'○', markColor:co.voucherId===v.id?'#E0392B':'#C9BFB0' })),
+        style:'display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 12px;border-radius:12px;cursor:pointer;margin-bottom:8px;border:1.5px solid '+(co.voucherId===v.id?'#DB4A2B':'#EFE6D6')+';background:'+(co.voucherId===v.id?'#FCEFEC':'#fff'),
+        mark:co.voucherId===v.id?'◉':'○', markColor:co.voucherId===v.id?'#DB4A2B':'#C9BFB0' })),
       hasVouchers: (window.Store?Store.availableVouchers(food, this.cartRestNames()).length:0)>0,
       noVouchers: (window.Store?Store.availableVouchers(food, this.cartRestNames()).length:0)===0,
       hasDiscount: this.voucherDiscount()>0, discountStr:'-'+this.money(this.voucherDiscount()),
       foodStr:this.money(food), feeStr: fee===0?'免费':this.money(fee), totalStr:this.money(Math.max(0,food+fee-this.voucherDiscount())),
       pointsHint:'本单预计获得 '+Math.round(Math.max(0,food+fee-this.voucherDiscount())*(window.Store?Store.CONFIG.pointsPerDollar:10))+' 积分',
-      payBg:'#E0392B', pay:()=>this.payNow()
+      payBg:'#DB4A2B', pay:()=>this.payNow()
     };
 
     // PAY RESULT
@@ -1181,15 +1190,15 @@ class Component extends DCLogic {
           items:o.items.map(i=>({ name:i.name, sub:i.day+' · '+i.restName, optStr:i.optStr, emoji:i.emoji, bg:i.bg, priceStr:this.money(i.price), qty:i.qty })),
           food:this.money(o.food), fee:o.fee===0?'免费':this.money(o.fee), total:this.money(o.total),
           cancel:()=>{ if(canCancel) this.cancelOrder(o.id); }, cancelLabel: canCancel?'取消订单':'不可取消',
-          cancelStyle: canCancel ? 'flex:1;height:46px;border:none;border-radius:23px;background:#E0392B;color:#fff;font-weight:700;font-size:14px;cursor:pointer' : 'flex:1;height:46px;border:none;border-radius:23px;background:#EFEAE2;color:#A89A8A;font-weight:700;font-size:14px;cursor:not-allowed' };
+          cancelStyle: canCancel ? 'flex:1;height:46px;border:none;border-radius:23px;background:#DB4A2B;color:#fff;font-weight:700;font-size:14px;cursor:pointer' : 'flex:1;height:46px;border:none;border-radius:23px;background:#EFEAE2;color:#A89A8A;font-weight:700;font-size:14px;cursor:not-allowed' };
         const reviewed = window.Store && Store.reviewsOfOrder(o.orderNo).length>0;
         vals.od.canReview = o.status!=='已取消';
         vals.od.reviewed = reviewed;
         vals.od.reviewLabel = reviewed?'已评价 ✓':'评价订单 +20积分';
         vals.od.review = ()=>{ if(reviewed){ this.showToast('该订单已评价'); return; } this.openReview(o.orderNo); };
         vals.od.reviewStyle = reviewed
-          ? 'width:100%;height:44px;margin-top:10px;border:1px solid #E5DBCC;border-radius:22px;background:#F4EFE6;color:#A89A8A;font-weight:700;font-size:14px;cursor:default'
-          : 'width:100%;height:44px;margin-top:10px;border:none;border-radius:22px;background:#D89A2A;color:#fff;font-weight:700;font-size:14px;cursor:pointer';
+          ? 'width:100%;height:44px;margin-top:10px;border:1px solid #ECE4D6;border-radius:22px;background:#F4EFE6;color:#A89A8A;font-weight:700;font-size:14px;cursor:default'
+          : 'width:100%;height:44px;margin-top:10px;border:none;border-radius:22px;background:#C2933F;color:#fff;font-weight:700;font-size:14px;cursor:pointer';
       }
     }
 
@@ -1242,11 +1251,11 @@ class Component extends DCLogic {
         btnLabel: cs.signedToday?'今日已签到 ✓':('立即签到 +'+cfg.daily),
         btnStyle: cs.signedToday
           ? 'width:100%;height:50px;border:none;border-radius:25px;background:#EFEAE2;color:#A89A8A;font-weight:900;font-size:16px;cursor:not-allowed'
-          : 'width:100%;height:50px;border:none;border-radius:25px;background:#E0392B;color:#fff;font-weight:900;font-size:16px;cursor:pointer',
+          : 'width:100%;height:50px;border:none;border-radius:25px;background:#DB4A2B;color:#fff;font-weight:900;font-size:16px;cursor:pointer',
         week:[1,2,3,4,5,6,7].map(i=>{ const done=i<=pos||(cs.signedToday&&i<=((cs.streak-1)%7)+1); const isBonus=i===7;
           return { day:'第'+i+'天', reward:isBonus?('+'+cfg.streakBonus[7]):'+'+cfg.daily, isBonus,
-            style:'flex:1;text-align:center;padding:10px 2px;border-radius:12px;background:'+(done?'#FCEFEC':'#fff')+';border:1.5px solid '+(done?'#E0392B':'#EFE6D6'),
-            dotStyle:'width:26px;height:26px;margin:4px auto 0;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;background:'+(done?'#E0392B':'#F0E8DA')+';color:'+(done?'#fff':'#C9BFB0'),
+            style:'flex:1;text-align:center;padding:10px 2px;border-radius:12px;background:'+(done?'#FCEFEC':'#fff')+';border:1.5px solid '+(done?'#DB4A2B':'#EFE6D6'),
+            dotStyle:'width:26px;height:26px;margin:4px auto 0;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;background:'+(done?'#DB4A2B':'#F0E8DA')+';color:'+(done?'#fff':'#C9BFB0'),
             mark: done?'✓':(isBonus?'★':'·') }; }),
         rules:['每日签到 +'+cfg.daily+' 积分','连续 7 天额外 +'+cfg.streakBonus[7]+'，连续 15 天额外 +'+cfg.streakBonus[15],'累计签到 30 天额外 +'+cfg.cumulativeBonus[30],'断签后连续天数重新计算'] };
     }
@@ -1261,7 +1270,7 @@ class Component extends DCLogic {
       validStr:'有效期至 '+new Date(v.validTo).toLocaleDateString(),
       used:v.status!=='unused', statusLabel:v.status==='unused'?'可用':(v.status==='used'?'已使用':'已过期'),
       cardStyle:'background:'+(v.status==='unused'?'#fff':'#F4EFE6')+';border-radius:16px;padding:0;margin-bottom:12px;overflow:hidden;display:flex;box-shadow:0 4px 14px rgba(80,50,20,.05);opacity:'+(v.status==='unused'?'1':'.6'),
-      leftStyle:'flex:none;width:108px;background:'+(v.status==='unused'?'linear-gradient(135deg,#E0392B,#B5241B)':'#B9AE9E')+';color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px 6px' })):[];
+      leftStyle:'flex:none;width:108px;background:'+(v.status==='unused'?'linear-gradient(135deg,#DB4A2B,#B23A1C)':'#B9AE9E')+';color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px 6px' })):[];
     vals.voucherEmpty=!vals.voucherCards.length;
 
     // POINTS SHOP
@@ -1271,7 +1280,7 @@ class Component extends DCLogic {
       vals.shopItems=this.pointsShopItems().map(it=>{ const can=bal>=it.cost; return { name:it.name, icon:it.icon, costStr:it.cost+' 积分',
         redeem:()=>this.redeemShop(it), can,
         btnLabel:can?'兑换':'积分不足',
-        btnStyle:can?'border:none;background:#E0392B;color:#fff;font-size:12px;font-weight:700;padding:7px 14px;border-radius:16px;cursor:pointer':'border:none;background:#EFEAE2;color:#A89A8A;font-size:12px;font-weight:700;padding:7px 14px;border-radius:16px;cursor:not-allowed' }; });
+        btnStyle:can?'border:none;background:#DB4A2B;color:#fff;font-size:12px;font-weight:700;padding:7px 14px;border-radius:16px;cursor:pointer':'border:none;background:#EFEAE2;color:#A89A8A;font-size:12px;font-weight:700;padding:7px 14px;border-radius:16px;cursor:not-allowed' }; });
     }
 
     // INVITE
@@ -1287,7 +1296,7 @@ class Component extends DCLogic {
     vals.msgEmpty=!vals.msgList.length;
 
     // REVIEW
-    if(screen==='review'){ const mkStars=(cur,setter)=>[1,2,3,4,5].map(n=>({ ch:n<=cur?'★':'☆', set:()=>this.setState(setter(n)), color:n<=cur?'#E0392B':'#D8CEBE' }));
+    if(screen==='review'){ const mkStars=(cur,setter)=>[1,2,3,4,5].map(n=>({ ch:n<=cur?'★':'☆', set:()=>this.setState(setter(n)), color:n<=cur?'#DB4A2B':'#D8CEBE' }));
       vals.rv={ foodStars:mkStars(st.reviewStar,n=>({reviewStar:n})), restStars:mkStars(st.reviewRestStar,n=>({reviewRestStar:n})),
         text:st.reviewText, onText:e=>this.setState({reviewText:e.target.value}), submit:()=>this.submitReview() };
     }
@@ -1295,8 +1304,8 @@ class Component extends DCLogic {
     return vals;
   }
 
-  chip(active){ return active ? 'border:none;background:#E0392B;color:#fff;font-size:13px;font-weight:600;padding:9px 18px;border-radius:20px;cursor:pointer' : 'border:1px solid #E5DBCC;background:#fff;color:#221C18;font-size:13px;padding:9px 18px;border-radius:20px;cursor:pointer'; }
-  coTab(active){ return active ? 'flex:1;border:none;border-radius:14px;background:#E0392B;color:#fff;font-weight:700;font-size:15px;padding:14px 0;cursor:pointer' : 'flex:1;border:1px solid #E5DBCC;border-radius:14px;background:#fff;color:#221C18;font-weight:700;font-size:15px;padding:14px 0;cursor:pointer'; }
+  chip(active){ return active ? 'border:none;background:#DB4A2B;color:#fff;font-size:13px;font-weight:600;padding:9px 18px;border-radius:20px;cursor:pointer' : 'border:1px solid #ECE4D6;background:#fff;color:#1C1813;font-size:13px;padding:9px 18px;border-radius:20px;cursor:pointer'; }
+  coTab(active){ return active ? 'flex:1;border:none;border-radius:14px;background:#DB4A2B;color:#fff;font-weight:700;font-size:15px;padding:14px 0;cursor:pointer' : 'flex:1;border:1px solid #ECE4D6;border-radius:14px;background:#fff;color:#1C1813;font-weight:700;font-size:15px;padding:14px 0;cursor:pointer'; }
 
   goBack(){
     const s=this.state.screen;

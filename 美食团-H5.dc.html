@@ -58,7 +58,7 @@
         <div style="animation:popIn .35s">
           <div style="margin:6px 16px 0;border-radius:24px;overflow:hidden;background:linear-gradient(150deg,#E0392B,#B5241B);color:#fff;padding:26px 22px 24px;position:relative">
             <div style="position:absolute;right:-20px;top:-18px;font-size:120px;opacity:.16;transform:rotate(-12deg)">🍱</div>
-            <div style="display:inline-block;background:rgba(255,255,255,.18);backdrop-filter:blur(4px);font-size:12px;font-weight:700;padding:5px 11px;border-radius:20px;letter-spacing:.5px">万能美食团 · Irvine 试运营</div>
+            <div style="display:inline-block;background:rgba(255,255,255,.18);backdrop-filter:blur(4px);font-size:12px;font-weight:700;padding:5px 11px;border-radius:20px;letter-spacing:.5px">万能团餐 · Irvine 试运营</div>
             <div style="font-family:'Noto Serif SC',serif;font-weight:900;font-size:30px;line-height:1.25;margin:14px 0 6px">下周吃什么<br>今天一次订好</div>
             <div style="font-size:13px;opacity:.92;line-height:1.6;max-width:240px">三家餐厅套餐任选 · 自提免费 · 指定区域低价配送</div>
             <button onClick="{{ goMenu }}" style="margin-top:18px;border:none;background:#fff;color:#E0392B;font-weight:900;font-size:15px;padding:13px 22px;border-radius:30px;cursor:pointer;box-shadow:0 8px 20px rgba(0,0,0,.18)">立即预订下周餐食 →</button>
@@ -1028,7 +1028,7 @@ class Component extends DCLogic {
 
   renderVals(){
     const st=this.state; const screen=st.screen;
-    const titles={home:'万能美食团', menu:'下周菜单', detail:'套餐详情', cart:'购物车', checkout:'确认订单', payResult:'下单成功', orders:'我的订单', orderDetail:'订单详情', pickup:'自提点', delivery:'配送范围', enterprise:'团餐合作', support:'联系客服', me:'我的', login:'登录', checkin:'每日签到', vouchers:'我的卡包', pointsShop:'积分商城', invite:'邀请好友', messages:'消息中心', review:'评价订单'};
+    const titles={home:'万能团餐', menu:'下周菜单', detail:'套餐详情', cart:'购物车', checkout:'确认订单', payResult:'下单成功', orders:'我的订单', orderDetail:'订单详情', pickup:'自提点', delivery:'配送范围', enterprise:'团餐合作', support:'联系客服', me:'我的', login:'登录', checkin:'每日签到', vouchers:'我的卡包', pointsShop:'积分商城', invite:'邀请好友', messages:'消息中心', review:'评价订单'};
     const noBackBars={home:1, menu:1, orders:1, me:1};
     const noTab={detail:1, checkout:1, payResult:1, orderDetail:1, login:1, checkin:1, vouchers:1, pointsShop:1, invite:1, messages:1, review:1};
     const cartCount=this.cartCount();
@@ -1041,7 +1041,7 @@ class Component extends DCLogic {
     const vals={
       topBarBg: screen==='enterprise' ? '#221C18' : '#FBF5EC',
       showBack: !noBackBars[screen],
-      screenTitle: titles[screen]||'万能美食团',
+      screenTitle: titles[screen]||'万能团餐',
       goBack: ()=>this.goBack(),
       goCart: ()=>this.setState({screen:'cart'}),
       goHome: ()=>this.setState({screen:'home'}),
