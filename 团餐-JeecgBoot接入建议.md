@@ -14,6 +14,19 @@
 - **暂不做**：多租户（单运营方 MVP，`ScrmTenantConfig.ENABLED` 保持关）、Flowable、ChatBI / AI 排餐——留作演进北极星。
 - **模块名**：`jeecg-module-tuancan`（= 专家说的 catering，二选一，本文统一用 tuancan）。
 
+## ⚠️ 领域边界（必读，最易踩坑）
+团餐是 **B2C 预售团餐市场**，不是 B2B 企业食堂。两份《产品专家建议》在执行细节上反复把它当成"企业团餐承包"，**领域模型会整个跑偏，切勿照抄**：
+| ❌ 别用（B2B 食堂模型） | ✅ 实际（B2C 市场，用本文 `tc_*`） |
+|---|---|
+| 签约企业 + 授信挂账 + 结算周期（`cat_company_customer`） | 个人顾客 `tc_customer`：手机号 / 积分 / 券 / 余额 |
+| 订单关联底座 `sys_user`（员工点餐） | C 端顾客用 **X-C-Token** 访客身份，**不走 sys_user** |
+| 餐次 早/午/晚 + 后厨排餐采购 | **每周(周一~五)套餐** + 多餐厅供货 + 自提点 |
+| 授信/挂账结算 | 个人预付 + 微信/USD + 抵用券 + 积分 |
+> "企业签约 + 授信开户"那套只属于官网上**次要的「企业团餐合作」线索**，是第二期的交叉点，不是核心 P0。核心闭环以第 3 节 `tc_*` 表为准。
+
+> **采纳专家的"脚手架"、用本文的"领域"**：多模块拓扑、JeecgEntity 审计字段、代码生成器、`@Transactional` 服务、Spring Event 解耦——这些照专家做；数据表/业务对象一律用 `tc_*`（第 3 节）。
+> 注意专家示例代码两处坑：金额比较别用 `.doubleValue()`（用 `BigDecimal.compareTo`）；跨模块事件类**别放 scrm**（见第 2.5 节，放 base-core，否则团餐反向依赖 scrm）。
+
 ## 0. 一句话策略
 把演示版（静态 H5 + localStorage）落到 JeecgBoot：**后端**新建**与 scrm 平级**的 `jeecg-module-tuancan` 模块（复用上提到 base-core 的 C 访客鉴权 + scrm 的通知编排器/微信配置）；**运营后台**用 JeecgBoot 代码生成器出 CRUD + 少量手写页；**H5 顾客端**单独做消费端 App（推荐 uni-app，一套出 H5 + 微信小程序）。`store.js` 里每个方法 ≈ 一个 `/tuancan/c/**` 接口。
 
@@ -54,10 +67,12 @@ org.jeecg.modules.tuancan
 **C 端鉴权（关键，保证真正平级）**：把 `CTokenUtil / CVisitorTokenFilter / CVisitorContext / CVisitorInfo` 这 4 个类**从 scrm 上提到 `jeecg-boot-base-core`**，做成通用「C 访客鉴权」。scrm 与 tuancan 各自注册自己的 `FilterRegistrationBean`（scrm `/scrm/c/**`、团餐 `/tuancan/c/**`），并在 `base-core` 的 `ShiroConfig` 各放行一行 `anon`。
 > 这样团餐**不依赖 scrm 模块**，两者只共享 base-core——这才是"平级"。若图快可让 tuancan 临时依赖 scrm 复用这 4 个类，但会留下反向耦合，不建议长留。
 
-## 2.5 与 SCRM 的集成缝（低耦合，别做成硬依赖）
-平级 ≠ 孤岛。预留一条**事件/接口**缝供"黄金交叉点"（SCRM 名片获客 → 线索转化 → 团餐开企业挂账户）：
-- 用 Spring `ApplicationEvent`（scrm 已有 `ScrmTrackEvent` 先例）或内部 OpenFeign/REST，**单向**从 scrm 发事件、tuancan 订阅，反之亦然。
-- 共享只到「底座对象」（sys_user 后台账号、组织、字典、权限、Quartz、通知编排器），**业务对象（线索 vs 餐单）各自闭环**，不互相伸手查表。
+## 2.5 与 SCRM 的集成缝（Spring Event，低耦合）
+平级 ≠ 孤岛。"黄金交叉点"（SCRM 名片获客 → 线索转化 → 团餐为企业开户）用 **Spring `ApplicationEvent`** 打通（scrm 已有 `ScrmTrackEvent` 先例）。采纳专家方案，但**修正一处依赖方向**：
+- **事件类放 `jeecg-boot-base-core`**（如 `LeadConvertedEvent`），不要放 scrm。否则 tuancan 的监听器要 `import org.jeecg.modules.scrm.*` → **团餐反向依赖 scrm，破坏平级**。
+- 数据流**单向**：scrm 发布 → tuancan `@EventListener` 订阅自动开户；两边都只依赖 base-core 的事件类，互不 import 对方模块。
+- 共享只到「底座对象」（sys_user 后台账号、组织、字典、权限、Quartz、通知编排器），**业务对象（线索 vs 餐单/顾客）各自闭环**，不互相伸手查表。
+- 形态参考（伪代码）：scrm `applicationEventPublisher.publishEvent(new LeadConvertedEvent(this, leadId, companyName))`；tuancan 监听后建 `tc_company`（企业团餐合作账户，第二期）。注意这属于 B2B 交叉点，**不影响 P0 的 B2C 个人下单闭环**。
 
 ---
 
