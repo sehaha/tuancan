@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./config.js"></script>
+<script src="./assets/store.js"></script>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -240,6 +242,80 @@
         </div>
       </sc-if>
 
+      <!-- ORDER MODE -->
+      <sc-if value="{{ isOrderMode }}" hint-placeholder-val="{{ false }}">
+        <div style="max-width:780px">
+          <div style="background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 10px rgba(80,50,20,.04)">
+            <div style="font-weight:900;font-size:15px;margin-bottom:4px">选择订餐模式</div>
+            <div style="font-size:12px;color:#9A8E80;margin-bottom:16px">控制顾客端 H5 可下单的日子。保存后顾客端刷新即生效。</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+              <sc-for list="{{ omPresets }}" as="m" hint-placeholder-count="5">
+                <button onClick="{{ m.pick }}" style="{{ m.style }}">{{ m.label }}</button>
+              </sc-for>
+            </div>
+            <div style="font-weight:700;font-size:13px;margin:22px 0 10px">开放日期 <span style="color:#9A8E80;font-weight:400">（仅「自定义」模式可勾选）</span></div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <sc-for list="{{ omDayChips }}" as="d" hint-placeholder-count="5">
+                <button onClick="{{ d.toggle }}" style="{{ d.style }}">{{ d.day }}</button>
+              </sc-for>
+            </div>
+            <div style="margin-top:20px;font-size:13px;color:#3a322b;background:#FBF6EE;border:1px solid #EFE3D2;border-radius:10px;padding:12px 14px">当前开放：<b>{{ omCurrentStr }}</b></div>
+            <button onClick="{{ omSave }}" style="margin-top:18px;border:none;background:#E0392B;color:#fff;font-weight:700;font-size:14px;padding:12px 24px;border-radius:10px;cursor:pointer">保存并应用到 H5</button>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- REVIEWS -->
+      <sc-if value="{{ isReviews }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <div style="font-size:13px;color:#8C8279;margin-bottom:14px">评价仅平台可见，绑定订单号为凭据，用于评估餐厅去留。</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px">
+            <sc-for list="{{ reviewAgg }}" as="a" hint-placeholder-count="3">
+              <div style="background:#fff;border-radius:14px;padding:16px 18px;box-shadow:0 2px 10px rgba(80,50,20,.04)">
+                <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-weight:900;font-size:15px">{{ a.name }}</span><span style="{{ a.adviseStyle }}">{{ a.advise }}</span></div>
+                <div style="display:flex;gap:20px;margin-top:14px">
+                  <div><div style="font-size:11px;color:#9A8E80">餐厅评分</div><div style="font-size:22px;font-weight:900;color:#E0392B">{{ a.restAvg }}</div></div>
+                  <div><div style="font-size:11px;color:#9A8E80">菜品评分</div><div style="font-size:22px;font-weight:900">{{ a.foodAvg }}</div></div>
+                  <div><div style="font-size:11px;color:#9A8E80">评价数</div><div style="font-size:22px;font-weight:900">{{ a.count }}</div></div>
+                </div>
+                <div style="font-size:11px;color:#C7350F;margin-top:10px">差评（≤2★）{{ a.low }} 条</div>
+              </div>
+            </sc-for>
+          </div>
+          <sc-if value="{{ reviewsEmpty }}" hint-placeholder-val="{{ false }}">
+            <div style="background:#fff;border-radius:14px;padding:50px;text-align:center;color:#9A8E80;box-shadow:0 2px 10px rgba(80,50,20,.04)">还没有评价。去 H5 完成一笔订单并评价后，这里会实时出现。</div>
+          </sc-if>
+          <div style="background:#fff;border-radius:14px;padding:18px 20px;box-shadow:0 2px 10px rgba(80,50,20,.04)">
+            <div style="font-weight:900;font-size:15px;margin-bottom:8px">全部评价（{{ reviewTotal }}）</div>
+            <sc-for list="{{ reviewList }}" as="r" hint-placeholder-count="3">
+              <div style="border-bottom:1px solid #F6F0E5;padding:13px 0">
+                <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-weight:700;font-size:13px">{{ r.restName }} · <span style="color:#E0392B">{{ r.stars }}</span></span><span style="font-size:11px;color:#9A8E80">订单 {{ r.orderNo }}</span></div>
+                <div style="font-size:13px;color:#3a322b;margin-top:6px">{{ r.text }}</div>
+                <div style="font-size:11px;color:#9A8E80;margin-top:5px">{{ r.foodStars }} · {{ r.timeStr }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- LOYALTY -->
+      <sc-if value="{{ isLoyalty }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px">
+            <sc-for list="{{ loyaltyStats }}" as="s" hint-placeholder-count="3">
+              <div style="background:#fff;border-radius:14px;padding:16px 18px;box-shadow:0 2px 10px rgba(80,50,20,.04)"><div style="font-size:11.5px;color:#9A8E80">{{ s.label }}</div><div style="font-size:25px;font-weight:900;margin-top:8px;color:{{ s.color }}">{{ s.value }}</div></div>
+            </sc-for>
+          </div>
+          <div style="background:#fff;border-radius:14px;padding:18px 20px;box-shadow:0 2px 10px rgba(80,50,20,.04)">
+            <div style="font-weight:900;font-size:15px;margin-bottom:8px">积分与活动规则</div>
+            <sc-for list="{{ loyaltyRules }}" as="r" hint-placeholder-count="6">
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid #F6F0E5"><span style="font-size:13px;color:#9A8E80">{{ r.label }}</span><span style="font-size:13px;font-weight:700">{{ r.value }}</span></div>
+            </sc-for>
+            <div style="font-size:11.5px;color:#9A8E80;margin-top:12px">{{ loyaltyNote }}</div>
+          </div>
+        </div>
+      </sc-if>
+
       </div>
     </div>
   </div>
@@ -255,12 +331,21 @@
 class Component extends DCLogic {
   constructor(props){
     super(props);
-    this.state = { page:'dashboard', filter:'all', toast:'', sorted:{}, menuState:{}, orderFilter:'all' };
+    const om = (window.Store?Store.getOrderingMode():{mode:'week',days:['周一','周二','周三','周四','周五']});
+    this.state = { page:'dashboard', filter:'all', toast:'', sorted:{}, menuState:{}, orderFilter:'all',
+      omMode: om.mode, omDays: om.days.slice() };
     this.nav = [
       {label:'运营', items:[
         {id:'dashboard', icon:'📊', label:'数据概览'},
         {id:'orders', icon:'🧾', label:'订单管理'},
         {id:'exceptions', icon:'⚠️', label:'异常订单', badge:2}
+      ]},
+      {label:'会员 / 营销', items:[
+        {id:'ordermode', icon:'🗓️', label:'订餐模式'},
+        {id:'vouchers', icon:'🎟️', label:'券管理'},
+        {id:'reviews', icon:'💬', label:'评论反馈'},
+        {id:'loyalty', icon:'⭐', label:'积分与活动'},
+        {id:'referrals', icon:'🤝', label:'裂变数据'}
       ]},
       {label:'菜单', items:[
         {id:'restaurants', icon:'🏪', label:'餐厅管理'},
@@ -296,7 +381,12 @@ class Component extends DCLogic {
       deliveryExport:{title:'配送单导出', sub:'按配送路线汇总', mode:'table', export:true},
       users:{title:'用户管理', sub:'注册用户与账户余额', mode:'table'},
       refunds:{title:'退款 / 余额管理', sub:'取消退款与余额变动', mode:'table'},
-      settlement:{title:'餐厅结算', sub:'每周与餐厅结算', mode:'table', export:true}
+      settlement:{title:'餐厅结算', sub:'每周与餐厅结算', mode:'table', export:true},
+      ordermode:{title:'订餐模式设置', sub:'控制开放哪些天供顾客下单（H5 实时生效）', mode:'ordermode'},
+      vouchers:{title:'券管理', sub:'抵用券创建 / 导入 / 核销记录（含海螺升学返利等来源）', mode:'table', primary:'新增 / 导入券', export:true},
+      reviews:{title:'评论反馈', sub:'订单评价（仅平台可见）· 按餐厅聚合辅助决定去留', mode:'reviews'},
+      loyalty:{title:'积分与活动', sub:'积分规则、签到规则与积分发放概览', mode:'loyalty'},
+      referrals:{title:'裂变数据', sub:'邀请拉新与返积分统计', mode:'table'}
     };
   }
 
@@ -454,6 +544,33 @@ class Component extends DCLogic {
       const rows=this.buildRows(w, D.map(d=>[this.txt(d[0],{bold:true}),this.txt(d[1]),this.txt(d[2]),this.txt(d[3]),this.txt(d[4],{color:'#E0392B',bold:true}),this.badge(d[5].split(':')[1], d[5].split(':')[0])]));
       return {columns:this.cols(w,['餐厅','结算周期','销售份数','供货价总额','平台销售额','结算状态']), rows, summary:'本周应结算供货价合计 $3,182.00 · 平台毛利约 $1,714'};
     }
+    if(page==='vouchers'){
+      const ST=window.Store; const list=ST?ST.allVouchers():[];
+      const w=[1.7,1.2,1,1,1.2,.9];
+      const amt=(v)=> v.type==='direct'?('直减$'+v.amount): v.type==='full_reduce'?('满$'+v.threshold+'减$'+v.amount): (v.amount+'折');
+      const skind={unused:'green',used:'gray',expired:'gray'}; const slabel={unused:'可用',used:'已核销',expired:'已过期'};
+      const rows=this.buildRows(w, list.map(v=>[
+        this.txt(v.title,{bold:true}), this.txt(v.source), this.txt(amt(v),{color:'#E0392B',bold:true}),
+        this.txt(v.threshold>0?('满$'+v.threshold):'无门槛'), this.txt('至 '+new Date(v.validTo).toLocaleDateString()),
+        this.badge(slabel[v.status]||v.status, skind[v.status]||'gray')
+      ]));
+      const used=list.filter(v=>v.status==='used').length;
+      return {columns:this.cols(w,['券名称','来源','面额','门槛','有效期','状态']), rows,
+        summary:'共 '+list.length+' 张券，已核销 '+used+' 张 · 「新增/导入券」可批量导入外部业务（海螺升学返利等）发放的券'};
+    }
+    if(page==='referrals'){
+      const ST=window.Store; const rs=ST?ST.referralStats():{code:'—',count:0,totalReward:0,invitees:[]};
+      const w=[1.4,1,1.1,1.4];
+      const skind={done:'green',pending:'gold'}; const slabel={done:'已完成首单',pending:'待首单'};
+      const rows=this.buildRows(w, rs.invitees.map(iv=>[
+        this.txt('尾号 '+String(iv.phone||'').slice(-4),{bold:true}),
+        this.badge(slabel[iv.status]||iv.status, skind[iv.status]||'gray'),
+        this.txt('+'+(iv.reward||0)+' 积分',{color:'#2E7D4F',bold:true}),
+        this.txt(iv.ts?new Date(iv.ts).toLocaleDateString():'—')
+      ]));
+      return {columns:this.cols(w,['受邀用户','状态','返积分','时间']), rows,
+        summary:'当前演示用户邀请码 '+rs.code+' · 已邀请 '+rs.count+' 人，累计返积分 '+rs.totalReward+'（推荐人+'+(ST?ST.CONFIG.referral.inviter:200)+' / 新人+'+(ST?ST.CONFIG.referral.invitee:100)+'）'};
+    }
     return {columns:[], rows:[], summary:''};
   }
 
@@ -480,7 +597,8 @@ class Component extends DCLogic {
         hasBadge:!!it.badge, badge:it.badge, weight: page===it.id?'700':'500',
         style:'display:flex;align-items:center;gap:11px;padding:9px 10px;border-radius:9px;cursor:pointer;margin-bottom:2px;'+(page===it.id?'background:#E0392B;color:#fff':'color:#C9BEAF')
       })) })),
-      isDashboard:meta.mode==='dashboard', isTable:meta.mode==='table', isWeekly:meta.mode==='weekly', isPrep:meta.mode==='prep', isSort:meta.mode==='sort'
+      isDashboard:meta.mode==='dashboard', isTable:meta.mode==='table', isWeekly:meta.mode==='weekly', isPrep:meta.mode==='prep', isSort:meta.mode==='sort',
+      isOrderMode:meta.mode==='ordermode', isReviews:meta.mode==='reviews', isLoyalty:meta.mode==='loyalty'
     };
 
     // DASHBOARD
@@ -578,8 +696,79 @@ class Component extends DCLogic {
       });
     }
 
+    // ORDER MODE（订餐模式设置）
+    if(meta.mode==='ordermode'){
+      const ST=window.Store; const presets= ST?ST.MODE_PRESETS:{};
+      v.omPresets = Object.keys(presets).map(k=>({ key:k, label:presets[k].label, active:st.omMode===k,
+        pick:()=>this.pickMode(k),
+        style:'border:1.5px solid '+(st.omMode===k?'#E0392B':'#E5DBCC')+';background:'+(st.omMode===k?'#FCEFEC':'#fff')+';color:'+(st.omMode===k?'#E0392B':'#3a322b')+';font-size:13px;font-weight:700;padding:11px 16px;border-radius:10px;cursor:pointer;text-align:left' }));
+      v.omPresets.push({ key:'custom', label:'自定义（勾选开放日）', active:st.omMode==='custom', pick:()=>this.pickMode('custom'),
+        style:'border:1.5px solid '+(st.omMode==='custom'?'#E0392B':'#E5DBCC')+';background:'+(st.omMode==='custom'?'#FCEFEC':'#fff')+';color:'+(st.omMode==='custom'?'#E0392B':'#3a322b')+';font-size:13px;font-weight:700;padding:11px 16px;border-radius:10px;cursor:pointer;text-align:left' });
+      const allDays= ST?ST.ALL_DAYS:['周一','周二','周三','周四','周五'];
+      v.omIsCustom = st.omMode==='custom';
+      v.omDayChips = allDays.map(d=>{ const on=st.omDays.indexOf(d)>=0; return { day:d, on, toggle:()=>this.toggleDay(d),
+        style:'border:1.5px solid '+(on?'#2E7D4F':'#E5DBCC')+';background:'+(on?'#EAF4ED':'#fff')+';color:'+(on?'#2E7D4F':'#8C8279')+';font-size:13px;font-weight:700;padding:10px 18px;border-radius:10px;cursor:'+(st.omMode==='custom'?'pointer':'not-allowed')+';opacity:'+(st.omMode==='custom'?'1':'.55') }; });
+      v.omCurrentStr = st.omDays.join('、')||'（未选择）';
+      v.omSave=()=>this.saveOrderMode();
+    }
+
+    // REVIEWS（评论反馈）
+    if(meta.mode==='reviews'){
+      const ST=window.Store; const all= ST?ST.allReviews():[];
+      // 按餐厅聚合
+      const byRest={}; all.forEach(r=>{ const k=r.restName||'未知'; (byRest[k]=byRest[k]||[]).push(r); });
+      v.reviewAgg = Object.keys(byRest).map(name=>{ const arr=byRest[name];
+        const avg=(arr.reduce((a,x)=>a+(x.restStar||0),0)/arr.length); const favg=(arr.reduce((a,x)=>a+(x.foodStar||0),0)/arr.length);
+        const low=arr.filter(x=>x.restStar<=2).length; const advise= avg>=4?'表现良好，建议保留':(avg>=3?'一般，持续观察':'差评偏多，建议评估去留');
+        const akind= avg>=4?'green':(avg>=3?'gold':'red');
+        return { name, count:arr.length, restAvg:avg.toFixed(1), foodAvg:favg.toFixed(1), low, advise,
+          adviseStyle:this.badge(advise,akind).badgeStyle }; });
+      v.reviewsEmpty = all.length===0;
+      v.reviewList = all.map(r=>({ orderNo:r.orderNo, restName:r.restName||'—',
+        stars:'★'.repeat(Math.round(r.restStar))+'☆'.repeat(5-Math.round(r.restStar)),
+        foodStars:'菜品 '+r.foodStar+'★ / 餐厅 '+r.restStar+'★', text:r.text,
+        timeStr:new Date(r.ts).toLocaleString(), hasPhoto:!!r.photo }));
+      v.reviewTotal = all.length;
+    }
+
+    // LOYALTY（积分与活动）
+    if(meta.mode==='loyalty'){
+      const ST=window.Store; const cfg= ST?ST.CONFIG:{pointsPerDollar:10,pointsExpireMonths:12,checkin:{daily:5,streakBonus:{7:50,15:120},cumulativeBonus:{30:200}},referral:{inviter:200,invitee:100}};
+      v.loyaltyRules=[
+        {label:'消费赚积分', value:'实付 $1 = '+cfg.pointsPerDollar+' 积分'},
+        {label:'积分有效期', value:'滚动 '+cfg.pointsExpireMonths+' 个月过期'},
+        {label:'每日签到', value:'+'+cfg.checkin.daily+' 积分 / 天'},
+        {label:'连续签到', value:'连 7 天 +'+cfg.checkin.streakBonus[7]+'，连 15 天 +'+cfg.checkin.streakBonus[15]},
+        {label:'累计签到', value:'累计 30 天 +'+cfg.checkin.cumulativeBonus[30]},
+        {label:'邀请奖励', value:'推荐人 +'+cfg.referral.inviter+' / 新人 +'+cfg.referral.invitee}
+      ];
+      const ledger= ST?ST.pointsLedger():[];
+      const earned=ledger.filter(e=>e.amount>0).reduce((a,e)=>a+e.amount,0);
+      const spent=ledger.filter(e=>e.type==='spend').reduce((a,e)=>a+(-e.amount),0);
+      v.loyaltyStats=[
+        {label:'当前演示用户积分', value: ST?String(ST.pointsBalance()):'0', color:'#E0392B'},
+        {label:'累计发放积分', value:String(earned), color:'#221C18'},
+        {label:'累计消耗积分', value:String(spent), color:'#2E7D4F'}
+      ];
+      v.loyaltyNote='参数默认值在 assets/store.js 的 CONFIG 中调整；真实环境改为后台可视化配置 + 写库。';
+    }
+
     return v;
   }
+
+  // 订餐模式交互
+  pickMode(k){ const ST=window.Store; let days=this.state.omDays;
+    if(k!=='custom' && ST && ST.MODE_PRESETS[k]) days=ST.MODE_PRESETS[k].days.slice();
+    this.setState({omMode:k, omDays:days}); }
+  toggleDay(d){ if(this.state.omMode!=='custom') return; const cur=this.state.omDays.slice(); const i=cur.indexOf(d);
+    if(i>=0) cur.splice(i,1); else cur.push(d);
+    // 按周一~周五排序
+    const order=['周一','周二','周三','周四','周五']; cur.sort((a,b)=>order.indexOf(a)-order.indexOf(b));
+    this.setState({omDays:cur}); }
+  saveOrderMode(){ const ST=window.Store; if(!ST){ this.toast('Store 未加载'); return; }
+    if(this.state.omMode==='custom' && !this.state.omDays.length){ this.toast('请至少选择一天'); return; }
+    ST.setOrderingMode(this.state.omMode, this.state.omDays);
+    this.toast('已保存，H5 顾客端刷新后即按此显示可订日'); }
 }
 </script>
 </body>

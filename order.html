@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./config.js"></script>
+<script src="./assets/store.js"></script>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -371,8 +373,26 @@
           </div>
 
           <div style="background:#fff;border-radius:14px;padding:14px 16px;margin-bottom:14px">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+              <span style="font-weight:700;font-size:13px;color:#221C18">🎟️ 抵用券</span>
+              <span style="font-size:11px;color:#8C8279">海螺升学返利 / 活动券可用</span>
+            </div>
+            <sc-if value="{{ co.hasVouchers }}" hint-placeholder-val="{{ false }}">
+              <sc-for list="{{ co.availVouchers }}" as="vc" hint-placeholder-count="2">
+                <div onClick="{{ vc.pick }}" style="{{ vc.style }}">
+                  <div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:700;color:#221C18">{{ vc.title }}</div><div style="font-size:11px;color:#8C8279;margin-top:2px">{{ vc.sub }}</div></div>
+                  <span style="font-size:16px;color:{{ vc.markColor }}">{{ vc.mark }}</span>
+                </div>
+              </sc-for>
+            </sc-if>
+            <sc-if value="{{ co.noVouchers }}" hint-placeholder-val="{{ false }}">
+              <div style="font-size:12px;color:#A89A8A;text-align:center;padding:6px 0">暂无可用抵用券（满足门槛后自动出现）</div>
+            </sc-if>
+          </div>
+
+          <div style="background:#fff;border-radius:14px;padding:14px 16px;margin-bottom:14px">
             <div style="font-weight:700;font-size:13px;color:#221C18;margin-bottom:10px">支付方式</div>
-            <sc-for list="{{ co.payOpts }}" as="pm" hint-placeholder-count="3">
+            <sc-for list="{{ co.payOpts }}" as="pm" hint-placeholder-count="2">
               <div onClick="{{ pm.set }}" style="{{ pm.style }}">
                 <span style="font-size:14px;color:#221C18">{{ pm.label }}</span>
                 <span style="font-size:16px;color:{{ pm.dotColor }}">{{ pm.dot }}</span>
@@ -383,8 +403,12 @@
           <div style="background:#fff;border-radius:14px;padding:14px 16px">
             <div style="display:flex;justify-content:space-between;font-size:13px;color:#5a524a;margin-bottom:8px"><span>餐食金额</span><span>{{ co.foodStr }}</span></div>
             <div style="display:flex;justify-content:space-between;font-size:13px;color:#5a524a;margin-bottom:8px"><span>配送费</span><span>{{ co.feeStr }}</span></div>
+            <sc-if value="{{ co.hasDiscount }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;justify-content:space-between;font-size:13px;color:#2E7D4F;margin-bottom:8px"><span>抵用券</span><span>{{ co.discountStr }}</span></div>
+            </sc-if>
             <div style="border-top:1px dashed #E5DBCC;margin:10px 0"></div>
             <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-weight:700;font-size:14px;color:#221C18">应付总额</span><span style="color:#E0392B;font-weight:900;font-size:22px">{{ co.totalStr }}</span></div>
+            <div style="font-size:11px;color:#D89A2A;margin-top:8px">⭐ {{ co.pointsHint }}</div>
           </div>
           <div style="font-size:11px;color:#8C8279;line-height:1.7;margin-top:12px">下单即同意：餐食日前一天 12:00 前可取消并退回账户余额，超时不支持取消或退款。</div>
         </div>
@@ -408,8 +432,15 @@
             <div style="display:flex;justify-content:space-between;font-size:13px;color:#5a524a;padding:6px 0"><span>订单号</span><span style="font-weight:600">{{ pr.orderNo }}</span></div>
             <div style="display:flex;justify-content:space-between;font-size:13px;color:#5a524a;padding:6px 0"><span>餐食日期</span><span>{{ pr.dates }}</span></div>
             <div style="display:flex;justify-content:space-between;font-size:13px;color:#5a524a;padding:6px 0"><span>交付方式</span><span>{{ pr.deliver }}</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;color:#5a524a;padding:6px 0"><span>支付方式</span><span>{{ pr.payMethod }}</span></div>
             <div style="display:flex;justify-content:space-between;font-size:13px;color:#5a524a;padding:6px 0"><span>实付金额</span><span style="color:#E0392B;font-weight:700">{{ pr.total }}</span></div>
           </div>
+          <sc-if value="{{ pr.hasEarned }}" hint-placeholder-val="{{ false }}">
+            <div onClick="{{ pr.goMe }}" style="background:#FFF8EE;border:1px solid #F2E4CE;border-radius:14px;padding:13px 16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer">
+              <span style="font-size:13px;color:#C7891B;font-weight:700">⭐ 本单获得 {{ pr.earned }} 积分</span>
+              <span style="font-size:12px;color:#C7891B">去会员中心 ›</span>
+            </div>
+          </sc-if>
           <button onClick="{{ pr.viewOrders }}" style="width:100%;height:48px;border:none;border-radius:24px;background:#E0392B;color:#fff;font-weight:900;font-size:15px;cursor:pointer">查看我的订单</button>
           <button onClick="{{ goHome }}" style="width:100%;height:46px;border:none;background:none;color:#8C8279;font-size:14px;cursor:pointer;margin-top:6px">返回首页</button>
         </div>
@@ -475,6 +506,9 @@
             <div style="display:flex;justify-content:space-between;padding:3px 0"><span style="color:#8C8279">配送费</span><span>{{ od.fee }}</span></div>
             <div style="display:flex;justify-content:space-between;padding:5px 0"><span style="font-weight:700;color:#221C18">实付</span><span style="color:#E0392B;font-weight:900;font-size:16px">{{ od.total }}</span></div>
           </div>
+          <sc-if value="{{ od.canReview }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ od.review }}" style="{{ od.reviewStyle }}">{{ od.reviewLabel }}</button>
+          </sc-if>
         </div>
         <div style="position:absolute;left:0;right:0;bottom:0;background:#fff;padding:12px 16px 22px;box-shadow:0 -6px 18px rgba(80,50,20,.08);display:flex;gap:12px">
           <button onClick="{{ goSupport }}" style="flex:none;width:120px;height:46px;border:1px solid #E5DBCC;background:#fff;color:#221C18;font-weight:700;font-size:14px;border-radius:23px;cursor:pointer">联系客服</button>
@@ -563,6 +597,195 @@
         </div>
       </sc-if>
 
+      <!-- ================= ME（会员中心）================= -->
+      <sc-if value="{{ isMe }}" hint-placeholder-val="{{ false }}">
+        <div style="animation:popIn .35s;padding-bottom:24px">
+          <div onClick="{{ goLogin }}" style="background:linear-gradient(135deg,#221C18,#3a312a);color:#fff;padding:24px 18px 28px;display:flex;align-items:center;gap:14px;cursor:pointer">
+            <div style="width:56px;height:56px;border-radius:50%;background:#E0392B;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;flex:none">{{ meAvatar }}</div>
+            <div style="flex:1;min-width:0">
+              <div style="font-family:'Noto Serif SC',serif;font-weight:900;font-size:19px">{{ meTitle }}</div>
+              <div style="font-size:12px;opacity:.8;margin-top:3px">{{ meSub }}</div>
+            </div>
+            <span style="font-size:18px;opacity:.7">›</span>
+          </div>
+
+          <div style="margin:-16px 16px 0;background:#fff;border-radius:18px;padding:16px 18px;box-shadow:0 8px 24px rgba(80,50,20,.1);display:flex;align-items:center;justify-content:space-between">
+            <div onClick="{{ goPointsShop }}" style="cursor:pointer">
+              <div style="font-size:12px;color:#8C8279">我的积分</div>
+              <div style="font-family:'Noto Serif SC',serif;font-weight:900;font-size:26px;color:#E0392B;margin-top:2px">{{ pointsBal }}</div>
+            </div>
+            <button onClick="{{ goPointsShop }}" style="border:none;background:#FBE9D6;color:#C7700F;font-weight:700;font-size:13px;padding:9px 16px;border-radius:18px;cursor:pointer">积分商城 ›</button>
+          </div>
+          <sc-if value="{{ hasSoonExpire }}" hint-placeholder-val="{{ false }}">
+            <div style="margin:8px 16px 0;font-size:11px;color:#D89A2A">⏳ {{ soonExpireStr }}</div>
+          </sc-if>
+
+          <div style="margin:16px 16px 0;background:#fff;border-radius:18px;padding:6px 6px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px">
+            <sc-for list="{{ meEntries }}" as="en" hint-placeholder-count="6">
+              <div onClick="{{ en.go }}" style="text-align:center;padding:16px 6px;border-radius:14px;cursor:pointer">
+                <div style="font-size:26px">{{ en.icon }}</div>
+                <div style="font-size:13px;font-weight:700;color:#221C18;margin-top:6px">{{ en.label }}</div>
+                <div style="font-size:10px;color:#8C8279;margin-top:2px">{{ en.sub }}</div>
+              </div>
+            </sc-for>
+          </div>
+
+          <sc-if value="{{ loggedIn }}" hint-placeholder-val="{{ false }}">
+            <div onClick="{{ doLogout }}" style="margin:18px 16px 0;text-align:center;font-size:13px;color:#A89A8A;cursor:pointer;padding:10px">退出登录</div>
+          </sc-if>
+        </div>
+      </sc-if>
+
+      <!-- ================= LOGIN ================= -->
+      <sc-if value="{{ isLogin }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:40px 24px;animation:popIn .35s">
+          <div style="text-align:center;margin-bottom:30px">
+            <div style="font-size:54px">🍱</div>
+            <div style="font-family:'Noto Serif SC',serif;font-weight:900;font-size:22px;color:#221C18;margin-top:10px">登录万能团餐</div>
+            <div style="font-size:13px;color:#8C8279;margin-top:6px">手机号即可登录（试运营免验证码）</div>
+          </div>
+          <input value="{{ loginPhoneVal }}" onInput="{{ onLoginPhone }}" placeholder="请输入手机号" style="width:100%;border:1px solid #E5DBCC;border-radius:12px;padding:14px 14px;font-size:15px;outline:none;font-family:inherit;background:#FCFAF6;margin-bottom:14px">
+          <button onClick="{{ submitLogin }}" style="width:100%;height:50px;border:none;border-radius:25px;background:#E0392B;color:#fff;font-weight:900;font-size:16px;cursor:pointer">登录 / 注册</button>
+          <div style="font-size:11px;color:#A89A8A;text-align:center;line-height:1.7;margin-top:16px">登录即同意《用户协议》与《隐私政策》<br>未来可升级为微信登录 / 短信验证码</div>
+        </div>
+      </sc-if>
+
+      <!-- ================= CHECKIN（每日签到）================= -->
+      <sc-if value="{{ isCheckin }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:16px 16px 24px;animation:popIn .35s">
+          <div style="background:linear-gradient(135deg,#E0392B,#B5241B);color:#fff;border-radius:18px;padding:20px;text-align:center">
+            <div style="font-size:13px;opacity:.9">已连续签到</div>
+            <div style="font-family:'Noto Serif SC',serif;font-weight:900;font-size:40px;margin:4px 0">{{ ck.streak }} 天</div>
+            <div style="font-size:12px;opacity:.85">累计签到 {{ ck.total }} 天</div>
+          </div>
+          <div style="display:flex;gap:6px;margin:16px 0">
+            <sc-for list="{{ ck.week }}" as="w" hint-placeholder-count="7">
+              <div style="{{ w.style }}">
+                <div style="{{ w.dotStyle }}">{{ w.mark }}</div>
+                <div style="font-size:10px;color:#8C8279;margin-top:4px">{{ w.day }}</div>
+                <div style="font-size:10px;color:#C7700F;font-weight:700">{{ w.reward }}</div>
+              </div>
+            </sc-for>
+          </div>
+          <button onClick="{{ ck.sign }}" style="{{ ck.btnStyle }}">{{ ck.btnLabel }}</button>
+          <div style="background:#fff;border-radius:14px;padding:14px 16px;margin-top:16px">
+            <div style="font-weight:700;font-size:13px;color:#221C18;margin-bottom:8px">签到规则</div>
+            <sc-for list="{{ ck.rules }}" as="ru" hint-placeholder-count="4">
+              <div style="font-size:12px;color:#8C8279;line-height:1.9">· {{ ru }}</div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ================= VOUCHERS（我的卡包）================= -->
+      <sc-if value="{{ isVouchers }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:14px 16px 24px;animation:popIn .35s">
+          <div style="background:#fff;border-radius:14px;padding:12px;margin-bottom:14px;display:flex;gap:8px">
+            <input value="{{ voucherCodeVal }}" onInput="{{ onVoucherCode }}" placeholder="输入券码领取（试试 WELCOME5）" style="flex:1;border:1px solid #E5DBCC;border-radius:10px;padding:11px 12px;font-size:13px;outline:none;font-family:inherit;background:#FCFAF6">
+            <button onClick="{{ doClaimVoucher }}" style="flex:none;border:none;background:#E0392B;color:#fff;font-weight:700;font-size:13px;padding:0 16px;border-radius:10px;cursor:pointer">领取</button>
+          </div>
+          <sc-if value="{{ voucherEmpty }}" hint-placeholder-val="{{ false }}">
+            <div style="text-align:center;padding:60px 20px;color:#8C8279"><div style="font-size:48px">🎟️</div><div style="margin-top:10px;font-size:14px">卡包还是空的</div></div>
+          </sc-if>
+          <sc-for list="{{ voucherCards }}" as="vc" hint-placeholder-count="3">
+            <div style="{{ vc.cardStyle }}">
+              <div style="{{ vc.leftStyle }}">
+                <div style="font-family:'Noto Serif SC',serif;font-weight:900;font-size:18px">{{ vc.amtStr }}</div>
+                <div style="font-size:10px;opacity:.9;margin-top:4px">{{ vc.statusLabel }}</div>
+              </div>
+              <div style="flex:1;padding:13px 14px">
+                <div style="font-weight:700;font-size:14px;color:#221C18">{{ vc.title }}</div>
+                <div style="font-size:11px;color:#8C8279;margin-top:4px">{{ vc.cond }}</div>
+                <div style="font-size:11px;color:#8C8279;margin-top:2px">{{ vc.validStr }}</div>
+                <div style="font-size:10px;color:#B9AE9E;margin-top:4px">{{ vc.source }}</div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <!-- ================= POINTS SHOP（积分商城）================= -->
+      <sc-if value="{{ isPointsShop }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:16px 16px 24px;animation:popIn .35s">
+          <div style="background:linear-gradient(120deg,#221C18,#3a312a);color:#fff;border-radius:16px;padding:16px 18px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between">
+            <div><div style="font-size:12px;opacity:.75">当前可用积分</div><div style="font-weight:900;font-size:24px;margin-top:2px">{{ shopBalStr }}</div></div>
+            <span style="font-size:30px">🛍️</span>
+          </div>
+          <sc-for list="{{ shopItems }}" as="si" hint-placeholder-count="4">
+            <div style="background:#fff;border-radius:14px;padding:14px 15px;margin-bottom:12px;display:flex;align-items:center;gap:13px;box-shadow:0 4px 14px rgba(80,50,20,.05)">
+              <div style="width:48px;height:48px;border-radius:12px;background:#FBF3E6;display:flex;align-items:center;justify-content:center;font-size:26px;flex:none">{{ si.icon }}</div>
+              <div style="flex:1"><div style="font-weight:700;font-size:14px;color:#221C18">{{ si.name }}</div><div style="font-size:12px;color:#C7700F;font-weight:700;margin-top:3px">{{ si.costStr }}</div></div>
+              <button onClick="{{ si.redeem }}" style="{{ si.btnStyle }}">{{ si.btnLabel }}</button>
+            </div>
+          </sc-for>
+          <div style="font-size:11px;color:#A89A8A;text-align:center;margin-top:8px">兑换的抵用券可在「我的卡包」查看使用</div>
+        </div>
+      </sc-if>
+
+      <!-- ================= INVITE（邀请好友）================= -->
+      <sc-if value="{{ isInvite }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:16px 16px 24px;animation:popIn .35s">
+          <div style="background:linear-gradient(135deg,#E0392B,#B5241B);color:#fff;border-radius:18px;padding:24px 20px;text-align:center">
+            <div style="font-size:40px">🤝</div>
+            <div style="font-family:'Noto Serif SC',serif;font-weight:900;font-size:20px;margin-top:8px">邀请好友 双方得积分</div>
+            <div style="font-size:12px;opacity:.9;line-height:1.7;margin-top:8px">{{ invRewardCfg }}</div>
+            <div style="background:rgba(255,255,255,.16);border-radius:12px;padding:12px;margin-top:16px">
+              <div style="font-size:11px;opacity:.85">我的专属邀请码</div>
+              <div style="font-family:'Noto Serif SC',serif;font-weight:900;font-size:28px;letter-spacing:4px;margin-top:2px">{{ invCode }}</div>
+            </div>
+            <button onClick="{{ doCopyInvite }}" style="width:100%;height:46px;border:none;border-radius:23px;background:#fff;color:#E0392B;font-weight:900;font-size:15px;cursor:pointer;margin-top:14px">复制邀请链接</button>
+          </div>
+          <div style="display:flex;gap:12px;margin-top:16px">
+            <div style="flex:1;background:#fff;border-radius:14px;padding:16px;text-align:center"><div style="font-size:12px;color:#8C8279">已邀请好友</div><div style="font-weight:900;font-size:24px;color:#221C18;margin-top:4px">{{ invCount }}</div></div>
+            <div style="flex:1;background:#fff;border-radius:14px;padding:16px;text-align:center"><div style="font-size:12px;color:#8C8279">累计获得积分</div><div style="font-weight:900;font-size:24px;color:#E0392B;margin-top:4px">{{ invReward }}</div></div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ================= MESSAGES（消息中心）================= -->
+      <sc-if value="{{ isMessages }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:14px 16px 24px;animation:popIn .35s">
+          <sc-if value="{{ msgEmpty }}" hint-placeholder-val="{{ false }}">
+            <div style="text-align:center;padding:60px 20px;color:#8C8279"><div style="font-size:48px">🔔</div><div style="margin-top:10px;font-size:14px">暂无消息</div></div>
+          </sc-if>
+          <sc-for list="{{ msgList }}" as="ms" hint-placeholder-count="3">
+            <div style="background:#fff;border-radius:14px;padding:14px 15px;margin-bottom:10px;display:flex;gap:12px;box-shadow:0 4px 14px rgba(80,50,20,.05)">
+              <div style="font-size:24px;flex:none">{{ ms.icon }}</div>
+              <div style="flex:1;min-width:0">
+                <div style="font-weight:700;font-size:14px;color:#221C18">{{ ms.title }}</div>
+                <div style="font-size:12px;color:#8C8279;margin-top:4px;line-height:1.6">{{ ms.body }}</div>
+                <div style="font-size:10px;color:#C9BFB0;margin-top:6px">{{ ms.timeStr }}</div>
+              </div>
+            </div>
+          </sc-for>
+          <div style="font-size:11px;color:#A89A8A;text-align:center;margin-top:10px">未来接入微信服务号后，这些提醒会推送到你的微信</div>
+        </div>
+      </sc-if>
+
+      <!-- ================= REVIEW（评价订单）================= -->
+      <sc-if value="{{ isReview }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:18px 16px 24px;animation:popIn .35s">
+          <div style="background:#fff;border-radius:16px;padding:18px">
+            <div style="font-weight:700;font-size:14px;color:#221C18;margin-bottom:10px">菜品评分</div>
+            <div style="display:flex;gap:8px;margin-bottom:18px">
+              <sc-for list="{{ rv.foodStars }}" as="s" hint-placeholder-count="5">
+                <span onClick="{{ s.set }}" style="font-size:32px;cursor:pointer;color:{{ s.color }}">{{ s.ch }}</span>
+              </sc-for>
+            </div>
+            <div style="font-weight:700;font-size:14px;color:#221C18;margin-bottom:10px">餐厅评分</div>
+            <div style="display:flex;gap:8px;margin-bottom:18px">
+              <sc-for list="{{ rv.restStars }}" as="s" hint-placeholder-count="5">
+                <span onClick="{{ s.set }}" style="font-size:32px;cursor:pointer;color:{{ s.color }}">{{ s.ch }}</span>
+              </sc-for>
+            </div>
+            <div style="font-weight:700;font-size:14px;color:#221C18;margin-bottom:10px">评价内容</div>
+            <textarea value="{{ rv.text }}" onInput="{{ rv.onText }}" placeholder="说说这餐怎么样？（仅平台可见，用于评估餐厅去留）" style="width:100%;height:100px;border:1px solid #E5DBCC;border-radius:12px;padding:12px;font-size:13px;outline:none;font-family:inherit;background:#FCFAF6;resize:none"></textarea>
+            <div style="font-size:11px;color:#A89A8A;margin-top:8px">📷 上传照片凭证（演示占位，真实环境支持）</div>
+          </div>
+          <button onClick="{{ rv.submit }}" style="width:100%;height:50px;border:none;border-radius:25px;background:#E0392B;color:#fff;font-weight:900;font-size:16px;cursor:pointer;margin-top:18px">提交评价 · 得 20 积分</button>
+        </div>
+      </sc-if>
+
     </div>
 
     <!-- ================= BOTTOM TAB ================= -->
@@ -570,7 +793,7 @@
       <div style="flex:none;height:62px;background:#fff;border-top:1px solid #F0E8DA;display:flex;padding-bottom:6px;z-index:25">
         <sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="4">
           <button onClick="{{ tb.go }}" style="flex:1;border:none;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:{{ tb.color }}">
-            <span style="font-size:21px;position:relative">{{ tb.icon }}<sc-if value="{{ tb.showBadge }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:-3px;right:-8px;min-width:15px;height:15px;background:#E0392B;color:#fff;border-radius:8px;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 3px">{{ cartCount }}</span></sc-if></span>
+            <span style="font-size:21px;position:relative">{{ tb.icon }}<sc-if value="{{ tb.showBadge }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:-3px;right:-8px;min-width:15px;height:15px;background:#E0392B;color:#fff;border-radius:8px;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 3px">{{ tb.badgeCount }}</span></sc-if></span>
             <span style="font-size:10px;font-weight:{{ tb.weight }}">{{ tb.label }}</span>
           </button>
         </sc-for>
@@ -601,18 +824,26 @@ class Component extends DCLogic {
       {tag:'B', name:'Zone B · 中距离', desc:'Northwood / University Park', fee:'$5.0', bg:'#D89A2A'},
       {tag:'C', name:'Zone C · 远距离', desc:'暂不支持，可单独报价', fee:'报价', bg:'#A89A8A'}
     ];
+    const u = (window.Store && Store.currentUser()) || null;
     this.state = {
-      screen:'home', selectedDay:'周一',
+      screen:'home', selectedDay:(this.days&&this.days[0]?this.days[0].day:'周一'),
       detailPkgId:null, detailQty:1,
       detailSel:{meats:[], veggies:[], spicy:'正常', staple:'白饭', utensil:false},
       cart:[],
       orders:[ this.seedOrder() ],
       balance:25,
-      checkout:{deliverType:'pickup', pickup:'p1', name:'', phone:'', wechat:'', address:'', unit:'', atDoor:false, pay:'card'},
+      checkout:{deliverType:'pickup', pickup:'p1', name:(u?u.nick:''), phone:(u?u.phone:''), wechat:'', address:'', unit:'', atDoor:false, pay:'card', voucherId:null},
       lastOrderId:null, viewOrderId:null,
+      loginPhone:'', reviewOrderNo:null, reviewStar:5, reviewRestStar:5, reviewText:'', voucherCode:'',
+      _v:0,
       toast:''
     };
   }
+
+  // 触发重渲染（Store 改动后调用）
+  bump(){ this.setState({_v:(this.state._v||0)+1}); }
+  // 需登录才能用的动作：未登录先跳登录页
+  needLogin(then){ if(window.Store && Store.currentUser()){ then&&then(); return true; } this.setState({screen:'login'}); return false; }
 
   money(n){ return '$'+n.toFixed(2); }
 
@@ -651,7 +882,9 @@ class Component extends DCLogic {
       if(hot[dObj.day]){ const h=hot[dObj.day]; h.id=dObj.day+'-HOT'; const tgt=rests.find(r=>r.id===h.restId); tgt.packages.unshift(h); }
       out[dObj.day] = {date:dObj.date, rests};
     });
-    this.days = days;
+    const enabled = (window.Store ? Store.enabledDays() : null);
+    this.days = (enabled && enabled.length) ? days.filter(d=>enabled.indexOf(d.day)>=0) : days;
+    if(!this.days.length) this.days = days;
     return out;
   }
 
@@ -733,19 +966,53 @@ class Component extends DCLogic {
 
   setCo(patch){ this.setState({checkout:{...this.state.checkout, ...patch}}); }
   deliveryFee(){ return this.state.checkout.deliverType==='pickup'?0:3.5; }
+  cartRestNames(){ return [...new Set(this.state.cart.map(c=>c.restName))]; }
+  selectedVoucher(){ const id=this.state.checkout.voucherId; if(!id||!window.Store) return null; return Store.allVouchers().find(v=>v.id===id)||null; }
+  voucherDiscount(){ const v=this.selectedVoucher(); return (v&&window.Store)?Store.voucherDiscount(v, this.cartFood()):0; }
   payNow(){
     const co=this.state.checkout;
     if(!co.name.trim()||!co.phone.trim()){ this.setState({screen:'checkout'}); this.showToast('请填写姓名和手机号'); return; }
     if(co.deliverType==='deliver'){ if(!co.address.trim()){ this.showToast('请填写配送地址'); return; } if(this.cartFood()<20){ this.showToast('配送需满 $20'); return; } }
+    // 手机号免验证：下单即登录，积分/券挂到该用户
+    if(window.Store && !Store.currentUser()){ Store.login(co.phone, co.name); }
     const code = String(1000+Math.floor(Math.random()*9000));
     const no = 'MST-'+ '2'+String(Math.floor(Math.random()*900000)+100000);
     const items = this.state.cart.map(c=>({name:c.name, restName:c.restName, day:c.day, emoji:c.emoji, bg:c.bg, optStr:c.optStr, price:c.price, qty:c.qty}));
     const food=this.cartFood(), fee=this.deliveryFee();
+    const disc=this.voucherDiscount(); const voucher=this.selectedVoucher();
+    const total=Math.max(0, food+fee-disc);
+    const payLabel = co.pay==='wechat'?'微信支付':'信用卡 (USD)';
+    let earned=0;
+    if(window.Store){ const r=Store.onOrderPaid({orderNo:no, code, total, voucherId:voucher?voucher.id:null, items}); earned=r.earned; }
     const order={ id:'o'+Date.now(), orderNo:no, code, status:'已付款', createdAt:'刚刚',
-      deliverType:co.deliverType, pickup:co.pickup, address:co.address, unit:co.unit,
-      items, food, fee, total:food+fee, cutoff: this.cutoffOf(items[0]? items[0].day:'周一') };
-    this.setState({ orders:[order, ...this.state.orders], cart:[], lastOrderId:order.id, screen:'payResult' });
+      deliverType:co.deliverType, pickup:co.pickup, address:co.address, unit:co.unit, payMethod:payLabel,
+      voucherTitle: voucher?voucher.title:null, discount:disc, pointsEarned:earned,
+      items, food, fee, total, cutoff: this.cutoffOf(items[0]? items[0].day:'周一') };
+    this.setState({ orders:[order, ...this.state.orders], cart:[], lastOrderId:order.id, screen:'payResult',
+      checkout:{...co, voucherId:null} });
   }
+
+  // ---- 二期：登录 / 签到 / 券 / 积分 / 裂变 / 消息 / 评论 ----
+  doLogin(){ const p=(this.state.loginPhone||'').trim(); if(!/^\+?\d[\d\- ]{5,}$/.test(p)){ this.showToast('请输入有效手机号'); return; }
+    Store.login(p); this.showToast('登录成功'); this.setState({screen:'me'}); }
+  doCheckin(){ if(!this.needLogin()) return; const r=Store.doCheckin(); this.showToast(r.msg); this.bump(); }
+  claimVoucher(){ const c=(this.state.voucherCode||'').trim(); if(!c){ this.showToast('请输入券码'); return; } const r=Store.claimByCode(c); this.showToast(r.msg); if(r.ok) this.setState({voucherCode:''}); else this.bump(); }
+  pickVoucher(id){ this.setState({checkout:{...this.state.checkout, voucherId: this.state.checkout.voucherId===id?null:id}}); }
+  copyInvite(){ const link=Store.inviteLink(); if(navigator.clipboard) navigator.clipboard.writeText(link); this.showToast('邀请链接已复制'); }
+  openMessages(){ if(!this.needLogin()) return; Store.markAllRead(); this.setState({screen:'messages'}); this.bump(); }
+  redeemShop(item){ if(!this.needLogin()) return; if(Store.spendPoints(item.cost, '兑换 '+item.name)){ if(item.grant) item.grant(); this.showToast('兑换成功：'+item.name); this.bump(); } else { this.showToast('积分不足'); } }
+  openReview(orderNo){ this.setState({screen:'review', reviewOrderNo:orderNo, reviewStar:5, reviewRestStar:5, reviewText:''}); }
+  submitReview(){ const t=(this.state.reviewText||'').trim(); if(!t){ this.showToast('请填写评价内容'); return; }
+    const o=this.state.orders.find(x=>x.orderNo===this.state.reviewOrderNo); const restName=o&&o.items[0]?o.items[0].restName:'';
+    Store.addReview({orderNo:this.state.reviewOrderNo, restName, foodStar:this.state.reviewStar, restStar:this.state.reviewRestStar, text:t, photo:null});
+    Store.notify('review','感谢评价 +20 积分','你的反馈仅平台可见，用于评估餐厅'); Store.earnPoints(20,'订单评价奖励');
+    this.showToast('评价已提交，+20 积分'); this.setState({screen:'orderDetail', viewOrderId:o?o.id:null}); this.bump(); }
+  pointsShopItems(){ return [
+    {id:'s1', name:'$3 抵用券', cost:300, icon:'🎟️', grant:()=>Store.importVouchers([{code:'PT3', title:'积分兑换 · 直减$3', source:'积分商城', type:'direct', amount:3, threshold:0, scope:'all', validTo:Date.now()+30*86400000}])},
+    {id:'s2', name:'饮品兑换券', cost:100, icon:'🥤', grant:()=>Store.importVouchers([{code:'PTDRINK', title:'积分兑换 · 饮品立减$2', source:'积分商城', type:'direct', amount:2, threshold:0, scope:'all', validTo:Date.now()+30*86400000}])},
+    {id:'s3', name:'指定套餐券', cost:800, icon:'🍱', grant:()=>Store.importVouchers([{code:'PTSET', title:'积分兑换 · 满$15减$8', source:'积分商城', type:'full_reduce', amount:8, threshold:15, scope:'all', validTo:Date.now()+30*86400000}])},
+    {id:'s4', name:'抽奖券 ×1', cost:50, icon:'🎰', grant:null}
+  ]; }
   cancelOrder(id){
     const orders=this.state.orders.map(o=> o.id===id ? {...o, status:'已取消'} : o);
     const o=this.state.orders.find(x=>x.id===id);
@@ -761,9 +1028,9 @@ class Component extends DCLogic {
 
   renderVals(){
     const st=this.state; const screen=st.screen;
-    const titles={home:'万能美食团', menu:'下周菜单', detail:'套餐详情', cart:'购物车', checkout:'确认订单', payResult:'下单成功', orders:'我的订单', orderDetail:'订单详情', pickup:'自提点', delivery:'配送范围', enterprise:'团餐合作', support:'联系客服'};
-    const noBackBars={home:1, menu:1, orders:1};
-    const noTab={detail:1, checkout:1, payResult:1, orderDetail:1};
+    const titles={home:'万能美食团', menu:'下周菜单', detail:'套餐详情', cart:'购物车', checkout:'确认订单', payResult:'下单成功', orders:'我的订单', orderDetail:'订单详情', pickup:'自提点', delivery:'配送范围', enterprise:'团餐合作', support:'联系客服', me:'我的', login:'登录', checkin:'每日签到', vouchers:'我的卡包', pointsShop:'积分商城', invite:'邀请好友', messages:'消息中心', review:'评价订单'};
+    const noBackBars={home:1, menu:1, orders:1, me:1};
+    const noTab={detail:1, checkout:1, payResult:1, orderDetail:1, login:1, checkin:1, vouchers:1, pointsShop:1, invite:1, messages:1, review:1};
     const cartCount=this.cartCount();
 
     const tagStyle=(t)=>{
@@ -788,13 +1055,16 @@ class Component extends DCLogic {
       hasCart: cartCount>0, cartCount,
       showTab: !noTab[screen],
       hasToast: !!st.toast, toast: st.toast,
-      isHome:screen==='home', isMenu:screen==='menu', isDetail:screen==='detail', isCart:screen==='cart', isCheckout:screen==='checkout', isPayResult:screen==='payResult', isOrders:screen==='orders', isOrderDetail:screen==='orderDetail', isPickup:screen==='pickup', isDelivery:screen==='delivery', isEnterprise:screen==='enterprise', isSupport:screen==='support'
+      isHome:screen==='home', isMenu:screen==='menu', isDetail:screen==='detail', isCart:screen==='cart', isCheckout:screen==='checkout', isPayResult:screen==='payResult', isOrders:screen==='orders', isOrderDetail:screen==='orderDetail', isPickup:screen==='pickup', isDelivery:screen==='delivery', isEnterprise:screen==='enterprise', isSupport:screen==='support',
+      isMe:screen==='me', isLogin:screen==='login', isCheckin:screen==='checkin', isVouchers:screen==='vouchers', isPointsShop:screen==='pointsShop', isInvite:screen==='invite', isMessages:screen==='messages', isReview:screen==='review'
     };
 
     // tabs
-    const tabDef=[['home','🏠','首页'],['menu','🍱','菜单'],['orders','📋','订单'],['support','🙋','客服']];
-    const activeTab = screen==='cart'||screen==='checkout'||screen==='payResult' ? 'menu' : (screen==='orderDetail'?'orders':(screen==='detail'?'menu':screen));
-    vals.tabs = tabDef.map(([k,icon,label])=>({ icon, label, go:()=>this.setState({screen:k}), color: activeTab===k?'#E0392B':'#A89A8A', weight: activeTab===k?'700':'500', showBadge:false }));
+    const unread = window.Store?Store.unreadCount():0;
+    const tabDef=[['home','🏠','首页'],['menu','🍱','菜单'],['orders','📋','订单'],['me','👤','我的']];
+    const meScreens={me:1,checkin:1,vouchers:1,pointsShop:1,invite:1,messages:1,login:1};
+    const activeTab = screen==='cart'||screen==='checkout'||screen==='payResult' ? 'menu' : (screen==='orderDetail'?'orders':(screen==='detail'?'menu':(meScreens[screen]?'me':screen)));
+    vals.tabs = tabDef.map(([k,icon,label])=>({ icon, label, go:()=>this.setState({screen:k}), color: activeTab===k?'#E0392B':'#A89A8A', weight: activeTab===k?'700':'500', showBadge:(k==='me'&&unread>0), badgeCount:unread }));
 
     // HOME
     const hot=[];
@@ -871,15 +1141,27 @@ class Component extends DCLogic {
       inputStyle, inputStyleLast:inputStyle.replace('margin-bottom:10px','margin-bottom:0'),
       toggleDoor:()=>this.setCo({atDoor:!co.atDoor}), doorBorder:co.atDoor?'#E0392B':'#C9BFB0', doorBg:co.atDoor?'#E0392B':'#fff', doorCheck:co.atDoor?'✓':'',
       name:co.name, phone:co.phone, wechat:co.wechat, onName:e=>this.setCo({name:e.target.value}), onPhone:e=>this.setCo({phone:e.target.value}), onWechat:e=>this.setCo({wechat:e.target.value}),
-      payOpts:[['card','💳 信用卡 (Stripe)'],['apple','🍎 Apple Pay'],['manual','💸 Zelle / 微信（人工确认）']].map(([k,label])=>({ label, set:()=>this.setCo({pay:k}), dot:co.pay===k?'◉':'○', dotColor:co.pay===k?'#E0392B':'#C9BFB0', style:'display:flex;align-items:center;justify-content:space-between;padding:11px 4px;cursor:pointer;border-bottom:1px solid #F4EDE0' })),
-      foodStr:this.money(food), feeStr: fee===0?'免费':this.money(fee), totalStr:this.money(food+fee), payBg:'#E0392B', pay:()=>this.payNow()
+      payOpts:[['card','💳 信用卡 · 美元 (Stripe)'],['wechat','💚 微信支付 (WeChat Pay)']].map(([k,label])=>({ label, set:()=>this.setCo({pay:k}), dot:co.pay===k?'◉':'○', dotColor:co.pay===k?'#E0392B':'#C9BFB0', style:'display:flex;align-items:center;justify-content:space-between;padding:11px 4px;cursor:pointer;border-bottom:1px solid #F4EDE0' })),
+      // 抵用券
+      availVouchers: (window.Store?Store.availableVouchers(food, this.cartRestNames()):[]).map(v=>({ title:v.title, sub:(v.type==='direct'?('直减$'+v.amount):('满$'+v.threshold+'减$'+v.amount))+' · '+v.source,
+        picked:co.voucherId===v.id, pick:()=>this.pickVoucher(v.id),
+        style:'display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 12px;border-radius:12px;cursor:pointer;margin-bottom:8px;border:1.5px solid '+(co.voucherId===v.id?'#E0392B':'#EFE6D6')+';background:'+(co.voucherId===v.id?'#FCEFEC':'#fff'),
+        mark:co.voucherId===v.id?'◉':'○', markColor:co.voucherId===v.id?'#E0392B':'#C9BFB0' })),
+      hasVouchers: (window.Store?Store.availableVouchers(food, this.cartRestNames()).length:0)>0,
+      noVouchers: (window.Store?Store.availableVouchers(food, this.cartRestNames()).length:0)===0,
+      hasDiscount: this.voucherDiscount()>0, discountStr:'-'+this.money(this.voucherDiscount()),
+      foodStr:this.money(food), feeStr: fee===0?'免费':this.money(fee), totalStr:this.money(Math.max(0,food+fee-this.voucherDiscount())),
+      pointsHint:'本单预计获得 '+Math.round(Math.max(0,food+fee-this.voucherDiscount())*(window.Store?Store.CONFIG.pointsPerDollar:10))+' 积分',
+      payBg:'#E0392B', pay:()=>this.payNow()
     };
 
     // PAY RESULT
     if(screen==='payResult'){ const o=st.orders.find(x=>x.id===st.lastOrderId);
       if(o) vals.pr={ code:o.code, orderNo:o.orderNo, dates:[...new Set(o.items.map(i=>i.day))].join('、'),
         deliver: o.deliverType==='pickup'?('自提 · '+(this.pickups.find(p=>p.id===o.pickup)||{}).name):'区域配送',
-        total:this.money(o.total), viewOrders:()=>this.setState({screen:'orders'}) };
+        total:this.money(o.total), payMethod:o.payMethod||'信用卡',
+        earned:o.pointsEarned||0, hasEarned:(o.pointsEarned||0)>0,
+        viewOrders:()=>this.setState({screen:'orders'}), goMe:()=>this.setState({screen:'me'}) };
     }
 
     // ORDERS
@@ -900,6 +1182,14 @@ class Component extends DCLogic {
           food:this.money(o.food), fee:o.fee===0?'免费':this.money(o.fee), total:this.money(o.total),
           cancel:()=>{ if(canCancel) this.cancelOrder(o.id); }, cancelLabel: canCancel?'取消订单':'不可取消',
           cancelStyle: canCancel ? 'flex:1;height:46px;border:none;border-radius:23px;background:#E0392B;color:#fff;font-weight:700;font-size:14px;cursor:pointer' : 'flex:1;height:46px;border:none;border-radius:23px;background:#EFEAE2;color:#A89A8A;font-weight:700;font-size:14px;cursor:not-allowed' };
+        const reviewed = window.Store && Store.reviewsOfOrder(o.orderNo).length>0;
+        vals.od.canReview = o.status!=='已取消';
+        vals.od.reviewed = reviewed;
+        vals.od.reviewLabel = reviewed?'已评价 ✓':'评价订单 +20积分';
+        vals.od.review = ()=>{ if(reviewed){ this.showToast('该订单已评价'); return; } this.openReview(o.orderNo); };
+        vals.od.reviewStyle = reviewed
+          ? 'width:100%;height:44px;margin-top:10px;border:1px solid #E5DBCC;border-radius:22px;background:#F4EFE6;color:#A89A8A;font-weight:700;font-size:14px;cursor:default'
+          : 'width:100%;height:44px;margin-top:10px;border:none;border-radius:22px;background:#D89A2A;color:#fff;font-weight:700;font-size:14px;cursor:pointer';
       }
     }
 
@@ -914,6 +1204,94 @@ class Component extends DCLogic {
       {q:'可以备注忌口吗？',a:'试运营暂不支持复杂定制，仅支持辣度、主食、餐具等选项。严重过敏请谨慎下单。'}
     ];
 
+    // ===================== 二期：会员功能 =====================
+    const ST=window.Store, u=ST?ST.currentUser():null;
+    vals.loggedIn=!!u; vals.notLoggedIn=!u; vals.userNick=u?u.nick:''; vals.userPhone=u?u.phone:'点击登录';
+    vals.meTitle=u?u.nick:'登录 / 注册'; vals.meSub=u?('手机 '+u.phone):'登录后享积分 · 签到 · 抵用券';
+    vals.meAvatar=u?u.nick.slice(0,1):'👤'; vals.meUnread=unread; vals.hasUnread=unread>0;
+    vals.pointsBal=ST?ST.pointsBalance():0;
+    const se=ST?ST.soonExpire():null;
+    vals.hasSoonExpire=!!se; vals.soonExpireStr=se?(se.amount+' 积分将于 '+new Date(se.at).toLocaleDateString()+' 过期'):'';
+    vals.goMe=()=>this.setState({screen:'me'});
+    vals.goCheckin=()=>this.needLogin(()=>this.setState({screen:'checkin'}));
+    vals.goVouchers=()=>this.needLogin(()=>this.setState({screen:'vouchers'}));
+    vals.goPointsShop=()=>this.needLogin(()=>this.setState({screen:'pointsShop'}));
+    vals.goInvite=()=>this.needLogin(()=>this.setState({screen:'invite'}));
+    vals.goMessages=()=>this.openMessages();
+    vals.goLogin=()=>this.setState({screen:'login'});
+    vals.doLogout=()=>{ ST.logout(); this.showToast('已退出登录'); this.setState({screen:'me'}); };
+    vals.meEntries=[
+      {icon:'📅', label:'每日签到', sub:'签到领积分', go:vals.goCheckin},
+      {icon:'🎟️', label:'我的卡包', sub:'抵用券', go:vals.goVouchers},
+      {icon:'🛍️', label:'积分商城', sub:'积分兑好礼', go:vals.goPointsShop},
+      {icon:'🤝', label:'邀请好友', sub:'拉新得积分', go:vals.goInvite},
+      {icon:'🔔', label:'消息中心', sub:(unread>0?(unread+' 条未读'):'通知提醒'), go:vals.goMessages},
+      {icon:'📋', label:'我的订单', sub:'查看/评价', go:()=>this.setState({screen:'orders'})}
+    ];
+
+    // LOGIN
+    vals.loginPhoneVal=st.loginPhone;
+    vals.onLoginPhone=e=>this.setState({loginPhone:e.target.value});
+    vals.submitLogin=()=>this.doLogin();
+
+    // CHECKIN
+    if(screen==='checkin'&&ST){
+      const cs=ST.checkinStatus(), cfg=ST.CONFIG.checkin, pos=cs.streak===0?0:((cs.streak-1)%7)+1;
+      vals.ck={ signedToday:cs.signedToday, streak:cs.streak, total:cs.total,
+        sign:()=>this.doCheckin(),
+        btnLabel: cs.signedToday?'今日已签到 ✓':('立即签到 +'+cfg.daily),
+        btnStyle: cs.signedToday
+          ? 'width:100%;height:50px;border:none;border-radius:25px;background:#EFEAE2;color:#A89A8A;font-weight:900;font-size:16px;cursor:not-allowed'
+          : 'width:100%;height:50px;border:none;border-radius:25px;background:#E0392B;color:#fff;font-weight:900;font-size:16px;cursor:pointer',
+        week:[1,2,3,4,5,6,7].map(i=>{ const done=i<=pos||(cs.signedToday&&i<=((cs.streak-1)%7)+1); const isBonus=i===7;
+          return { day:'第'+i+'天', reward:isBonus?('+'+cfg.streakBonus[7]):'+'+cfg.daily, isBonus,
+            style:'flex:1;text-align:center;padding:10px 2px;border-radius:12px;background:'+(done?'#FCEFEC':'#fff')+';border:1.5px solid '+(done?'#E0392B':'#EFE6D6'),
+            dotStyle:'width:26px;height:26px;margin:4px auto 0;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;background:'+(done?'#E0392B':'#F0E8DA')+';color:'+(done?'#fff':'#C9BFB0'),
+            mark: done?'✓':(isBonus?'★':'·') }; }),
+        rules:['每日签到 +'+cfg.daily+' 积分','连续 7 天额外 +'+cfg.streakBonus[7]+'，连续 15 天额外 +'+cfg.streakBonus[15],'累计签到 30 天额外 +'+cfg.cumulativeBonus[30],'断签后连续天数重新计算'] };
+    }
+
+    // VOUCHERS（我的卡包）
+    vals.voucherCodeVal=st.voucherCode;
+    vals.onVoucherCode=e=>this.setState({voucherCode:e.target.value});
+    vals.doClaimVoucher=()=>this.claimVoucher();
+    const vAmt=(v)=> v.type==='direct'?('减$'+v.amount): v.type==='full_reduce'?('满$'+v.threshold+'减$'+v.amount): (v.amount+'折');
+    vals.voucherCards=ST?ST.allVouchers().map(v=>({ title:v.title, source:'来源：'+v.source, amtStr:vAmt(v),
+      cond:(v.threshold>0?('满 $'+v.threshold+' 可用'):'无门槛使用'),
+      validStr:'有效期至 '+new Date(v.validTo).toLocaleDateString(),
+      used:v.status!=='unused', statusLabel:v.status==='unused'?'可用':(v.status==='used'?'已使用':'已过期'),
+      cardStyle:'background:'+(v.status==='unused'?'#fff':'#F4EFE6')+';border-radius:16px;padding:0;margin-bottom:12px;overflow:hidden;display:flex;box-shadow:0 4px 14px rgba(80,50,20,.05);opacity:'+(v.status==='unused'?'1':'.6'),
+      leftStyle:'flex:none;width:108px;background:'+(v.status==='unused'?'linear-gradient(135deg,#E0392B,#B5241B)':'#B9AE9E')+';color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px 6px' })):[];
+    vals.voucherEmpty=!vals.voucherCards.length;
+
+    // POINTS SHOP
+    if(screen==='pointsShop'){
+      const bal=vals.pointsBal;
+      vals.shopBalStr=bal+' 积分';
+      vals.shopItems=this.pointsShopItems().map(it=>{ const can=bal>=it.cost; return { name:it.name, icon:it.icon, costStr:it.cost+' 积分',
+        redeem:()=>this.redeemShop(it), can,
+        btnLabel:can?'兑换':'积分不足',
+        btnStyle:can?'border:none;background:#E0392B;color:#fff;font-size:12px;font-weight:700;padding:7px 14px;border-radius:16px;cursor:pointer':'border:none;background:#EFEAE2;color:#A89A8A;font-size:12px;font-weight:700;padding:7px 14px;border-radius:16px;cursor:not-allowed' }; });
+    }
+
+    // INVITE
+    if(screen==='invite'&&ST){ const rs=ST.referralStats();
+      vals.invCode=rs.code||'—'; vals.invCount=rs.count; vals.invReward=rs.totalReward;
+      vals.invRewardCfg='好友通过你的链接注册并完成首单，你得 +'+ST.CONFIG.referral.inviter+' 积分，好友得 +'+ST.CONFIG.referral.invitee+' 积分';
+      vals.doCopyInvite=()=>this.copyInvite();
+    }
+
+    // MESSAGES
+    const msgIcon={welcome:'🎉',points:'⭐',order:'🍱',review:'💬',default:'🔔'};
+    vals.msgList=ST?ST.notifications().map(n=>({ title:n.title, body:n.body, icon:(msgIcon[n.type]||msgIcon.default), timeStr:new Date(n.ts).toLocaleString() })):[];
+    vals.msgEmpty=!vals.msgList.length;
+
+    // REVIEW
+    if(screen==='review'){ const mkStars=(cur,setter)=>[1,2,3,4,5].map(n=>({ ch:n<=cur?'★':'☆', set:()=>this.setState(setter(n)), color:n<=cur?'#E0392B':'#D8CEBE' }));
+      vals.rv={ foodStars:mkStars(st.reviewStar,n=>({reviewStar:n})), restStars:mkStars(st.reviewRestStar,n=>({reviewRestStar:n})),
+        text:st.reviewText, onText:e=>this.setState({reviewText:e.target.value}), submit:()=>this.submitReview() };
+    }
+
     return vals;
   }
 
@@ -922,7 +1300,7 @@ class Component extends DCLogic {
 
   goBack(){
     const s=this.state.screen;
-    const back={detail:'menu', cart:'menu', checkout:'cart', payResult:'home', orderDetail:'orders', pickup:'home', delivery:'home', enterprise:'home', support:'home'};
+    const back={detail:'menu', cart:'menu', checkout:'cart', payResult:'home', orderDetail:'orders', pickup:'home', delivery:'home', enterprise:'home', support:'home', login:'me', checkin:'me', vouchers:'me', pointsShop:'me', invite:'me', messages:'me', review:'orders'};
     this.setState({screen: back[s]||'home'});
   }
 }

@@ -4,9 +4,12 @@
 
 ---
 
-## 0. 一句话现状
+## 0. 一句话现状（2026-06-29 更新）
 万能团餐 = 面向 Irvine/OC 华人的**预售制团餐**平台（试运营/MVP）。
-当前已上线 **3 个纯前端站点**（官网 + 顾客端 H5 + 运营后台），正在做**第一期后端接入**（Supabase，核心下单闭环）——脚手架已就绪，**等创建 Supabase 项目并填配置**。
+已上线 **3 个纯前端站点**（官网 + 顾客端 H5 + 运营后台）。**二期 8 大功能已在前端 demo 全部实现并实测通过**（用券/积分/签到/支付占位/订餐模式/评论/裂变/站内提醒），数据层 `assets/store.js`（localStorage，字段对齐后端表）。
+**后端方向已改定**：从原计划 Supabase **转为用 JeecgBoot（Java + 底座 MySQL）落地**，且团餐作为**与 SCRM 平级**的独立模块。详见下方「11. 二期 & JeecgBoot 落地」。
+
+> ⚠️ 原 Supabase 方案（`supabase/schema.sql`、`config.js`、`assets/db.js`、`SETUP-supabase.md`）**已弃用**，保留作参考；不要再按它接后端。
 
 ## 1. 线上地址（GitHub Pages）
 | 站点 | 地址 |
@@ -103,3 +106,24 @@ python3 -m http.server 4173
 - React 走 unpkg CDN：离线或 unpkg 受限会白屏。
 - `config.js` 里的 **anon key 是公开的**（安全靠 RLS），可提交；**service_role key 绝不能进前端/仓库**。
 - Pages 部署有 ~1 分钟延迟，且偶尔需强刷。
+
+## 11. 二期 & JeecgBoot 落地（当前主线）
+
+### 二期 8 大功能（已实现 · 前端 demo）
+顾客端 H5 + 运营后台都已落地并实测通过，新增 `assets/store.js` 数据层（localStorage，字段对齐后端表）：
+1 用券 · 2 积分(赚/兑/过期) · 3 签到 · 4 支付(USD/微信占位) · 5 订餐模式(后台开关→H5 联动) · 6 评论(绑订单·后台聚合) · 7 裂变(邀请码/返积分) · 8 站内提醒(消息中心)。
+- 入口：`order.html`（底部「我的」）、`admin.html`（左栏「会员/营销」）。本地：`python3 -m http.server 4173`。
+- 改动已同步回设计源 `美食团-H5.dc.html` / `美食团-后台.dc.html`。演示数据清空：浏览器控制台 `Store._reset()`。
+
+### 规格文档（新对话从这读）
+- `project/tuancan/需求v2-设计文档.md` — 8 功能的设计 + 已确认参数。
+- `project/tuancan/团餐-JeecgBoot接入建议.md` — **后端落地策略 + 已定决策**（看 ★ 节）。
+- `project/tuancan/assets/store.js` — **API 契约蓝本**（每个方法 ≈ 一个 `/tuancan/c/**` 接口）。
+- `产品专家的建议.md` — 平级架构论证（已采纳）。
+
+### 已定后端决策
+- **JeecgBoot（Java + 底座 MySQL）**，团餐做成**与 scrm 平级**的 `jeecg-module-tuancan`。
+- 复用：把 scrm 的 C 访客鉴权上提 `jeecg-boot-base-core`；通知用 scrm `NotifyOrchestrator`；微信用现成 `WxMp/WxMaConfiguration`。
+- 新表 `tc_*`（JeecgEntity 规范、utf8mb4）；后台 CRUD 走代码生成器。
+- **暂不做**：多租户 / Flowable / 真支付（占位）/ 小程序——留作演进。
+- JeecgBoot 仓库在同根的 `jeecg-boot/`（git 根 = `/Users/eiden/work/JeecgBoot`）。
